@@ -13,36 +13,51 @@
       voluptatum tempore! Consectetur, id commodi!</p>
     <br>
     <form>
-        <div class="form-group ">
-          <label for="exampleFormControlInput1"><h4>Title</h4></label>
-          <input type="text" class="form-control"  placeholder="lorem ispum">
+      <div class="form-group ">
+        <label for="exampleFormControlInput1">
+          <h4 >Title</h4>
+        </label>
+        <input type="text" class="form-control border border-primary" placeholder="lorem ispum">
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">
+          <br>
+          <h4>Justification</h4>
+        </label>
+        <textarea class="form-control border border-primary" rows="4" placeholder="lorem ispum"></textarea>
+      </div>
+      <br><br>
+      <div class="row">
+        <div class="col"></div>
+        <div style="width:50%" class="col form-group">
+          <h4>Exclusion end date</h4>
+          <input type="date" name="bday" min="1000-01-01" max="3000-12-31" class="form-control border border-primary">
         </div>
-        <div class="form-group">
-          <label for="exampleFormControlTextarea1"><h4>Justification</h4></label>
-          <textarea class="form-control" rows="4" placeholder="lorem ispum"></textarea>
-        </div>
+        <div class="col"></div>
+      </div>
+      <br>
 
-        <!-- tarea insertar calendario -->
-      </form>
+      <button type="submit" class="btn btn-primary btn-lg">Send request</button>
+      <div class="col"></div>
+  </div>
+  </form>
   </div>
 </section>
 
-
-
 <section id="services" class="py-5 bg-secondary text-white">
-    <div class="container">
-      <div class="row text-center">
-        <div class="col-md-12">
-          <i class="fas fa-comment fa-4x mr-4"></i>
-          <hr>
-          <h2>Risk management tool</h2>
-          <br>
-          <h4>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Recusandae quas, asperiores eveniet vel
-            nostrum magnam
-            voluptatum tempore! Consectetur, id commodi!</h4>
-        </div>
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-12">
+        <i class="fas fa-comment fa-4x mr-4"></i>
+        <hr>
+        <h2>Risk management tool</h2>
+        <br>
+        <h4>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Recusandae quas, asperiores eveniet vel
+          nostrum magnam
+          voluptatum tempore! Consectetur, id commodi!</h4>
       </div>
     </div>
-  </section>
-  
-  {% endblock %}
+  </div>
+</section>
+
+{% endblock %}
