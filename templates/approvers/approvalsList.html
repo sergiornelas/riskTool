@@ -1,62 +1,85 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <!-- Showcase -->
-  <section id="showcase">
-        <div class="container text-center">
-          <div class="home-search p-5">
-            <div class="overlay p-5">
-              <h1 class="display-4 mb-4">
-                Approval list
-              </h1>
-              <p class="lead">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Recusandae quas, asperiores eveniet vel nostrum magnam
-                voluptatum tempore! Consectetur, id commodi!</p>
+<!-- Showcase -->
+<!-- <section id="showcase_patchList"> -->
+<section>
+  <div class="p-5 container text-center">
+    <h1 class="display-4 mb-4">
+      List of approvals
+    </h1>
+    <p class="lead">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Recusandae quas, asperiores eveniet vel
+      nostrum magnam
+      voluptatum tempore! Consectetur, id commodi!</p>
+    <br>
+    <table class="table mt-4">
+      <thead>
+        <tr>
+          <th scope="col">Requester name</th>
+          <th scope="col">Request date</th>
+          <th scope="col">Criticality</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>John Smith</td>
+          <td>12/12/2020</td>
+          <td>High</td>
+          <td><button class="btn btn-primary btn-lg">View details</button></td>
+        </tr>
+        <tr>
+          <td>John Smith</td>
+          <td>12/12/2020</td>
+          <td>High</td>
+          <td><button class="btn btn-primary btn-lg">View details</button></td>
+        </tr>
+        <tr>
+          <td>John Smith</td>
+          <td>12/12/2020</td>
+          <td>High</td>
+          <td><button class="btn btn-primary btn-lg">View details</button></td>
+        </tr>
+        <tr>
+          <td>John Smith</td>
+          <td>12/12/2020</td>
+          <td>High</td>
+          <td><button class="btn btn-primary btn-lg">View details</button></td>
+        </tr>
+        <tr>
+          <td>John Smith</td>
+          <td>12/12/2020</td>
+          <td>High</td>
+          <td><button class="btn btn-primary btn-lg">View details</button></td>
+        </tr>
+        <tr>
+          <td>John Smith</td>
+          <td>12/12/2020</td>
+          <td>High</td>
+          <td><button class="btn btn-primary btn-lg">View details</button></td>
+        </tr>
+        <tr>
+          <td>John Smith</td>
+          <td>12/12/2020</td>
+          <td>High</td>
+          <td><button class="btn btn-primary btn-lg">View details</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 
-              
-
-            </div>
-          </div>
-        </div>
-      </section> 
-    
-      <section id="services" class="py-5 bg-secondary text-white">
-        <div class="container">
-          <div class="row text-center">
-            <div class="col-md-12">
-              <i class="fas fa-comment fa-4x mr-4"></i>
-              <hr>
-              <h2>Risk management tool</h2>
-            <br>
-              <h4>Request the exclusion for a certain period either due to a business need or interferences between applications.</h4>
-            </div>
-
-            <!-- <div class="col-md-4">
-              <i class="fas fa-home fa-4x mr-4"></i>
-              <hr>
-              <h3>Propery Management</h3>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt, debitis nam! Repudiandae, provident iste consequatur
-                hic dignissimos ratione ea quae.</p>
-            </div>
-            <div class="col-md-4">
-              <i class="fas fa-suitcase fa-4x mr-4"></i>
-              <hr>
-              <h3>Renting & Selling</h3>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt, debitis nam! Repudiandae, provident iste consequatur
-                hic dignissimos ratione ea quae.</p>
-            </div> -->
-
-          </div>
-        </div>
-      </section>
-
-<!-- SERGIO -->
-<!-- <div class="container">
-    <h1>hola sergiozz te quiero</h1>
-    <p>hola</p>
-    <form action="submit">
-        <input placeholder = "identificación" type="text" name="" id="">ID
-        <input placeholder = "contraseña" type="text" name="" id="">Password
-        <button type="submit">Entrar</button>
-    </form>
-</div> -->
+<section id="services" class="py-5 bg-secondary text-white">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-12">
+        <i class="fas fa-comment fa-4x mr-4"></i>
+        <hr>
+        <h2>Risk management tool</h2>
+        <br>
+        <h4>Request the exclusion for a certain period either due to a business need or interferences between
+          applications.</h4>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock %}
