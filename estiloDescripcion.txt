@@ -4,3 +4,8 @@ mb-4
 	margin bottom 4
 py-4
 	padding top and bottom 4
+
+Eliminar un paquete del virtual environment
+	pip uninstall mysqlclient
+https://linuxscriptshub.com/uninstall-completely-remove-mysql-ubuntu-16-04/
+	desinstalar mysql
