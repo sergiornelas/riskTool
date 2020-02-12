@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -35,6 +34,12 @@ INSTALLED_APPS = [
     #
     'clients.apps.ClientsConfig',
     'approvers.apps.ApproversConfig',
+    #
+    #
+    'patches.apps.PatchesConfig',
+    'packages.apps.PackagesConfig',
+    'servers.apps.ServersConfig',
+    'exception.apps.ExceptionConfig',
     #
     'django.contrib.admin',
     'django.contrib.auth',
