@@ -1,0 +1,7 @@
+#showcase_patchList {
+    /* background: url(../img/showcase.jpg) no-repeat top center fixed/cover; */
+    position: relative;
+    min-height: 650px;
+    color: black;
+    padding-top: 6rem;
+}

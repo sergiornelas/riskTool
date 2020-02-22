@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Showcase -->
+<!-- <section id="showcase_patchList"> -->
+<div class="p-5 container text-center">
+    <h1 style="margin-bottom:2rem" class="display-4">
+        Approval detail
+    </h1>
+
+    <div style="background-color:#334275; color:blanchedalmond; font-size:1.5rem;" class="py-6 container">
+        <div class="row">
+            <div class="border border-primary col">
+                $Requester name
+            </div>
+            <div class="border border-primary col">
+                $Request date
+            </div>
+            <div class="border border-primary col">
+                $Criticality
+            </div>
+        </div>
+    </div>
+
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th scope="col">Server or package</th>
+                <th scope="col">Date</th>
+                <th scope="col">Patch date</th>
+                <th scope="col">Version</th>
+                <th scope="col">Update version</th>
+                <th scope="col">Hour</th>
+                <th scope="col">Criticality</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>RHEL</td>
+                <td>12/12/2020</td>
+                <td>24/12/2020</td>
+                <td>2.0</td>
+                <td>2.0.2</td>
+                <td>12:00</td>
+                <td>High</td>
+            </tr>
+        </tbody>
+    </table>
+    <div>
+        <br>
+        <h4>Justification</h4>
+        <textarea class="form-control border border-primary" rows="7"
+            placeholder="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."></textarea>
+    </div>
+
+    <div style="margin-top:3rem;">
+        <h4>Approve exception</h4>
+        <button class="m-4 btn btn-primary btn-lg">Yes</button>
+        <button class="m-4 btn btn-primary btn-lg">No</button>
+        <button class="m-4 btn btn-primary btn-lg">Send message to requester</button>
+    </div>
+
+    <hr style="margin: 1rem;">
+    <div>
+        <br>
+        <h4>Approvers</h4>
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Date of receipt</th>
+                    <th scope="col">Authorized</th>
+                    <th scope="col">Justification</th>
+                    <th scope="col">Send notification (each 2 days)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>John Smith</td>
+                    <td>12/12/2020</td>
+                    <td>Undefined</td>
+                    <td><button class="btn btn-primary">Read</button></td>
+                    <td><button class="btn btn-primary">Send reminder</button></td>
+                </tr>
+                <tr>
+                    <td>John Smith</td>
+                    <td>12/12/2020</td>
+                    <td>Undefined</td>
+                    <td><button class="btn btn-primary">Read</button></td>
+                    <td><button class="btn btn-primary">Send reminder</button></td>
+                </tr>
+                <tr>
+                    <td>John Smith</td>
+                    <td>12/12/2020</td>
+                    <td>Undefined</td>
+                    <td><button class="btn btn-primary">Read</button></td>
+                    <td><button class="btn btn-primary">Send reminder</button></td>
+                </tr>
+                <tr>
+                    <td>John Smith</td>
+                    <td>12/12/2020</td>
+                    <td>Undefined</td>
+                    <td><button class="btn btn-primary">Read</button></td>
+                    <td><button class="btn btn-primary">Send reminder</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top:3rem;">
+        <button class="mx-4 btn btn-primary btn-lg">Send message to admin</button>
+
+    </div>
+</div>
+
+<section id="services" class="py-5 bg-secondary text-white">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-12">
+                <i class="fas fa-comment fa-4x mr-4"></i>
+                <hr>
+                <h2>Risk management tool</h2>
+                <br>
+                <h4>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Recusandae quas, asperiores eveniet vel
+                    nostrum magnam
+                    voluptatum tempore! Consectetur, id commodi!</h4>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -123,7 +123,7 @@
     -webkit-transform: rotate(360deg);
             transform: rotate(360deg); } }
 
-.fa-rotate-90 {
+/* .fa-rotate-90 {
   -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";
   -webkit-transform: rotate(90deg);
           transform: rotate(90deg); }
@@ -151,7 +151,7 @@
 .fa-flip-horizontal.fa-flip-vertical {
   -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)";
   -webkit-transform: scale(-1, -1);
-          transform: scale(-1, -1); }
+          transform: scale(-1, -1); } */
 
 :root .fa-rotate-90,
 :root .fa-rotate-180,
