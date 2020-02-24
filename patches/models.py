@@ -1,17 +1,18 @@
 from django.db import models
-from servers.models import server
-from packages.models import package
-from exception.models import exceptionTable
+from datetime import datetime
 
-class patch_status(models.Model):
-    #id se genera solo
-    name = models.CharField(max_length=45)
-    
 class patch(models.Model):
-    #id se genera solo
-    dou_supported = models.CharField(max_length=30)
-    # id = models.ForeignKey(server, on_delete=models.DO_NOTHING)
-    # id = models.ForeignKey(package, on_delete=models.DO_NOTHING)
-    # id = models.ForeignKey(patch_status, on_delete=models.DO_NOTHING)
-    # id = models.ForeignKey(exceptionTable, on_delete=models.DO_NOTHING)
-    is_supported = models.IntegerField()
+    server_package = models.CharField(max_length=30)
+    time = models.DateTimeField(default=datetime.now, blank=False)
+    criticality = models.CharField(max_length=30)
+    def __str__(self):
+	    return self.server_package
+
+class exclude_patch(models.Model):
+    title = models.CharField(max_length=30)
+    justification = models.TextField(blank=False)
+    excludeDate = models.DateTimeField(default=datetime.now, blank=False)
+    #foraneas del modelo de arriba:
+    #server_package = models.ForeignKey(patch, on_delete=models.DO_NOTHING)
+    def __str__(self):
+	    return self.title
