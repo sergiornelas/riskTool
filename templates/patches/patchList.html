@@ -26,11 +26,13 @@
           {% if patches %}
             {% for parche in patches %}
               <tr>
-                <td>RHEL</td>
-                <td>12/12/2020</td>
-                <td>12:00</td>
-                <td>High</td>
-                <td>John Smith</td>
+                <td>{{ parche.server_package }}</td>
+                <td>{{ parche.time }}</td>
+                <!-- Hay que agregar la hora -->
+                <td>"Hour"</td>
+                <td>{{ parche.criticality }}</td>
+                <!-- Hay que agregar el nombre de los probadores -->
+                <td>"Approver"</td>
                 <td><button class="btn btn-primary btn-lg">Exclude patch</button></td>
               </tr>
             {% endfor %}
