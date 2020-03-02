@@ -13,9 +13,13 @@
           vel nostrum magnam
           voluptatum tempore! Consectetur, id commodi!</p>
         <div class="search">
-
-          <!--busca credentials en la base de datos  -->
-          <form action="search.html">
+        <!-- Alerts -->
+        {% include 'partials/_alerts.html' %}
+        <!--busca credentials en la base de datos  -->
+          <!-- <form action="search.html" method="POST"> -->
+          <form action="{% url 'index' %}" method="POST">
+            {% csrf_token %}  
+          
             <!-- Form Row 1 -->
             <div class="form-row">
               <div class="col-md-6 mb-3">

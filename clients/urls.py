@@ -1,12 +1,17 @@
 from django.urls import path
 from . import views
 
-urlpatterns = [
-   	#first parameter: empty path means home directory like /
+urlpatterns = [     
+    path('logout', views.logout, name='logout'),
+    
+    #messages
+    path('login', views.login, name='login'),
+        
+    #path('<int:listing_id>', views.listing, name='listing'),
+
+    path('', views.test, name='test'),
+
+    #first parameter: empty path means home directory like /
     #second parameter: method we want to connect in the view file
     #third parameter: name to easily access this path
-       
-    path('logout', views.logout, name='logout'),
-
-    #path('<int:listing_id>', views.listing, name='listing'),
 ]

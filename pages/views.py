@@ -4,3 +4,9 @@ from django.http import HttpResponse
 
 def index(request):
     return render(request, 'pages/index.html')
+
+#def test(request):
+    #return render(request, 'pages/test.html')
+
+#def test(request):
+#    return render(request, './base.html')
