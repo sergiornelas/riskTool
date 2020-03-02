@@ -7,6 +7,7 @@ from django.contrib import messages
 #messages
 def login(request):
 	if request.method == 'POST':
+		# Login User
 		return
 	else:
 		return render(request, 'pages/index.html')
