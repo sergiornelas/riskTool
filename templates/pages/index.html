@@ -2,6 +2,7 @@
 
 {% block content %}
 <!-- Showcase -->
+<!-- ESTE ES EL BACK -->
 <section id="showcase">
   <div class="container text-center">
     <div class="home-search p-5">
@@ -13,31 +14,27 @@
           vel nostrum magnam
           voluptatum tempore! Consectetur, id commodi!</p>
         <div class="search">
-        <!-- Alerts -->
-        {% include 'partials/_alerts.html' %}
-        <!--busca credentials en la base de datos  -->
-          <!-- <form action="search.html" method="POST"> -->
-          <form action="{% url 'index' %}" method="POST">
-            {% csrf_token %}  
-          
-            <!-- Form Row 1 -->
+          <!-- Alerts -->
+          {% include 'partials/_alerts.html' %}
+          <!-- POST REQUEST -->
+          <br><br>
+          <form action="{% url 'login' %}" method="POST">
+            {% csrf_token %}
+            <!-- POST REQUEST -->
             <div class="form-row">
               <div class="col-md-6 mb-3">
-                <label class="sr-only">ID</label>
-                <input type="text" name="ID" class="form-control" placeholder="Enter identification">
+                <label class="sr-only" for="username">Username</label>
+                <input type="text" name="username" class="form-control" placeholder="Enter identification" required>
               </div>
-
               <div class="col-md-6 mb-3">
-                <label class="sr-only">Password</label>
-                <input type="text" name="password" class="form-control" placeholder="Enter password">
+                <label class="sr-only" for="password2">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Enter password" required>
               </div>
             </div>
-
-            <button class="btn btn-secondary btn-block mt-4" type="submit">Submit</button>
+            <input type="submit" value="Login" class="btn btn-secondary btn-block">
           </form>
         </div>
       </div>
-      
     </div>
   </div>
 </section>
