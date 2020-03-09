@@ -13,9 +13,11 @@ urlpatterns = [
     path('approvallist/', include('approvers.urls')),
 
     path('admin/', admin.site.urls),
+    # path('accounts/', include('clients.urls')),
+    path('accounts/', include('clients.urls')),
     
     #testing
-    path('test/', include('clients.urls')),
+    #path('test/', include('clients.urls')),
     
     #new added (estilo al admin)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

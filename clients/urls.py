@@ -9,7 +9,9 @@ urlpatterns = [
         
     #path('<int:listing_id>', views.listing, name='listing'),
 
-    path('', views.test, name='test'),
+    #path('', views.test, name='test'),
+
+    path('dashboard', views.dashboard, name='dashboard'),
 
     #first parameter: empty path means home directory like /
     #second parameter: method we want to connect in the view file
