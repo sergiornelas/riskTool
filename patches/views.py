@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 
 #show data frontend
 #BOOOM!!, agarré el modelo de la aplicación de patches.
@@ -9,7 +8,7 @@ from .models import patch
 # Create your views here.
 #show data from models.
 def index(request):
-
+	
 	patches = patch.objects.all() #agarramos todos los objetos (elementos de bases de datos)
 				     #los almacenamos en la variable listings
 	context = {
@@ -17,6 +16,7 @@ def index(request):
     }
 
 	return render(request, 'patches/patchList.html', context)
+	#return render(request, 'clients/dashboard.html', context)
 
 def exclude(request):
 	return render(request, 'patches/excludePatch.html')

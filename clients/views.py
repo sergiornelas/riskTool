@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 
+#from django.shortcuts import get_object_or_404
+
 #message alerts
 from django.contrib import messages
 
@@ -9,7 +11,16 @@ from django.contrib.auth.models import User
 #user registration, login after register
 from django.contrib import auth
 
+#from patches.models import patch
+
 def login(request):
+	
+	# patches = patch.objects.all() #agarramos todos los objetos (elementos de bases de datos)
+	# 			     #los almacenamos en la variable listings
+	# context = {
+    # 	'patches': patches #almacenamos los valores de la bd a un diccionario.
+    # }
+
 	if request.method == 'POST':
 		username = request.POST['username']
 		password = request.POST['password']
@@ -19,7 +30,6 @@ def login(request):
 		if user is not None:
 			auth.login(request, user)
 			messages.success(request, 'You are now logged in')
-            #return redirect('dashboard')
 			return redirect('dashboard')
 		else:
 			messages.error(request, 'Invalid credentials')
@@ -28,10 +38,6 @@ def login(request):
 			return redirect('index')
 	else:
 		return render(request, 'pages/index.html')
-
-#función que redirige a una pagina, no la renderea
-#def logout(request):
-#    return redirect('index')
 
 #log out & navbar auth links
 def logout(request):

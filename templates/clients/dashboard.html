@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 
+<!-- comentar el jinja -->
+{# {% load humanize %} #}
+
 {% block content %}
 
 <section id="showcase-inner" class="py-5 text-white">
@@ -33,12 +36,15 @@
         <div class="row">
             <div class="col-md-12">
                 <h2>Welcome John</h2>
-                <p>Here are the property listings that you have inquired about</p>
+                <p>Here are patches that are coming</p>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Property</th>
+                            <th scope="col">Server or package</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Hour</th>
+                            <th scope="col">Criticality</th>
+                            <th scope="col">Approver</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -50,20 +56,30 @@
                                 <a class="btn btn-light" href="#">View Listing</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td>43</td>
-                            <td>22 Westbrook rd</td>
-                            <td>
-                                <a class="btn btn-light" href="#">View Listing</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>31</td>
-                            <td>12 Samson Ave</td>
-                            <td>
-                                <a class="btn btn-light" href="#">View Listing</a>
-                            </td>
-                        </tr>
+
+                        {# {% if patches %}#}
+                            {#{% for parche in patches %}#}
+
+                                <!-- <tr>
+                                    <td>{{ parche.server_package }}</td>
+                                    <td>{{ parche.time }}</td> -->
+                                    <!-- Hay que agregar la hora -->
+                                    <!-- <td>"Hour"</td>
+                                    <td>{{ parche.criticality }}</td> -->
+                                    <!-- Hay que agregar el nombre de los probadores -->
+                                    <!-- <td>"Approver"</td>
+                                    <td><button class="btn btn-primary btn-lg">Exclude patch</button></td>
+                                </tr> -->
+                            
+                            {#{% endfor %}#}
+                            {#{% else %}#}
+                                
+                                <!-- <div class="col-md-12">
+                                    <p>No patches Available</p>
+                                </div> -->
+
+                        {#{% endif %} #}
+
                     </tbody>
                 </table>
             </div>
