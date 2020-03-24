@@ -35,7 +35,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h2>Welcome John</h2>
+                <h2>Welcome {{ user.username }}</h2>
+                {% if patches %}
                 <p>Here are patches that are coming</p>
                 <table class="table">
                     <thead>
@@ -49,47 +50,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>22</td>
-                            <td>45 Drivewood Circle</td>
-                            <td>
-                                <a class="btn btn-light" href="#">View Listing</a>
-                            </td>
-                        </tr>
-                        <!-- {% for contact in contacts %}
-                        <tr>
-                          <td>{{ contact.id }}</td>
-                          <td>{{ contact.listing}}</td>
-                          <td>
-                            <a class="btn btn-light" href="{% url 'listing' contact.listing_id %}">View Listing</a>
-                          </td>
-                        </tr>
-                      {% endfor %} -->
-                        {# {% if patches %}#}
-                            {#{% for parche in patches %}#}
-
-                                <!-- <tr>
-                                    <td>{{ parche.server_package }}</td>
-                                    <td>{{ parche.time }}</td> -->
-                                    <!-- Hay que agregar la hora -->
-                                    <!-- <td>"Hour"</td>
-                                    <td>{{ parche.criticality }}</td> -->
-                                    <!-- Hay que agregar el nombre de los probadores -->
-                                    <!-- <td>"Approver"</td>
-                                    <td><button class="btn btn-primary btn-lg">Exclude patch</button></td>
-                                </tr> -->
-                            
-                            {#{% endfor %}#}
-                            {#{% else %}#}
-                                
-                                <!-- <div class="col-md-12">
-                                    <p>No patches Available</p>
-                                </div> -->
-
-                        {#{% endif %} #}
-
+                        {% for patch in patches %}
+                            <tr>
+                                <td>{{ patch.severity }}</td>
+                                <td>{{ patch.criticality}}</td>
+                                <td>
+                                    <a class="btn btn-light">View Listing</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
+                {% else %}
+                    <p>You have not patches</p>
+                {% endif %}
             </div>
         </div>
     </div>

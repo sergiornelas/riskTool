@@ -11,7 +11,9 @@ from django.contrib.auth.models import User
 #user registration, login after register
 from django.contrib import auth
 
-#from patches.models import patch
+#*
+from patches.models import patch
+#*
 
 def login(request):
 	
@@ -47,4 +49,12 @@ def logout(request):
         return redirect('index')
 
 def dashboard(request):
-	return render(request, 'clients/dashboard.html')
+	#*
+	#client_patches = patch.objects.order_by('-contact_date').filter(user_id=request.user.id)
+	#client_patches = patch.objects.filter(user_id=request.user.id)
+	client_patches = patch.objects.filter(user=request.user.id)
+	context = {
+		'patches': client_patches
+	}
+	#*
+	return render(request, 'clients/dashboard.html', context)
