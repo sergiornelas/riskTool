@@ -45,17 +45,20 @@
                             <th scope="col">Date</th>
                             <th scope="col">Hour</th>
                             <th scope="col">Criticality</th>
-                            <th scope="col">Approver</th>
+                            <!-- <th scope="col">Approver</th> -->
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for patch in patches %}
                             <tr>
-                                <td>{{ patch.severity }}</td>
+                                <td>{{ patch.server_package }}</td>
+                                <td>{{ patch.time }}</td>
                                 <td>{{ patch.criticality}}</td>
+                                <td>{{ patch.severity }}</td>                               
                                 <td>
-                                    <a class="btn btn-light">View Listing</a>
+                                    <!-- <a class="btn btn-light">Exclude patch</a> -->
+                                    <button class="btn btn-primary btn-block " data-toggle="modal" data-target="#inquiryModal">Exclude patch</button>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -68,4 +71,21 @@
         </div>
     </div>
 </section>
+
+  <!-- Inquiry Modal -->
+  <div class="modal fade" id="inquiryModal" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="inquiryModalLabel">Make An Inquiry</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

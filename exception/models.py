@@ -1,4 +1,8 @@
 from django.db import models
+from datetime import datetime
+#*
+from django.conf import settings
+#*
 
 #class exception_status(models.Model):
     ##id se genera solo
@@ -9,3 +13,12 @@ from django.db import models
     #approval_name = models.CharField(max_length=45)
     #expiration = models.CharField(max_length=45)
     ## id = models.ForeignKey(exception_status, on_delete=models.DO_NOTHING)
+
+# class exclude_patch(models.Model):
+#     title = models.CharField(max_length=30)
+#     justification = models.TextField(blank=False)
+#     excludeDate = models.DateTimeField(default=datetime.now, blank=False)
+#     #foraneas del modelo de arriba:
+#     #server_package = models.ForeignKey(patch, on_delete=models.DO_NOTHING)
+#     def __str__(self):
+# 	    return self.title
