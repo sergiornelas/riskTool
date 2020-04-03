@@ -35,7 +35,7 @@ def login(request):
 			return redirect('dashboard')
 		else:
 			messages.error(request, 'Invalid credentials')
-			print ("no se conecto compa")
+			print ("Credenciales erroneas")
 			#return redirect('login')
 			return redirect('index')
 	else:

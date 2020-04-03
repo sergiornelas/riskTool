@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'patches.apps.PatchesConfig',
     'packages.apps.PackagesConfig',
     'servers.apps.ServersConfig',
-    #'exception.apps.ExceptionConfig',
+    'exceptions.apps.ExceptionsConfig',
     #
     'django.contrib.admin',
     'django.contrib.auth',
