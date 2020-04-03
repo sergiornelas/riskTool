@@ -17,6 +17,3 @@ def index(request):
 
 	return render(request, 'patches/patchList.html', context)
 	#return render(request, 'clients/dashboard.html', context)
-
-def exclude(request):
-	return render(request, 'patches/excludePatch.html')

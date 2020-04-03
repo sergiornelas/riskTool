@@ -8,5 +8,5 @@ urlpatterns = [
        
     #path('<int:patches_id>', views.index, name='patchlizt'),
     path('', views.index, name='patchlizt'),
-    path('exclude', views.exclude, name='ezclude'),
+    # path('exclude', views.exclude, name='ezclude'),
 ]
