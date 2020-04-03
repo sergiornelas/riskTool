@@ -9,12 +9,18 @@ from django.conf.urls.static import static
 urlpatterns = [
     #root paths
     path('', include('pages.urls')), #linking the urls.py of the pages app. #'' = homepage
-    path('patchlist/', include('patches.urls')),
+    
+    #DASHBOARD PROTOTIPO
+    #path('patchlist/', include('patches.urls')),
+
     path('approvallist/', include('approvers.urls')),
 
     path('admin/', admin.site.urls),
-    # path('accounts/', include('clients.urls')),
+    
     path('accounts/', include('clients.urls')),
+
+    #no es obligatorio que si un usuario escriba localhost://8000/exceptions.html
+    path('exceptions', include('exceptions.urls'))
        
     #new added (estilo al admin)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

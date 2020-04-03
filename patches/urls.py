@@ -7,6 +7,7 @@ urlpatterns = [
     #third parameter: name to easily access this path
        
     #path('<int:patches_id>', views.index, name='patchlizt'),
-    path('', views.index, name='patchlizt'),
-    # path('exclude', views.exclude, name='ezclude'),
+    
+    #este es el dashboard prototipo (patchList.html)
+    #path('', views.index, name='patchlizt'),
 ]
