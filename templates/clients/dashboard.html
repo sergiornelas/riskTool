@@ -33,6 +33,7 @@
 
 <section id="dashboard" class="py-4">
     <div class="container">
+        {% include 'partials/_alerts.html' %}
         <div class="row">
             <div class="col-md-12">
                 <h2>Welcome {{ user.username }}</h2>
@@ -43,9 +44,7 @@
                         <tr>
                             <th scope="col">Server or package</th>
                             <th scope="col">Date</th>
-                            <th scope="col">Hour</th>
                             <th scope="col">Criticality</th>
-                            <!-- <th scope="col">Approver</th> -->
                             <th></th>
                         </tr>
                     </thead>
@@ -57,7 +56,6 @@
                                 <td>{{ patch.criticality}}</td>
                                 <td>{{ patch.severity }}</td>                               
                                 <td>
-                                    <!-- <a class="btn btn-light">Exclude patch</a> -->
                                     <button class="btn btn-primary btn-block " data-toggle="modal" data-target="#inquiryModal">Exclude patch</button>
                                 </td>
                             </tr>
@@ -83,9 +81,8 @@
           </button>
         </div>
         <div class="modal-body">
-            <!-- CREO QUE ESE URL 'EXCLUDE' SE REFIERE A LA FUNCIÓN DE EXCEPTIONS/VIEWS.PY -->
+            <!-- 'EXCLUDE' SE REFIERE A LA FUNCIÓN DE EXCEPTIONS/VIEWS.PY -->
             <form action="{% url 'exclude' %}" method="POST">
-            <!-- <form method="POST"> -->
                 {% csrf_token %}
                 <!-- Aunque de todas formas esta autenticado -->
                 {% if user.is_authenticated %}
@@ -99,18 +96,12 @@
                 </div>
                 <div class="form-group">
                     <label for="justification" class="col-form-label">Justification:</label>
-                    <input type="text" name="justification" class="form-control" required>
+                    <textarea name="justification" class="form-control" required></textarea>
                 </div>
                 <div class="form-group">
                     <label for="excludeDate" class="col-form-label">Exclude date:</label>
                     <input type="datetime" name="excludeDate" class="form-control" required>
                 </div>
-                <!-- Arreglar lo del mensaje -->
-                <div class="form-group">
-                    <label for="message" class="col-form-label">Message:</label>
-                    <textarea name="message" class="form-control"></textarea>
-                </div>
-
                 <hr>
                 <input type="submit" value="Send" class="btn btn-block btn-secondary">
             </form>

@@ -19,15 +19,13 @@ def exclude(request):
         exclude = exclude_patch(title=title, justification=justification, excludeDate=excludeDate)
 
         exclude.save()
-        messages.success(request, "Your request has been submitted, a realtor will get back to you soon")
-        #return redirect('/listings/'+listing_id)
 
+        #para redireccionar al dashboard consultando los patches.
         client_patches = patch.objects.filter(user=request.user.id)
         context = {
             'patches': client_patches
         }
 
-        return render(request, 'clients/dashboard.html', context)
+        messages.success(request, "Your request has been submitted, an approver will get back to you soon")
 
-#def exclude(request):
-#	return render(request, 'patches/excludePatch.html')
+        return render(request, 'clients/dashboard.html', context)

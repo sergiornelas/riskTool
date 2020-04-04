@@ -17,12 +17,6 @@ from patches.models import patch
 
 def login(request):
 	
-	# patches = patch.objects.all() #agarramos todos los objetos (elementos de bases de datos)
-	# 			     #los almacenamos en la variable listings
-	# context = {
-    # 	'patches': patches #almacenamos los valores de la bd a un diccionario.
-    # }
-
 	if request.method == 'POST':
 		username = request.POST['username']
 		password = request.POST['password']
@@ -49,9 +43,6 @@ def logout(request):
         return redirect('index')
 
 def dashboard(request):
-	#*
-	#client_patches = patch.objects.order_by('-contact_date').filter(user_id=request.user.id)
-	#client_patches = patch.objects.filter(user_id=request.user.id)
 	client_patches = patch.objects.filter(user=request.user.id)
 	context = {
 		'patches': client_patches
