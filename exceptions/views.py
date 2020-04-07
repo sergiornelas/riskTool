@@ -8,16 +8,23 @@ from .models import exclude_patch
 from patches.models import patch
 
 def exclude(request):
+    #*
+    # userID = exclude_patch.objects.all()
+    # patchFrom = exclude_patch.objects.all()
+    #*
     if request.method == 'POST':
         #listing_id = request.POST['listing_id']
         #listing = request.POST['listing']
+        
         title = request.POST['title']
         justification = request.POST['justification']
         excludeDate = request.POST['excludeDate']
         #user_id = request.POST['user_id']
 
-        exclude = exclude_patch(title=title, justification=justification, excludeDate=excludeDate)
+        exclude = exclude_patch(
+        title=title, justification=justification, excludeDate=excludeDate)
 
+        #funcion de base de datos
         exclude.save()
 
         #para redireccionar al dashboard consultando los patches.

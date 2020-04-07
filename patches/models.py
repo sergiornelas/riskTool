@@ -8,6 +8,7 @@ class patch(models.Model):
     #* Estamos tomando el nombre del dueño del patch.
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE, null=True)
+
     server_package = models.CharField(max_length=30)
     time = models.DateTimeField(default=datetime.now, blank=False)
     criticality = models.CharField(max_length=30)
@@ -17,7 +18,7 @@ class patch(models.Model):
 
 #*NUEVAS NOTAS:
 
-#on_delete=models.CASCADE 
+# on_delete=models.CASCADE 
 # When the referenced object is deleted, also delete the objects 
 # that have references to it .
 
