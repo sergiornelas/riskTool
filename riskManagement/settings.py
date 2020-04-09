@@ -36,10 +36,11 @@ INSTALLED_APPS = [
     'approvers.apps.ApproversConfig',
     #
     #
+    
     'patches.apps.PatchesConfig',
     'packages.apps.PackagesConfig',
     'servers.apps.ServersConfig',
-    'exceptions.apps.ExceptionsConfig',
+    'exception.apps.ExceptionConfig',
     #
     'django.contrib.admin',
     'django.contrib.auth',

@@ -20,7 +20,7 @@ urlpatterns = [
     path('accounts/', include('clients.urls')),
 
     #no es obligatorio que si un usuario escriba localhost://8000/exceptions.html
-    path('exceptions', include('exceptions.urls'))
+    path('exception', include('exception.urls'))
        
     #new added (estilo al admin)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -85,14 +85,23 @@
             <form action="{% url 'exclude' %}" method="POST">
                 {% csrf_token %}
                 <!-- Aunque de todas formas esta autenticado -->
-                {% if user.is_authenticated %}
-                    <input type="hidden" name="user_id" value="{{ client.id }}">
-                {% else %}
-                    <input type="hidden" name="user_id" value="0">
-                {% endif %}
+                <!-- {% if user.is_authenticated %} -->
+                    <!-- * -->
+                    <!-- <input type="hidden" name="user_id" value="{{ user.id }}"> -->
+                    <!-- * -->
+                <!-- {% else %} -->
+                    <!-- En caso excluyan un parche sin estar logeados (nunca ocurrirá) -->
+                    <!-- <input type="hidden" name="user_id" value="0"> -->
+                <!-- {% endif %} -->
+                
+                <!-- <input type="hidden" name="patch_id" value="{{ patch.criticality }}"> -->
+
+                <input type="hidden" name="patchFrom" value="{{ patch.user }}">
+                
                 <div class="form-group">
                     <label for="title" class="col-form-label">Title:</label>
                     <input type="text" name="title" class="form-control" required>
+                    
                 </div>
                 <div class="form-group">
                     <label for="justification" class="col-form-label">Justification:</label>
