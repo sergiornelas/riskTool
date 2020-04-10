@@ -25,12 +25,9 @@ urlpatterns = [
     #new added (estilo al admin)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-
-
-
-#dentro de views.py de cualquier aplicación, si quieres hacer una función
-#para crear un url, y el archivo html se encuentra dentro de la carpeta
-#templates pero fuera de una carpeta dentro de templates, entonces la puedes
-#referir de esta manera:
-#def test(request):
+# dentro de views.py de cualquier aplicación, si quieres hacer una función
+# para crear un url, y el archivo html se encuentra dentro de la carpeta
+# templates pero fuera de una carpeta dentro de templates, entonces la puedes
+# referir de esta manera:
+# def test(request):
 #    return render(request, './base.html')

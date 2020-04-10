@@ -11,16 +11,16 @@ from django.contrib.auth.models import User
 def exclude(request):
     
     if request.method == 'POST':
-        # patch_id = request.POST['patch_id']
-        patchFrom = request.user
-        
-        #patch = request.POST['patch'] #patch name?
-    
+        client = request.user
+        # patch = request.patch.id
+        # patch = request.POST['patch']
+
+        #interesante:
+        # patch.objects.get(patch = request.POST['patch.id'])
+
         title = request.POST['title']
         justification = request.POST['justification']
-        excludeDate = request.POST['excludeDate']
-
-        #user_id = request.POST['user_id']
+        exclude_date = request.POST['exclude_date']
         
         #Check if user has made exclusion already
         # if request.user.is_authenticated:
@@ -31,13 +31,11 @@ def exclude(request):
                 # return redirect('/approvallist')               
         
        
-        exclude = exclude_patch(patchFrom=patchFrom, title=title, justification=justification, excludeDate=excludeDate)
-        # exclude = exclude_patch(title=title, justification=justification, excludeDate=excludeDate)
-
+        # exclude = exclude_patch(client=client, patch=patch, title=title, justification=justification, exclude_date=exclude_date)
+        exclude = exclude_patch(client=client, title=title, justification=justification, exclude_date=exclude_date)
+        
         #funcion de base de datos
         exclude.save()
-
-        #PENDIENTE SI AGREGARLO O NO (7 DE ABRIL)
         
         client_patches = patch.objects.filter(user=request.user.id)
         context = {
