@@ -13,6 +13,7 @@ def exclude(request):
     if request.method == 'POST':
         client = request.user
         # patch = request.patch.id
+        # patch = request.patch
         # patch = request.POST['patch']
 
         #interesante:
