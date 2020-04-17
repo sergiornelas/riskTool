@@ -17,10 +17,15 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     
-    path('accounts/', include('clients.urls')),
+    #AQUI:
+    # path('accounts/', include('clients.urls')),
+
+    
 
     #no es obligatorio que si un usuario escriba localhost://8000/exceptions.html
-    path('exception', include('exception.urls'))
+    path('exception', include('exception.urls')),
+
+    # path('testing', include('testing.urls'))
        
     #new added (estilo al admin)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
