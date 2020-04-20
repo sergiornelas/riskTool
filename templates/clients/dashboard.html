@@ -84,6 +84,7 @@
             <!-- 'EXCLUDE' SE REFIERE A LA FUNCIÓN DE EXCEPTIONS/VIEWS.PY -->
             <form action="{% url 'exclude' %}" method="POST">
                 {% csrf_token %}
+                
                 <!-- Aunque de todas formas esta autenticado -->
                 <!-- {% if user.is_authenticated %} -->
                     <!-- * -->
@@ -93,7 +94,6 @@
                     <!-- En caso excluyan un parche sin estar logeados (nunca ocurrirá) -->
                     <!-- <input type="hidden" name="user_id" value="0"> -->
                 <!-- {% endif %} -->
-                
                 <!-- <input type="hidden" name="patch_id" value="{{ patch.criticality }}"> -->
 
                 <input type="hidden" name="client" value="{{ patch.user }}">
