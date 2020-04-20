@@ -31,6 +31,13 @@ urlpatterns = [
 
     path('dashboard', views.dashboard, name='dashboard'),
 
+    path('approvalsList', views.approvalsList, name='approvalsList'),
+
+    # path('approvalDetail', views.approvalDetail, name='approvalDetail'),
+
+    #COPIA DEL BTRE
+    path('approvalsList/<int:patch_id>', views.approvalDetail, name='approvalDetail'), #views.listing refers to the listing method.
+
     #first parameter: empty path means home directory like /
     #second parameter: method we want to connect in the view file
     #third parameter: name to easily access this path

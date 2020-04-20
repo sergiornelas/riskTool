@@ -11,3 +11,4 @@ venv
 /static
 /media
 mapa riskTool.xml
+sqlScript.sql

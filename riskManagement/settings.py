@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'packages.apps.PackagesConfig',
     'servers.apps.ServersConfig',
     'exception.apps.ExceptionConfig',
-    'testing.apps.TestingConfig',
     #
     'django.contrib.admin',
     'django.contrib.auth',

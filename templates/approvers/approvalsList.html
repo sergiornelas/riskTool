@@ -1,40 +1,84 @@
 {% extends 'base.html' %}
 
+<!-- comentar el jinja -->
+{# {% load humanize %} #}
+
 {% block content %}
-<!-- Showcase -->
-<!-- <section id="showcase_patchList"> -->
-<section>
-  <div class="p-5 container text-center">
-    <h1 class="display-4 mb-4">
-      List of approvals
-    </h1>
-    <p class="lead">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Recusandae quas, asperiores eveniet vel
-      nostrum magnam
-      voluptatum tempore! Consectetur, id commodi!</p>
-    <br>
-    <table class="table mt-4">
-      <thead>
-        <tr>
-          <th scope="col">Requester name</th>
-          <th scope="col">Request date</th>
-          <th scope="col">Time</th>
-          <th scope="col">Criticality</th>
-          <th scope="col">Server or package</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>John Smith</td>
-          <td>12/12/2020</td>
-          <td>12:00</td>
-          <td>High</td>
-          <td>RHEL</td>
-          <!-- LOS COMENTARIOS EN HTML DE IGUAL FORMA EJECUTA EL CODIGO -->
-          
-          <td><button class="btn btn-primary btn-lg">View details</button></td>
-        </tr>
-      </tbody>
-    </table>
+
+<section id="showcase-inner" class="py-5 text-white">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-12">
+        <h1 class="display-4">List of approvals</h1>
+        <p class="lead">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Recusandae quas, asperiores eveniet
+          vel nostrum magnam voluptatum tempore! Consectetur, id commodi!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Breadcrumb -->
+<section id="bc" class="mt-3">
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'index' %}">
+            <i class="fas fa-home"></i> Home</a>
+        </li>
+        <li class="breadcrumb-item active"> Dashboard</li>
+      </ol>
+    </nav>
+  </div>
+</section>
+
+<section id="dashboard" class="py-4">
+  <div class="container">
+    {% include 'partials/_alerts.html' %}
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Welcome {{ user.username }}</h2>
+        {% if patches %}
+        <p>Here are the list of pending approvals</p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Requester ID</th>
+              <th scope="col">Request date</th>
+              <th scope="col">Criticality</th>
+              <th scope="col">Server or package</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+
+            {% for patch in patches %}
+            <tr>
+              <td>{{ patch.user_id}}</td>
+              <td>{{ patch.time }}</td>
+              <td>{{ patch.criticality}}</td>
+              <td>{{ patch.server_package }}</td>
+              <td>
+                <!-- <button class="btn btn-primary btn-block " data-toggle="modal" data-target="#inquiryModal">View details</button> -->
+
+                {# <a href="{% url 'listing' listing.id %}" class="btn btn-primary btn-block">More Info</a> #}
+                
+                <a href="{% url 'approvalDetail' patch.id %}" class="btn btn-primary btn-block">More Info</a>
+
+                {# <a href="{% url 'approvalDetail' patch.id %}" class="btn btn-primary btn-block">More Info</a> #}
+
+                {# <a href="{% url 'listing' listing.id %}" class="btn btn-primary btn-block">More Info</a> #}
+              </td>
+            </tr>
+            {% endfor %}
+
+          </tbody>
+        </table>
+        {% else %}
+        <p>You have not patches</p>
+        {% endif %}
+      </div>
+    </div>
   </div>
 </section>
 

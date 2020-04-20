@@ -1,42 +1,60 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!-- Showcase -->
-<!-- <section id="showcase_patchList"> -->
+
+<!-- Breadcrumb -->
+<section id="bc" class="mt-3">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'index' %}">
+                        <i class="fas fa-home"></i> Home</a>
+                </li>
+                <li class="breadcrumb-item active"> Dashboard</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
 <div class="p-5 container text-center">
     <h1 style="margin-bottom:2rem" class="display-4">
         Approval detail
     </h1>
+    <section class="py-4">
+        {% include 'partials/_alerts.html' %}
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th scope="col">Requester ID</th>
+                    <th scope="col">Request date</th>
+                    <th scope="col">Server or package</th>
+                    <th scope="col">Criticality</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ patch.id }}</td>
+                    <td>{{ patch.time }}</td>
+                    <td>{{ patch.server_package }}</td>
+                    <td>{{ patch.criticality}}</td>
+                </tr>
+                <tr>
+                    <td>{{ exclude_patch.id }}</td>
+                    <td>{{ exclude_patch.client }}</td>
+                    <td>{{ exclude_patch.title }}</td>
+                    <td>{{ exclude_patch.exclude_date }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
 
-     <table class="table mt-4">
-        <thead>
-            <tr>
-                <th scope="col">Server or package</th>
-                <th scope="col">Date</th>
-                <th scope="col">Patch date</th>
-                <th scope="col">Version</th>
-                <th scope="col">Update version</th>
-                <th scope="col">Hour</th>
-                <th scope="col">Criticality</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>RHEL</td>
-                <td>12/12/2020</td>
-                <td>24/12/2020</td>
-                <td>2.0</td>
-                <td>2.0.2</td>
-                <td>12:00</td>
-                <td>High</td>
-            </tr>
-        </tbody>
-    </table>
     <div>
         <br>
         <h4>Justification</h4>
-        <textarea class="form-control border border-primary" rows="7"
-            placeholder="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."></textarea>
+        <!-- <textarea class="form-control border border-primary" rows="7"
+            placeholder="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."></textarea> -->
+        <textarea class="form-control border border-primary" rows="7">{{ exclude_patch.justification }}</textarea>            
     </div>
 
     <br>
