@@ -30,16 +30,12 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    #
     'pages.apps.PagesConfig',
-    #
-    'clients.apps.ClientsConfig',
     'approvers.apps.ApproversConfig',
-    #
-    #
     'patches.apps.PatchesConfig',
-    'packages.apps.PackagesConfig',
-    'servers.apps.ServersConfig',
     'exception.apps.ExceptionConfig',
+    'roles.apps.RolesConfig',
     #
     'django.contrib.admin',
     'django.contrib.auth',

@@ -4,11 +4,13 @@ from datetime import datetime
 #se utiliza para utilizar el id foraneo del usuario
 from django.conf import settings
 
-class patch(models.Model):
-    #* Estamos tomando el nombre del dueño del patch.
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE, null=True)
+#*
+#from approvers.models import Profile
+#*
 
+class patch(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE, null=True, related_name='users')
     server_package = models.CharField(max_length=30)
     time = models.DateTimeField(default=datetime.now, blank=False)
     criticality = models.CharField(max_length=30)

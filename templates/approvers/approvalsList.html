@@ -51,25 +51,26 @@
             </tr>
           </thead>
           <tbody>
-            {% for patch in patches %}
-            <tr>
-              <td>{{ patch.user_id}}</td>
-              <td>{{ patch.time }}</td>
-              <td>{{ patch.criticality}}</td>
-              <td>{{ patch.server_package }}</td>
-              <td><a href="{% url 'approvalDetail' patch.id %}" class="btn btn-primary btn-block">More Info</a></td>
-              
-              {# <td>{{ exclude_patch.user_id}}</td> #}
-              {# <td>{{ exclude_patch.time }}</td> #}
-              {# <td>{{ exclude_patch.criticality}}</td> #}
-              {# <td>{{ exclude_patch.server_package }}</td> #}
-              {# <td><a href="{% url 'approvalDetail' exclude_patch.id %}" class="btn btn-primary btn-block">More Info</a></td> #}
-            </tr>
+            {# {% for patch in patches %} #}
+            {% for exclude_patch in exceptions %}
+              <tr>
+                {# <td>{{ patch.user_id}}</td> #}
+                {# <td>{{ patch.time }}</td> #}
+                {# <td>{{ patch.criticality}}</td> #}
+                {# <td>{{ patch.server_package }}</td> #}
+                {# <td><a href="{% url 'approvalDetail' patch.id %}" class="btn btn-primary btn-block">More Info</a></td> #}
+                
+                <td>{{ exclude_patch.user_id}}</td>
+                <td>{{ exclude_patch.time }}</td>
+                <td>{{ exclude_patch.criticality}}</td>
+                <td>{{ exclude_patch.server_package }}</td>
+                <td><a href="{% url 'approvalDetail' exclude_patch.id %}" class="btn btn-primary btn-block">More Info</a></td>
+              </tr>
             {% endfor %}
           </tbody>
         </table>
         {% else %}
-        <p>You have not patches</p>
+        <p>You have not exceptions</p>
         {% endif %}
       </div>
     </div>
