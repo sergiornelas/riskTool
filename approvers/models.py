@@ -8,8 +8,9 @@ from django.conf import settings
 #La relación entre un parche y el aprobador es de muchos a muchos,
 # se necesita crear un nuevo modelo para ello.
 class patchApproverRelationship(models.Model):
-    #patch = models.ForeignKey(patch, on_delete=models.CASCADE, null=True)
-    patch = models.ManyToManyField(patch)
+    patch = models.ForeignKey(patch, on_delete=models.CASCADE, null=True)
+    #patch = models.ManyToManyField(patch)
+
     approver = models.ForeignKey(settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE, null=True, related_name='approvers')
 

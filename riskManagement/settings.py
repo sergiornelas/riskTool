@@ -45,13 +45,27 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+# MIDDLEWARE = [
+#     'django.contrib.sessions.middleware.SessionMiddleware',
+#     'django.contrib.auth.middleware.AuthenticationMiddleware',
+#     'django.contrib.messages.middleware.MessageMiddleware',
+# ]
+
+#MIDDLEWARE_CLASSES = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    #**
     'django.contrib.sessions.middleware.SessionMiddleware',
+    #**
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    #**
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    #**
+    #**
     'django.contrib.messages.middleware.MessageMiddleware',
+    #**
+
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 

@@ -9,14 +9,26 @@ from django.conf import settings
 #*
 
 class patch(models.Model):
+    #id = models.AutoField(primary_key=True, auto_created=True)
+    
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE, null=True, related_name='users')
+    
     server_package = models.CharField(max_length=30)
     time = models.DateTimeField(default=datetime.now, blank=False)
     criticality = models.CharField(max_length=30)
 
+    
+
+    #approver = models.ForeignKey(settings.AUTH_USER_MODEL,
+    #    on_delete=models.CASCADE, null=True, related_name='approvers')
+    #patchApproverRelationship
+
     def __str__(self):
-	    return self.server_package
+	    #return self.criticality
+        #return self.patch_id
+        return str(self.id)
+
 
 #*NUEVAS NOTAS:
 

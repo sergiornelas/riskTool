@@ -50,19 +50,41 @@ def logout(request):
         messages.success(request, 'You are now logged out')
         return redirect('index')
 
+
+
+
+
+
+
+
+#def dashboard(request, patch_id):
 def dashboard(request):
+    #patchInfo = get_object_or_404(patch, pk=patch_id)
     client_patches = patch.objects.filter(user=request.user.id)
     context = {
-		'patches': client_patches
+		'patches': client_patches,
+        #'patchInfo' : patchInfo
+
+        # erik
+        #'patch': client_patches
     }
     if request.user.is_authenticated:
         if request.user.profile.role == 1:
+
             return render(request, 'clients/dashboard.html', context)
         else:
             messages.error(request, 'Not allowed to enter here')
             return redirect('index')
     else:
         return render(request, 'pages/index.html')
+
+
+
+
+
+
+
+
 
 def approvalsList(request):
     #approvals = patch.objects.filter(user=request.user.id)

@@ -8,16 +8,24 @@ from patches.models import patch
 
 from django.contrib.auth.models import User
 
+#def exclude(request, patch_id): 
 def exclude(request):
-    
     if request.method == 'POST':
         client = request.user
+
+        
+        #patch_from = 666
+
+        #patch_from = id(patch)
+        #patch_from = request.patch.patch_id
+        #patch_from = request.models.patch.patch_id
+
         # patch = request.patch.id
         # patch = request.patch
         # patch = request.POST['patch']
 
         #interesante:
-        # patch.objects.get(patch = request.POST['patch.id'])
+        #patch.objects.get(patch_from = request.POST['patch_id'])
 
         title = request.POST['title']
         justification = request.POST['justification']
@@ -32,20 +40,14 @@ def exclude(request):
                 # return redirect('/approvallist')               
         
        
-        # exclude = exclude_patch(client=client, patch=patch, title=title, justification=justification, exclude_date=exclude_date)
+        #exclude = exclude_patch(client=client, patch_from=patch_from, title=title, justification=justification, exclude_date=exclude_date)
         exclude = exclude_patch(client=client, title=title, justification=justification, exclude_date=exclude_date)
         
         #funcion de base de datos
         exclude.save()
-        
-        client_patches = patch.objects.filter(user=request.user.id)
-        context = {
-            'patches': client_patches
-        }
 
         messages.success(request, "Your request has been submitted, an approver will get back to you soon")
 
-        return render(request, 'clients/dashboard.html', context)
+        return redirect('dashboard')
 
-        #The render function Combines a given template with a given context
-        #dictionary and returns an HttpResponse object with that rendered text.
+        #The render function Combines a given template with a given context dictionary and returns an HttpResponse object with that rendered text.

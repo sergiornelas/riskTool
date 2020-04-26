@@ -6,11 +6,12 @@ from django.contrib.auth.models import User
 from .models import patchApproverRelationship
 
 class approvers_patch(admin.ModelAdmin):
-    # list_display = ('id', 'patch', 'approver')
-    # list_display_links = ('id'),
+    list_display = ('id', 'patch', 'approver')
+    #list_display = ('id', 'patch')
+    list_display_links = ('id'),
 
-    list_display = ('approver'),
-    list_display_links = ('approver'),
+    # list_display = ('approver'),
+    # list_display_links = ('approver'),
     
     search_fields = ('patch'),
     list_per_page = 25

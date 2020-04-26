@@ -7,20 +7,19 @@ from django.contrib.auth.models import User
 
 #*
 from patches.models import patch
+from approvers.models import patchApproverRelationship
 #*
 
 class exclude_patch(models.Model):
+    #patch_from = models.ForeignKey(patch, to_field="id", db_column="patch_from", on_delete=models.CASCADE, null=True)
+    
 
-    #ESTE ES EL MERO MERO
-    #id = models.AutoField(primary_key=True, auto_created=True)
-    #cascade = if you delete the parent it will delete the childs
-
-    #con esto hereda el id
-    patch = models.ForeignKey(patch, on_delete=models.CASCADE, null=True)
-    # patch = models.IntegerField(null=True)
-
+    #patch_from = models.IntegerField(null=True)
+    patch_from = models.ForeignKey(patch, on_delete=models.DO_NOTHING, null=True)
+    
     client = models.ForeignKey(settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE, null=True)
+
     title = models.CharField(max_length=30)
     justification = models.TextField(blank=False)
     exclude_date = models.DateTimeField(default=datetime.now, blank=False)
