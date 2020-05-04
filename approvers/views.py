@@ -37,6 +37,7 @@ def login(request):
                 elif request.user.profile.role == 1:
                     messages.success(request, 'You are now logged in')
                     return redirect('dashboard')
+                    #return render(request, 'clients/dashboard.html')
         else:
             messages.error(request, 'Invalid credentials')
             return redirect('index')
@@ -52,36 +53,22 @@ def logout(request):
 
 
 
-
-
-
-
-
-#def dashboard(request, patch_id):
 def dashboard(request):
-    #patchInfo = get_object_or_404(patch, pk=patch_id)
     client_patches = patch.objects.filter(user=request.user.id)
-    context = {
-		'patches': client_patches,
-        #'patchInfo' : patchInfo
 
-        # erik
-        #'patch': client_patches
+
+    context = {
+		'patches': client_patches
     }
+
     if request.user.is_authenticated:
         if request.user.profile.role == 1:
-
             return render(request, 'clients/dashboard.html', context)
         else:
             messages.error(request, 'Not allowed to enter here')
             return redirect('index')
     else:
         return render(request, 'pages/index.html')
-
-
-
-
-
 
 
 

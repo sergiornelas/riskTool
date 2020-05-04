@@ -1,9 +1,22 @@
 {% extends 'base.html' %}
 
-<!-- comentar el jinja -->
-{# {% load humanize %} #}
-
 {% block content %}
+
+<script type="text/javascript">
+    
+    jQuery(document).ready(function () {
+
+        $(".clickbtn").click(function () {
+            $("#btnpress").val(this.id);
+        });
+    });
+    
+    /*
+    $(document).ready(function() {
+        alert("Hello world !! document is ready");
+    }); 
+    */
+</script>
 
 <section id="showcase-inner" class="py-5 text-white">
     <div class="container">
@@ -49,18 +62,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for patch in patches %}
+                        {% for alias in patches %}
                             <tr>
-                                <td>{{ patch.server_package }}</td>
-                                <td>{{ patch.time }}</td>
-                                <td>{{ patch.criticality}}</td>
-                                <td>{{ patch.severity }}</td>                               
+                                <td>{{ alias.server_package }}</td>
+                                <td>{{ alias.time }}</td>
+                                <td>{{ alias.criticality}}</td>
+                                <td>{{ alias.severity }}</td>
                                 <td>
-                                    <button class="btn btn-primary btn-block " data-toggle="modal" data-target="#inquiryModal">Exclude patch</button>
-
-                                    <!-- EL DE ERICK: -->
-                                    {# <button class="btn btn-primary btn-block " data-toggle="modal" data-target="#inquiryModal" name = {{ patch.id }} >Exclude patch</button> #}
-                                </td>
+                                    <button class="btn btn-primary btn-block clickbtn" id="{{ alias.id }}" data-toggle="modal" data-target="#inquiryModal"> Exclude patch </button>
+                                </td>                                
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -88,13 +98,7 @@
             <form action="{% url 'exclude' %}" method="POST">
                 {% csrf_token %}
                 
-                
-
-                <!-- Se toman estos del modelo del parche -->
-                {# <input type="hidden" name="patch_from" value="{{ patch_id }}"> #}
-
-                <!-- js -->
-                <!-- patch_from.value = name -->
+                <input id="btnpress" type="hidden" name="patch_id">
 
                 <!-- Estos se introducen del modelo de exception -->
                 <div class="form-group">

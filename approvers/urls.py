@@ -7,7 +7,7 @@ urlpatterns = [
     #messages
     path('login', views.login, name='login'),
 
-    #path('dashboard/<int:user_id>', views.dashboard, name='dashboard'),
+    #path('<int:user_id>', views.dashboard, name='dashboard'),
     
     path('dashboard', views.dashboard, name='dashboard'),
 

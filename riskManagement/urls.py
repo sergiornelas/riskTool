@@ -15,6 +15,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     path('exception', include('exception.urls')),
+
+    path('', include('patches.urls')),
        
     #new added (estilo al admin)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
