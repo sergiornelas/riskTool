@@ -1,14 +1,6 @@
 from django.db import models
 from datetime import datetime
-
-#se utiliza para utilizar el id foraneo del usuario
 from django.conf import settings
-from django.contrib.auth.models import User
-
-#*
-from patches.models import patch
-from approvers.models import patchApproverRelationship
-#*
 
 class exclude_patch(models.Model):
     #patch_from = models.ForeignKey(patch, to_field="id", db_column="patch_from", on_delete=models.CASCADE, null=True)

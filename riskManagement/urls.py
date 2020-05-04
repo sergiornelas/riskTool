@@ -16,6 +16,10 @@ urlpatterns = [
     
     path('exception', include('exception.urls')),
 
+    path('', include('roles.urls')),
+
+    path('', include('clients.urls')),
+
     path('', include('patches.urls')),
        
     #new added (estilo al admin)
