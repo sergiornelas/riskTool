@@ -3,7 +3,7 @@ from django.contrib import messages
 from patches.models import patch
 
 def dashboard(request):
-    client_patches = patch.objects.filter(user=request.user.id)
+    client_patches = patch.objects.filter(client=request.user.id)
 
     context = {
 		'patches': client_patches
