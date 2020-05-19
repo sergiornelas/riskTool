@@ -43,25 +43,28 @@
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">ID</th>
+                <!-- <th scope="col">ID</th> -->
                 <th scope="col">Title</th>
                 <th scope="col">Date</th>
                 <th scope="col">Justification</th>
-                <th scope="col">Client ID</th>
+                {# <th scope="col">Client ID</th> #}
+                <th scope="col">Customer name</th>
                 <th scope="col">Patch ID</th>
               </tr>
             </thead>
             <tbody>
               {% for alias in exceptions %}
                 <tr>
-                  <td>{{ alias.id}}</td>
+                  {# <td>{{ alias.id}}</td> #}
                   <td>{{ alias.title}}</td>
                   <td>{{ alias.exclude_date}}</td>
                   <td>{{ alias.justification}}</td>
-                  <td>{{ alias.client_id}}</td>
-                  {# <td> {{ alias.client}} </td> #}
+                  {#<td>{{ alias.client_id}}</td> #}
+                  <td> {{ alias.client}} </td>
                   <td>{{ alias.patch_id }}</td>
-                  {# <td><a href="{% url 'approvalDetail' exclude_patch.id %}" class="btn btn-primary btn-block">More Info</a></td> #}
+                  <td>
+                    <a href="{% url 'approvalDetail' alias.id %}" class="btn btn-primary btn-block">More Info</a>
+                  </td>
                 </tr>
               {% endfor %}
             </tbody>

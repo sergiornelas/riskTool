@@ -2,10 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    
     path('approvalsList', views.approvalsList, name='approvalsList'),
-
-    path('approvalsList/<int:patch_id>', views.approvalDetail, name='approvalDetail'), #views.listing refers to the listing method.
-
-    path('sergio', views.sergio, name='approvalDetail'), #views.listing refers to the listing method.
+    path('approvalsList/<int:exclude_patch_ID>', views.approvalDetail, name='approvalDetail'),
 ]

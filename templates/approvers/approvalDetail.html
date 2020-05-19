@@ -26,24 +26,39 @@
         <table class="table mt-4">
             <thead>
                 <tr>
-                    <th scope="col">Requester ID</th>
-                    <th scope="col">Request date</th>
-                    <th scope="col">Server or package</th>
-                    <th scope="col">Criticality</th>
+                    <th scope="col">Patch ID</th>
+                    <th scope="col">Patch date</th>
+                    <th scope="col">Patch server or package</th>
+                    <th scope="col">Patch criticality</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>{{ patch.id }}</td>
-                    <td>{{ patch.time }}</td>
-                    <td>{{ patch.server_package }}</td>
-                    <td>{{ patch.criticality}}</td>
+                    <td>{{ patch_exc.id }}</td>
+                    <td>{{ patch_exc.time }}</td>
+                    <td>{{ patch_exc.server_package }}</td>
+                    <td>{{ patch_exc.criticality}}</td>
                 </tr>
+            </tbody>
+        </table>
+        <table class="table mt-4">
+            <thead>
                 <tr>
-                    <td>{{ exclude_patch.id }}</td>
-                    <td>{{ exclude_patch.client }}</td>
-                    <td>{{ exclude_patch.title }}</td>
-                    <td>{{ exclude_patch.exclude_date }}</td>
+                    <th scope="col">Exception ID</th>
+                    <th scope="col">Exception client</th>
+                    <th scope="col">Exception title</th>
+                    <th scope="col">Exception date</th>
+                    <th scope="col">Exception patch ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ exception.id }}</td>
+                    <td>{{ exception.client }}</td>
+                    {#<td>{{ alias.client_id}}</td> #}
+                    <td>{{ exception.title }}</td>
+                    <td>{{ exception.exclude_date }}</td>
+                    <td>{{ exception.patch_id }}</td>
                 </tr>
             </tbody>
         </table>
