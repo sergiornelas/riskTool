@@ -66,7 +66,7 @@ def approvalDetail(request, exclude_patch_ID):
         'patch_exc':patch_exc,
         'patch_approver':patch_approver,
         'approver_detail':approver_detail,
-        'data': zip(patch_approver, approver_detail)                        
+        'data': zip(patch_approver, approver_detail)
     }
 
     if request.user.is_authenticated:

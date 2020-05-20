@@ -81,9 +81,8 @@
         <table class="table mt-4">
             <thead>
                 <tr>
-                <!-- <th scope="col">Name</th>
+                <!-- 
                     <th scope="col">Date of receipt</th>
-                    <th scope="col">Authorized</th>
                     <th scope="col">Justification</th>
                     <th scope="col">Send notification</th> -->       
                     
@@ -93,6 +92,7 @@
                     <th scope="col">Approver name</th>
                     <th scope="col">Approver last login</th>
                     <th scope="col">Approver is active</th>
+                    <th scope="col">Authorized</th>
                 </tr>
             </thead>
             <tbody>
@@ -103,9 +103,19 @@
                         {# <td>{{ i.patch_id}}</td> #}
                         <td>{{ i.approver_id}}</td>
                         {# <td>{{ j.id}}</td>#}
-                        <td>{{ j.username}}</td>
-                        <td>{{ j.last_login}}</td>
-                        <td>{{ j.is_active}}</td>
+                        <td>{{ j.username}} </td>
+                        <td>{{ j.last_login}} </td>
+                        {% if j.is_active %}
+                            <td>Yes</td>
+                        {% else %}
+                            <td>No</td>
+                        {% endif %}
+                        
+                        {% if user.id == i.approver_id %}
+                            <td><a href="" class="btn btn-primary btn-block">{{ i.state }}</a></td>
+                        {% else %}
+                            <td>{{ i.state }}</td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>
