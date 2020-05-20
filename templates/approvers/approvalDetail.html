@@ -46,9 +46,9 @@
                 <tr>
                     <th scope="col">Exception ID</th>
                     <th scope="col">Exception client</th>
-                    <th scope="col">Exception title</th>
+                    <!-- <th scope="col">Exception title</th> -->
                     <th scope="col">Exception date</th>
-                    <th scope="col">Exception patch ID</th>
+                    <!-- <th scope="col">Exception patch ID</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -56,9 +56,9 @@
                     <td>{{ exception.id }}</td>
                     <td>{{ exception.client }}</td>
                     {#<td>{{ alias.client_id}}</td> #}
-                    <td>{{ exception.title }}</td>
+                    {# <td>{{ exception.title }}</td> #}
                     <td>{{ exception.exclude_date }}</td>
-                    <td>{{ exception.patch_id }}</td>
+                    {# <td>{{ exception.patch_id }}</td> #}
                 </tr>
             </tbody>
         </table>
@@ -66,10 +66,9 @@
 
     <div>
         <br>
-        <h4>Justification</h4>
-        <!-- <textarea class="form-control border border-primary" rows="7"
-            placeholder="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."></textarea> -->
-        <textarea class="form-control border border-primary" rows="7">{{ exclude_patch.justification }}</textarea>            
+        <h2>{{ exception.title }}</h2>
+        <h4>Customer action plan</h4>
+        <textarea style="padding:15px;" readonly class="form-control border border-primary" rows="7">{{ exception.justification }}</textarea>            
     </div>
 
     <br>
@@ -82,48 +81,38 @@
         <table class="table mt-4">
             <thead>
                 <tr>
-                    <th scope="col">Name</th>
+                <!-- <th scope="col">Name</th>
                     <th scope="col">Date of receipt</th>
                     <th scope="col">Authorized</th>
                     <th scope="col">Justification</th>
-                    <th scope="col">Send notification</th>
+                    <th scope="col">Send notification</th> -->       
+                    
+                    <!-- <th scope="col">patchApprover_id</th> -->
+                    {# <th scope="col">patch_id</th> #}
+                    <th scope="col">Approver ID</th>
+                    <th scope="col">Approver name</th>
+                    <th scope="col">Approver last login</th>
+                    <th scope="col">Approver is active</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>John Smith</td>
-                    <td>12/12/2020</td>
-                    <td>Undefined</td>
-                    <td><button class="btn btn-primary">Read</button></td>
-                    <td><button class="btn btn-primary">Send reminder</button></td>
-                </tr>
-                <tr>
-                    <td>John Smith</td>
-                    <td>12/12/2020</td>
-                    <td>Undefined</td>
-                    <td><button class="btn btn-primary">Read</button></td>
-                    <td><button class="btn btn-primary">Send reminder</button></td>
-                </tr>
-                <tr>
-                    <td>John Smith</td>
-                    <td>12/12/2020</td>
-                    <td>Undefined</td>
-                    <td><button class="btn btn-primary">Read</button></td>
-                    <td><button class="btn btn-primary">Send reminder</button></td>
-                </tr>
-                <tr>
-                    <td>John Smith</td>
-                    <td>12/12/2020</td>
-                    <td>Undefined</td>
-                    <td><button class="btn btn-primary">Answer</button></td>
-                </tr>
+                {% for i, j in data %}
+                    <tr>
+                        {# <td>{{ alias.id}}</td> #}
+                        {# <td>{{ i.id}}</td> #}
+                        {# <td>{{ i.patch_id}}</td> #}
+                        <td>{{ i.approver_id}}</td>
+                        {# <td>{{ j.id}}</td>#}
+                        <td>{{ j.username}}</td>
+                        <td>{{ j.last_login}}</td>
+                        <td>{{ j.is_active}}</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
-
     <div style="margin-top:3rem;">
         <button class="mx-4 btn btn-primary btn-lg">Send message to admin</button>
-
     </div>
 </div>
 

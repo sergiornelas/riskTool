@@ -57,16 +57,21 @@ def approvalsList(request):
 def approvalDetail(request, exclude_patch_ID):
     exception = get_object_or_404(exclude_patch, pk=exclude_patch_ID)
     patch_exc = get_object_or_404(patch, pk=exception.patch_id)
+    patch_approver = patchApproverRelationship.objects.filter(patch=exception.patch_id)
+    approver_detail = User.objects.filter(pk__in=patch_approver.values_list('approver_id'))
+        #aqui lo que me trabé fue no agregar "__in"
 
     context = {
         'exception': exception,
         'patch_exc':patch_exc,
-    } 
+        'patch_approver':patch_approver,
+        'approver_detail':approver_detail,
+        'data': zip(patch_approver, approver_detail)                        
+    }
 
     if request.user.is_authenticated:
         if request.user.profile.role == 2:
             return render(request, 'approvers/approvalDetail.html', context)
-            # return redirect(request, 'approvers/approvalDetail.html', context)
         else:
             messages.error(request, 'Not allowed to enter here')
             return redirect('index')   
