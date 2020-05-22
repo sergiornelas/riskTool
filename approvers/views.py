@@ -16,7 +16,10 @@ from patches.models import patch
 from roles.models import Profile
 from exception.models import exclude_patch
 from .models import patchApproverRelationship
+from .models import authorize_Exception
 from django.http import HttpResponse
+from django import forms
+from django.forms import ModelForm
 #*
 
 def approvalsList(request):
@@ -59,21 +62,49 @@ def approvalDetail(request, exclude_patch_ID):
     patch_exc = get_object_or_404(patch, pk=exception.patch_id)
     patch_approver = patchApproverRelationship.objects.filter(patch=exception.patch_id)
     approver_detail = User.objects.filter(pk__in=patch_approver.values_list('approver_id'))
+    authExc = authorize_Exception.objects.filter(approver_id__in=patch_approver.values_list('approver_id')) #patch_approver es el mero mero
+    
+    # print("excepcion" , exception)
+    # print("patch_exc" , patch_exc)
+    # print("patch_approver" , patch_approver)
+    # print("approver_detail" , approver_detail)
+
+
+    print("authExc", authExc)
+
         #aqui lo que me trabé fue no agregar "__in"
 
     context = {
         'exception': exception,
         'patch_exc':patch_exc,
-        'patch_approver':patch_approver,
-        'approver_detail':approver_detail,
-        'data': zip(patch_approver, approver_detail)
+        'data': zip(patch_approver, approver_detail, authExc),
     }
 
     if request.user.is_authenticated:
         if request.user.profile.role == 2:
+            #return render(request, 'approvers/approvalDetail.html', context)
             return render(request, 'approvers/approvalDetail.html', context)
+
         else:
             messages.error(request, 'Not allowed to enter here')
-            return redirect('index')   
+            return redirect('index')
     else:
         return redirect('login')
+
+
+
+def authorize(request):
+#def authorize(request, user_id):
+    if request.method == 'POST':
+        #exception_id = request.POST['exception_id']
+        
+        approver = request.user
+        
+        state = request.POST['state']
+        comment = request.POST['comment']
+        
+    #validate = authorizeException(exception_id=exception_id, approver=approver, state=state, comment=comment)
+    validate = authorizeException(approver=approver, comment=comment,state=state)
+    
+    validate.save()
+    return redirect('approvalsList')
