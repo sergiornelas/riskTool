@@ -107,51 +107,68 @@
                 </tr>
             </thead>
             <tbody>
-                {% for i, j, k in data %}
-                    <tr>
-                        {# <td>{{ alias.id}}</td> #}
-                        {# <td>{{ i.id}}</td> #}
-                        {# <td>{{ i.patch_id}}</td> #}
-                        <td>{{ i.approver_id }}</td>
-                        {# <td>{{ j.id}}</td>#}
-                        <td>{{ j.username }} </td>
-                        <td>{{ j.last_login }} </td>
-                        {% if j.is_active %}
-                            <td>Yes</td>
-                        {% else %}
-                            <td>No</td>
-                        {% endif %}
-                        {#<td> {{ k.comment}} </td>#}
-                        {#<td> {{ k.approver_id}} </td>#}
-                        {#<td> {{ k.exception_id}} </td>#}
-                        
-                        
-                        {% if k.comment == "" %}
-                            <td> Pending </td>
-                        {% else %}
+                {#{% for i, j, k in authObjects %}#}
+                <!-- No existen aprovaciones creadas aún -->
+                {#{% if flag %}#}
+                {% if flag == False %}
+                    {% for i, j in authObjects %}
+                        <tr>
+                            {# <td>{{ alias.id}}</td> #}
+                            {# <td>{{ i.id}}</td> #}
+                            {# <td>{{ i.patch_id}}</td> #}
+                            <td>{{ i.approver_id }}</td>
+                            {# <td>{{ j.id}}</td>#}
+                            <td>{{ j.username }} </td>
+                            <td>{{ j.last_login }} </td>
+                            {% if j.is_active %}
+                                <td>Yes</td>
+                            {% else %}
+                                <td>No</td>
+                            {% endif %}
+                            {% if user.id == i.approver_id %}
+                                <td><button class="btn btn-primary btn-block clickbtn" data-toggle="modal" data-target="#inquiryModal"> Approve </button></td>
+                            {% else %}
+                                <td>_Pending_</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    {% for i, j, k in authObjects %}
+                        <tr>
                             {#<td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal2">Read</button></td>#}
                             <td> {{ k.comment }} </td>
-                        {% endif %}
-                        
-                        {% if user.id == i.approver_id %}
-                            {% if k.state == "Approved" %}
-                                <td><button class="btn btn-success btn-block clickbtn" data-toggle="modal" data-target="#inquiryModal"> {{ k.state }} </button></td>
-                            {% elif k.state == "Rejected" %}
-                                <td><button class="btn btn-danger btn-block clickbtn" data-toggle="modal" data-target="#inquiryModal"> {{ k.state }} </button></td>
+                            {# <td>{{ alias.id}}</td> #}
+                            {# <td>{{ i.id}}</td> #}
+                            {# <td>{{ i.patch_id}}</td> #}
+                            <td>{{ i.approver_id }}</td>
+                            {# <td>{{ j.id}}</td>#}
+                            <td>{{ j.username }} </td>
+                            <td>{{ j.last_login }} </td>
+                            {% if j.is_active %}
+                                <td>Yes</td>
                             {% else %}
-                                <td><button class="btn btn-primary btn-block clickbtn" data-toggle="modal" data-target="#inquiryModal"> {{ k.state }} </button></td>
+                                <td>No</td>
                             {% endif %}
-                        {% else %}
-                            {% if k.state == "Approved" %}
-                                <td style="color:green;">{{ k.state }}</td>
-                            {% elif k.state == "Rejected" %}
-                                <td style="color:red;">{{ k.state }}</td>
+                            {% if user.id == i.approver_id %}
+                                {% if k.state == "Approved" %}
+                                    <td><button class="btn btn-success btn-block clickbtn" data-toggle="modal" data-target="#inquiryModal"> {{ k.state }} </button></td>
+                                {% elif k.state == "Rejected" %}
+                                    <td><button class="btn btn-danger btn-block clickbtn" data-toggle="modal" data-target="#inquiryModal"> {{ k.state }} </button></td>
+                                {% else %}
+                                    <td><button class="btn btn-primary btn-block clickbtn" data-toggle="modal" data-target="#inquiryModal"> {{ k.state }} </button></td>
+                                {% endif %}
                             {% else %}
-                                <td>{{ k.state }}</td>
+                                {% if k.state == "Approved" %}
+                                    <td style="color:green;">{{ k.state }}</td>
+                                {% elif k.state == "Rejected" %}
+                                    <td style="color:red;">{{ k.state }}</td>
+                                {% else %}
+                                    <td>{{ k.state }}</td>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                    </tr>
-                {% endfor %}
+                        </tr>
+                    {% endfor %}
+                {% endif %}
             </tbody>
         </table>
     </div>

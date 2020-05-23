@@ -62,27 +62,41 @@ def approvalDetail(request, exclude_patch_ID):
     patch_exc = get_object_or_404(patch, pk=exception.patch_id)
     patch_approver = patchApproverRelationship.objects.filter(patch=exception.patch_id)
     approver_detail = User.objects.filter(pk__in=patch_approver.values_list('approver_id'))
+    #aqui lo que me trabé fue no agregar "__in"
+    #toma los valores de la tabla, por lo que tiene que tener campos.
     authExc = authorize_Exception.objects.filter(approver_id__in=patch_approver.values_list('approver_id')) #patch_approver es el mero mero
-    
+      
     # print("excepcion" , exception)
     # print("patch_exc" , patch_exc)
     # print("patch_approver" , patch_approver)
     # print("approver_detail" , approver_detail)
+    #print("authExc", authExc)
 
+    if authorize_Exception.objects.exists(): #will stop querying at the first object
+        print("Tiene contenido")
+    else:
+        print("No tiene contenido")
 
-    print("authExc", authExc)
-
-        #aqui lo que me trabé fue no agregar "__in"
+    flag = True
+    if authorize_Exception.objects.exists(): #model has content
+        authObjects = zip(patch_approver, approver_detail, authExc)
+        print (authObjects)
+    else: #model is empty
+        authObjects = zip(patch_approver, approver_detail)
+        flag = False
+        print (authObjects)
 
     context = {
         'exception': exception,
         'patch_exc':patch_exc,
-        'data': zip(patch_approver, approver_detail, authExc),
+        'authObjects':authObjects,
+        'flag':flag
     }
+
+    print(flag)
 
     if request.user.is_authenticated:
         if request.user.profile.role == 2:
-            #return render(request, 'approvers/approvalDetail.html', context)
             return render(request, 'approvers/approvalDetail.html', context)
 
         else:
@@ -103,8 +117,8 @@ def authorize(request):
         state = request.POST['state']
         comment = request.POST['comment']
         
-    #validate = authorizeException(exception_id=exception_id, approver=approver, state=state, comment=comment)
-    validate = authorizeException(approver=approver, comment=comment,state=state)
+    #validate = authorize_Exception(exception_id=exception_id, approver=approver, state=state, comment=comment)
+    validate = authorize_Exception(approver=approver, comment=comment,state=state)
     
     validate.save()
     return redirect('approvalsList')
