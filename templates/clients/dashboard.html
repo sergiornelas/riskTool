@@ -94,7 +94,7 @@
           </button>
         </div>
         <div class="modal-body">
-            <!-- 'EXCLUDE' SE REFIERE A LA FUNCIÓN DE EXCEPTIONS/VIEWS.PY -->
+            <!-- 'EXCLUDE' SE REFIERE A LA FUNCIÓN DE EXCEPTIONS/VIEWS.PY, tambien debe estar en url-->
             <form action="{% url 'exclude' %}" method="POST">
                 {% csrf_token %}
                 
@@ -113,7 +113,6 @@
                     <label for="excludeDate" class="col-form-label">Exclude date:</label>
                     <input type="datetime" name="exclude_date" class="form-control" required>
                 </div>
-
                 <hr>
                 <input type="submit" value="Send" class="btn btn-block btn-secondary">
             </form>

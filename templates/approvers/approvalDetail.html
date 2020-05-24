@@ -2,13 +2,15 @@
 {% block content %}
 
 <script type="text/javascript">
+    /*
     jQuery(document).ready(function () {
 
         $(".clickbtn").click(function () {
             //$("#btnpress").val("{{ exception.id }}");
-            $("#btnpress").val(exc);
+            $("#btnpress").val(exclude_patch_ID);
         });
     });
+    */
 </script>
 
 <!-- Breadcrumb -->
@@ -62,8 +64,7 @@
             </thead>
             <tbody>
                 <tr>
-                    {#<td class="clickbtn">{{ exception.id }}</td>#}
-                    <td id="exc">{{ exception.id }}</td>
+                    <td>{{ exception.id }}</td>
                     <td>{{ exception.client }}</td>
                     {#<td>{{ alias.client_id}}</td> #}
                     {# <td>{{ exception.title }}</td> #}
@@ -126,7 +127,7 @@
                                 <td>No</td>
                             {% endif %}
                             {% if user.id == i.approver_id %}
-                                <td><button class="btn btn-primary btn-block clickbtn" data-toggle="modal" data-target="#inquiryModal"> Approve </button></td>
+                                <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal"> Approve </button></td>
                             {% else %}
                                 <td>_Pending_</td>
                             {% endif %}
@@ -134,28 +135,35 @@
                     {% endfor %}
                 {% else %}
                     {% for i, j, k in authObjects %}
+                    <!-- i= patch_approver, j= approver_detail, k = authExc) -->
                         <tr>
                             {#<td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal2">Read</button></td>#}
-                            <td> {{ k.comment }} </td>
-                            {# <td>{{ alias.id}}</td> #}
-                            {# <td>{{ i.id}}</td> #}
-                            {# <td>{{ i.patch_id}}</td> #}
+                            <!-- <td>{{ k.id}}</td> -->
+                            
+                            {#<td>{{ k.approver_id }}</td>#}
                             <td>{{ i.approver_id }}</td>
-                            {# <td>{{ j.id}}</td>#}
-                            <td>{{ j.username }} </td>
+                            
+                            <!-- solo existe con el j  -->
+                            <td>{{ j.username }} </td> 
+                                                        
                             <td>{{ j.last_login }} </td>
+                            
                             {% if j.is_active %}
                                 <td>Yes</td>
                             {% else %}
                                 <td>No</td>
                             {% endif %}
+
+                            <!-- solo existe con el k  -->
+                            <td> {{ k.comment }} </td>
+                                                                                    
                             {% if user.id == i.approver_id %}
                                 {% if k.state == "Approved" %}
-                                    <td><button class="btn btn-success btn-block clickbtn" data-toggle="modal" data-target="#inquiryModal"> {{ k.state }} </button></td>
+                                    <td><button class="btn btn-success btn-block" data-toggle="modal" data-target="#inquiryModal"> {{ k.state }} </button></td>
                                 {% elif k.state == "Rejected" %}
-                                    <td><button class="btn btn-danger btn-block clickbtn" data-toggle="modal" data-target="#inquiryModal"> {{ k.state }} </button></td>
+                                    <td><button class="btn btn-danger btn-block" data-toggle="modal" data-target="#inquiryModal"> {{ k.state }} </button></td>
                                 {% else %}
-                                    <td><button class="btn btn-primary btn-block clickbtn" data-toggle="modal" data-target="#inquiryModal"> {{ k.state }} </button></td>
+                                    <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal"> {{ k.state }} </button></td>
                                 {% endif %}
                             {% else %}
                                 {% if k.state == "Approved" %}
@@ -177,33 +185,21 @@
     </div>
 </div>
 
-<!-- Inquiry Modal -->
+<!-- Inquiry Modal authorize exception-->
 <div class="modal fade" id="inquiryModal" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-
           <h5 class="modal-title" id="inquiryModalLabel">Approve exception</h5>
-          
           <button type="button" class="close" data-dismiss="modal">
             <span>&times;</span>
           </button>
         </div>
         <div class="modal-body">
-            <!-- 'EXCLUDE' SE REFIERE A LA FUNCIÓN DE EXCEPTIONS/VIEWS.PY -->
-            {#<form action="{% url 'approvedState' %}" method="POST">#}
-            {#<form action="{% url 'approvalsList/<int:exclude_patch_ID>'' %}" method="POST">#}
-            {#<form action="{% url 'approvedState' request.user.id %}" method="POST">#}            
-            {#<form action="{% url 'authorize' request.user.id %}" method="POST">#}
-
+            <!-- 'EXCLUDE' SE REFIERE AL PRIMER CAMPO DEL PATH DE URL.PY -->
             <form action="{% url 'authorize' %}" method="POST">
                 {% csrf_token %}
-
-                <!-- <input id="btnpress" type="hidden" name="exception_id">-->
-                <input id="btnpress" type="hidden" name="exception_id">
-
-                <!-- <input id="btnpress" type="hidden" name="approver"> -->
-                
+                <input type="hidden" name="exception_id" value={{ exception.id }}>
                 <div class="form-group">
                     <label for="comment" class="col-form-label">Comment:</label>
                     <textarea rows="7" name="comment" class="form-control" required></textarea>
