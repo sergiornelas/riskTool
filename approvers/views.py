@@ -25,21 +25,12 @@ from django.forms import ModelForm
 def approvalsList(request):
     var = patchApproverRelationship.objects.filter(approver=request.user.id).values_list('patch_id')
                                                                            #.values_list('patch_id', flat=True)
-    #var = patchApproverRelationship.objects.filter(patch_id=3)
-
-    #print (var)
-
-    #exceptions = exclude_patch.objects.filter(patch_id=request.user.id)
-    #exceptions = exclude_patch.objects.filter(patch_id=1)
-
     exceptions = exclude_patch.objects.filter(patch_id__in=var)
                               #objects.select_related('patch', 'patch__client')
     
-    #hello = exclude_patch.objects.filter(patch_id__in=patchApproverRelationship.objects.all())
     #hello = exclude_patch.objects.filter(pk__in=[1,2,3])
                                  #.filter(patch_id__in=[1,3])
-    #It means, give me all objects of model Model that either have {var} as their primary key.
-
+    
     patches = patch.objects.all()
 
     context = {
@@ -53,7 +44,6 @@ def approvalsList(request):
         else:
             messages.error(request, 'Not allowed to enter here')
             return redirect('index')
-        
     else:
         return render(request, 'pages/index.html')
 
@@ -64,52 +54,121 @@ def approvalsList(request):
 
 
 
+
+
+
+
+
+
+
+
 def approvalDetail(request, exclude_patch_ID):
+    #get_object_or_404 will only return one object, get_list_or_404 multiple objects. Levanta la excepción Http404 si no existe el objeto.
+    #get_object_or_404 uses get(), get_list_or_404 uses filter()
+    #__in se utiliza cuando quieres usar de referencia objetos con otros objetos.
+
+#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    #FRONTEND SIMPLE QUERIES
+
+        # exclude_patch_ID = 8
     exception = get_object_or_404(exclude_patch, pk=exclude_patch_ID)
+        #Selecciona el objeto que contiene el {id 8 en exclude_patch model}:
+            #<id=8, title=elID2, just=awef, patch_id=2>
     patch_exc = get_object_or_404(patch, pk=exception.patch_id)
-    patch_approver = patchApproverRelationship.objects.filter(patch=exception.patch_id)
-    approver_detail = User.objects.filter(pk__in=patch_approver.values_list('approver_id'))
+        #Selecciona el objeto que contiene en el id, dentro del patch model, el {valor de patch_id en el objeto exception}:
+            #<id=2, server=Linux, crit=Medium, client_id=3>
+
+#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    #APPROVERS TABLE
+
+    #patch_approver = patchApproverRelationship.objects.filter(patch=exception.patch_id)
+        #Selecciona los objetos que contienen en el campo patch_id (patch) dentro del patchApproverRelationship model, el valor {patch_id en el objeto exception}:
+            #<id=1, approver_id=4, patch_id=2>,
+            #<id=4, approver_id=6, patch_id=2>,
+            #<id=8, approver_id=5, patch_id=2>,
+    #approver_detail = User.objects.filter(pk__in=patch_approver.values_list('approver_id'))
     
-    #toma los valores de la tabla, por lo que tiene que tener campos.
-    #los campos no salen en orden
-    authExc = authorize_Exception.objects.filter(approver_id__in=patch_approver.values_list('approver_id')) #patch_approver es el mero mero
-    print("authExc", authExc)
+    approver_detail = User.objects.filter(pk__in=patchApproverRelationship.objects.filter(patch=exception.patch_id).values_list('approver_id'))
+            #<id=4, username=approver, is_active=1 ...>,
+            #<id=5, username=approver2, is_active=1 ...>
+            #<id=6, username=approver3, is_active=1 ...>
+    
+#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    #TESTING
 
-    print("excepcion id" , exclude_patch_ID)
-    #print("excepcion" , exception)
-    #print("patch_exc" , patch_exc)
-    #print("patch_approver" , patch_approver)
-    #print("approver_detail" , approver_detail)
-    #print("authExc", authExc)
+    #print("exclude_patch_ID = ", exclude_patch_ID, "\n")
+    #print("excepcion = " , exception, "\n")
+    #print("patch_exc = " , patch_exc, "\n")
+    
+    print("")
 
-    flag = True
-    #if authorize_Exception.objects.exists(): #model has content
-    if authExc.exists():
-        authObjects = zip(patch_approver, approver_detail, authExc)
-        
-    else: #model is empty
-        authObjects = zip(patch_approver, approver_detail)
-        flag = False
+    approverResponsable = []
+    
+    for x in range(len(approver_detail)):
+        approverResponsable.append(approver_detail[x])
+        print("aprobadores responsables a esta excepcion: [",x,"] = " , approverResponsable[x])
+
+
+    # existen autorizaciones ya realizadas en el modelo authorize_Exception
+    authorize = authorize_Exception.objects.filter(exception_id=exception.id).filter(approver_id__in=approver_detail)
+
+    print("")
+    exceptionReply = []
+    
+    for x in range(len(authorize)):
+        exceptionReply.append(authorize[x])
+        print("excepcion ya respondida: [",x,"] = " , exceptionReply[x])
+        #if exceptionReply[x]:
+    
+    
+    # for x in range(len(approver_detail)):
+    #     #if approverResponsable[x].objects.filter(pk__in=
+    #     if approverResponsable[x].objects.filter(id=1):
+    #         print("es 1")
+
+    
+    if authorize:
+        print ("\nExisten campos en la tabla\n")
+    else:
+        print ("\nNO Existen campos en la tabla\n")
+
+#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    #CONTEXT
 
     context = {
         'exception': exception,
         'patch_exc':patch_exc,
-        'authObjects':authObjects,
-        'flag':flag
+        'approver_detail':approver_detail,
+
+        #es resultado es el mismo:
+        'authorize':authorize,
+        'exceptionReply':exceptionReply
     }
 
-    path = patchApproverRelationship.objects.filter(approver_id=request.user.id).filter(patch_id=patch_exc.id).values_list('approver_id', flat=True)
-    #path = to user_authenticated_id
+#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    #URLS
 
+    path = patchApproverRelationship.objects.filter(approver_id=request.user.id).filter(patch_id=patch_exc.id).values_list('approver_id', flat=True)
+        #var path = to user_authenticated_id
+    
     if request.user.is_authenticated:
-        try:
-            if request.user.id == path[0]:
-                return render(request, 'approvers/approvalDetail.html', context)
-        except:    
+        #try:
+        if request.user.profile.role == 2:
+            #if request.user.id == path[0]:
+            return render(request, 'approvers/approvalDetail.html', context)
+        else:
+        #except:    
             messages.error(request, 'Not allowed to enter here')
             return redirect('index')
     else:
         return redirect('login')
+
+
+
+
+
+
+
 
 
 

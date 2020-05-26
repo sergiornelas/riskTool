@@ -8,7 +8,7 @@ from .models import authorize_Exception
 
 class approvers_patch(admin.ModelAdmin):
     #list_display = ('id', 'patch', 'approver')
-    list_display = ('patch', 'approver')
+    list_display = ('patch', 'approver_id')
     #list_display = ('id', 'patch')
     list_display_links = ('patch'),
 
@@ -19,7 +19,7 @@ class approvers_patch(admin.ModelAdmin):
     list_per_page = 25
 
 class authorizeExc(admin.ModelAdmin):
-    list_display = ('id', 'exception_id', 'approver', 'state', 'comment')
+    list_display = ('id', 'exception_id', 'approver_id', 'state', 'comment')
     list_display_links = ('state'),
 
     search_fields = ('exception_id'),

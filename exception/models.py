@@ -2,6 +2,16 @@ from django.db import models
 from datetime import datetime
 from django.conf import settings
 
+APP = "Approved"
+REJ = "Rejected"
+PEND = "Pending"
+
+state_choices = (
+    (APP, "Approved"),
+    (REJ, "Rejected"),
+    (PEND, "Pending"),
+)
+
 class exclude_patch(models.Model):
     #patch_from = models.ForeignKey(patch, to_field="id", db_column="patch_from", on_delete=models.CASCADE, null=True)
     
@@ -18,3 +28,11 @@ class exclude_patch(models.Model):
     
     def __str__(self):
 	    return self.title
+
+class approve_Exception(models.Model):
+    #exception = models.ForeignKey(exclude_patch, on_delete=models.CASCADE, null=True)
+    state = models.CharField(max_length=8, choices = state_choices, default = PEND)
+    comment = models.TextField(blank=True, default="Pending")
+    exception_id = models.IntegerField(null=True, default=0)
+    patch_id = models.IntegerField(null=True, default=0)
+    approver_id = models.IntegerField(null=True, default=0)

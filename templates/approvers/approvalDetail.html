@@ -57,19 +57,14 @@
                 <tr>
                     <th scope="col">Exception ID</th>
                     <th scope="col">Exception client</th>
-                    <!-- <th scope="col">Exception title</th> -->
                     <th scope="col">Exception date</th>
-                    <!-- <th scope="col">Exception patch ID</th> -->
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>{{ exception.id }}</td>
                     <td>{{ exception.client }}</td>
-                    {#<td>{{ alias.client_id}}</td> #}
-                    {# <td>{{ exception.title }}</td> #}
                     <td>{{ exception.exclude_date }}</td>
-                    {# <td>{{ exception.patch_id }}</td> #}
                 </tr>
             </tbody>
         </table>
@@ -92,91 +87,55 @@
         <table class="table mt-4">
             <thead>
                 <tr>
-                <!-- 
-                    <th scope="col">Date of receipt</th>
-                    <th scope="col">Justification</th>
-                    <th scope="col">Send notification</th> -->       
-                    
-                    <!-- <th scope="col">patchApprover_id</th> -->
-                    {# <th scope="col">patch_id</th> #}
+                    <!-- <th scope="col">Send notification</th> -->       
                     <th scope="col">Approver ID</th>
                     <th scope="col">Approver name</th>
                     <th scope="col">Approver last login</th>
                     <th scope="col">Approver is active</th>
-                    <th scope="col">Comments</th>
-                    <th scope="col">Authorized</th>
+                    <th scope="col" style="color: orange;">Comments</th>
+                    <th scope="col" style="color: orange;">Authorized</th>
                 </tr>
             </thead>
             <tbody>
                 {#{% for i, j, k in authObjects %}#}
-                <!-- No existen aprovaciones creadas aún -->
-                {#{% if flag %}#}
-                {% if flag == False %}
-                    {% for i, j in authObjects %}
-                        <tr>
-                            {# <td>{{ alias.id}}</td> #}
-                            {# <td>{{ i.id}}</td> #}
-                            {# <td>{{ i.patch_id}}</td> #}
-                            <td>{{ i.approver_id }}</td>
-                            {# <td>{{ j.id}}</td>#}
-                            <td>{{ j.username }} </td>
-                            <td>{{ j.last_login }} </td>
-                            {% if j.is_active %}
-                                <td>Yes</td>
-                            {% else %}
-                                <td>No</td>
-                            {% endif %}
-                            {% if user.id == i.approver_id %}
-                                <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal"> Approve </button></td>
-                            {% else %}
-                                <td>_Pending_</td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                {% else %}
-                    {% for i, j, k in authObjects %}
-                    <!-- i= patch_approver, j= approver_detail, k = authExc) -->
-                        <tr>
-                            {#<td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal2">Read</button></td>#}
-                            <!-- <td>{{ k.id}}</td> -->
-                            
-                            {#<td>{{ k.approver_id }}</td>#}
-                            <td>{{ i.approver_id }}</td>
-                            
-                            <!-- solo existe con el j  -->
-                            <td>{{ j.username }} </td> 
-                                                        
-                            <td>{{ j.last_login }} </td>
-                            
-                            {% if j.is_active %}
-                                <td>Yes</td>
-                            {% else %}
-                                <td>No</td>
-                            {% endif %}
+                {% for i in approver_detail %}
+                    <tr>
+                        <td>{{ i.id }} </td>
+                        <td>{{ i.username }} </td>
+                        <td>{{ i.last_login }} </td>
 
-                            <!-- solo existe con el k  -->
-                            <td> {{ k.comment }} </td>
-                                                                                    
-                            {% if user.id == i.approver_id %}
-                                {% if k.state == "Approved" %}
-                                    <td><button class="btn btn-success btn-block" data-toggle="modal" data-target="#inquiryModal"> {{ k.state }} </button></td>
-                                {% elif k.state == "Rejected" %}
-                                    <td><button class="btn btn-danger btn-block" data-toggle="modal" data-target="#inquiryModal"> {{ k.state }} </button></td>
-                                {% else %}
-                                    <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal"> {{ k.state }} </button></td>
-                                {% endif %}
+                        {% if i.is_active %}
+                            <td>Yes</td>
+                        {% else %}
+                            <td>No</td>
+                        {% endif %}
+                        
+                        <!-- Dynamic  -->
+
+                            <!-- Comments -->
+                            <td>Pending</td>
+                            
+                            <!-- Si existe un row con approver_id[x] y exception_id [x] -->
+                                <!-- mostrar los campos comment y state de dicho row y posibilitar la actualización de dichos campos -->
+                            <!-- Poner state y comment Pending y capturar datos de entrada -->
+
+                            <!-- Authorized -->
+                            {% if user.id == i.id %}
+                                <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal"> Pending </button></td>
                             {% else %}
-                                {% if k.state == "Approved" %}
-                                    <td style="color:green;">{{ k.state }}</td>
-                                {% elif k.state == "Rejected" %}
-                                    <td style="color:red;">{{ k.state }}</td>
-                                {% else %}
-                                    <td>{{ k.state }}</td>
-                                {% endif %}
+                                <td>Pending</td>
                             {% endif %}
-                        </tr>
-                    {% endfor %}
-                {% endif %}
+                        <!-- Dynamic  -->
+                    </tr>
+                {% endfor %}
+
+                {#{% for i in authorize %}#}
+                {% for i in exceptionReply %}
+                    <td>{{ i.id }} </td>
+                    <td>{{ i.comment }} </td>
+                    <td>{{ i.state }} </td>
+                {% endfor %}
+
             </tbody>
         </table>
     </div>

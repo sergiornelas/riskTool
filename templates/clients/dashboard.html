@@ -94,11 +94,12 @@
           </button>
         </div>
         <div class="modal-body">
-            <!-- 'EXCLUDE' SE REFIERE A LA FUNCIÓN DE EXCEPTIONS/VIEWS.PY, tambien debe estar en url-->
+            <!-- 'EXCLUDE' SE REFIERE AL PRIMER CAMPO DEL PATH DE URL.PY -->
             <form action="{% url 'exclude' %}" method="POST">
                 {% csrf_token %}
                 
                 <input id="btnpress" type="hidden" name="patch_id">
+                <!-- <input id="btnpress" type="hidden" name="approver"> -->
 
                 <!-- Estos se introducen del modelo de exception -->
                 <div class="form-group">

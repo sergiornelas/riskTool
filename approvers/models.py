@@ -37,6 +37,7 @@ class authorize_Exception(models.Model):
     exception_id = models.IntegerField(null=True)
     approver = models.ForeignKey(settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE, null=True, related_name='approverAuthorize')
+    #approver_id = models.IntegerField(null=True)
     state = models.CharField(max_length=8, choices = state_choices, default = PEND)
     comment = models.TextField(blank=True, default="Pending")
 
