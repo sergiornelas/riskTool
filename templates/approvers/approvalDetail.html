@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
     /*
     jQuery(document).ready(function () {
 
@@ -11,7 +11,7 @@
         });
     });
     */
-</script>
+</script> -->
 
 <!-- Breadcrumb -->
 <section id="bc" class="mt-3">
@@ -62,9 +62,9 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>{{ exception.id }}</td>
-                    <td>{{ exception.client }}</td>
-                    <td>{{ exception.exclude_date }}</td>
+                    <td>{{ exceptionQuery.id }}</td>
+                    <td>{{ exceptionQuery.client }}</td>
+                    <td>{{ exceptionQuery.exclude_date }}</td>
                 </tr>
             </tbody>
         </table>
@@ -72,9 +72,9 @@
 
     <div>
         <br>
-        <h2>{{ exception.title }}</h2>
+        <h2>{{ exceptionQuery.title }}</h2>
         <h4>Customer action plan</h4>
-        <textarea style="padding:15px;" readonly class="form-control border border-primary" rows="7">{{ exception.justification }}</textarea>            
+        <textarea style="padding:15px;" readonly class="form-control border border-primary" rows="7">{{ exceptionQuery.justification }}</textarea>            
     </div>
 
     <br>
@@ -92,13 +92,49 @@
                     <th scope="col">Approver name</th>
                     <th scope="col">Approver last login</th>
                     <th scope="col">Approver is active</th>
-                    <th scope="col" style="color: orange;">Comments</th>
-                    <th scope="col" style="color: orange;">Authorized</th>
+                    <th scope="col">Comments</th>
+                    <th scope="col">Authorized</th>
                 </tr>
             </thead>
             <tbody>
-                {#{% for i, j, k in authObjects %}#}
                 {% for i in approver_detail %}
+                    {% for j in authorize %}
+                        <tr>                        
+                            {% if i.id == j.approver_id %}
+                                <td>{{ i.id }} </td>
+                                <td>{{ i.username }} </td>
+                                <td>{{ i.last_login }} </td>
+
+                                {% if i.is_active %}
+                                    <td>Yes</td>
+                                {% else %}
+                                    <td>No</td>
+                                {% endif %}
+                                <td> {{ j.comment }} </td>
+
+                                {% if user.id == i.id %}
+                                    {% if j.state == 'Approved' %}
+                                        <td><button class="btn btn-success btn-block" data-toggle="modal" data-target="#inquiryModal"> {{ j.state }} </button></td>
+                                    {% elif j.state == 'Rejected' %}
+                                        <td><button class="btn btn-danger btn-block" data-toggle="modal" data-target="#inquiryModal"> {{ j.state }} </button></td>
+                                    {% else %}
+                                        <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal"> {{ j.state }} </button></td>
+                                    {% endif %}
+                                {% else %}
+                                    {% if j.state == 'Approved' %}
+                                        <td style="color: green"> {{ j.state }} </td>
+                                    {% elif j.state == 'Rejected' %}
+                                        <td style="color: red"> {{ j.state }} </td>
+                                    {% else %}
+                                        <td> {{ j.state }} </td>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+
+                {% for i in approver_detail_pending %}
                     <tr>
                         <td>{{ i.id }} </td>
                         <td>{{ i.username }} </td>
@@ -109,36 +145,53 @@
                         {% else %}
                             <td>No</td>
                         {% endif %}
-                        
-                        <!-- Dynamic  -->
 
-                            <!-- Comments -->
+                        <td>Pending</td>
+
+                        {% if user.id == i.id %}
+                            <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal">Pending</button></td>
+                        {% else %}
                             <td>Pending</td>
-                            
-                            <!-- Si existe un row con approver_id[x] y exception_id [x] -->
-                                <!-- mostrar los campos comment y state de dicho row y posibilitar la actualización de dichos campos -->
-                            <!-- Poner state y comment Pending y capturar datos de entrada -->
-
-                            <!-- Authorized -->
-                            {% if user.id == i.id %}
-                                <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal"> Pending </button></td>
-                            {% else %}
-                                <td>Pending</td>
-                            {% endif %}
-                        <!-- Dynamic  -->
+                        {% endif %}
                     </tr>
                 {% endfor %}
-
-                {#{% for i in authorize %}#}
-                {% for i in exceptionReply %}
-                    <td>{{ i.id }} </td>
-                    <td>{{ i.comment }} </td>
-                    <td>{{ i.state }} </td>
-                {% endfor %}
-
             </tbody>
         </table>
-    </div>
+
+        <!-- <br>
+        <h4>Approvers pending</h4>
+        <table class="table mt-4">
+            <thead>
+                <tr> -->
+                    <!-- <th scope="col">Send notification</th> -->       
+                    <!-- <th scope="col">Approver ID</th>
+                    <th scope="col">Approver name</th>
+                    <th scope="col">Approver last login</th>
+                    <th scope="col">Approver is active</th>
+                    <th scope="col" style="color: orange;">Comments</th>
+                    <th scope="col" style="color: orange;">Authorized</th>
+                </tr>
+            </thead>
+            <tbody> -->
+                {#{% for i in approver_detail_pending %}#}
+                    <!-- <tr> -->
+                        {#<td>{{ i.id }} </td>#}
+                        {#<td>{{ i.username }} </td>#}
+                        {#<td>{{ i.last_login }} </td>#}
+
+                        {#{% if i.is_active %}#}
+                            <!-- <td>Yes</td> -->
+                        {#{% else %}#}
+                            <!-- <td>No</td> -->
+                        {#{% endif %}#}
+                        <!-- <td>Pending</td>
+                        <td>Pending</td>
+                    </tr> -->
+                {#{% endfor %}#}
+            <!-- </tbody>
+        </table> -->
+
+</div>
     <div style="margin-top:3rem;">
         <button class="mx-4 btn btn-primary btn-lg">Send message to admin</button>
     </div>
@@ -158,7 +211,8 @@
             <!-- 'EXCLUDE' SE REFIERE AL PRIMER CAMPO DEL PATH DE URL.PY -->
             <form action="{% url 'authorize' %}" method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="exception_id" value={{ exception.id }}>
+                <input type="hidden" name="exception_id" value={{ exceptionQuery.id }}>
+                
                 <div class="form-group">
                     <label for="comment" class="col-form-label">Comment:</label>
                     <textarea rows="7" name="comment" class="form-control" required></textarea>
