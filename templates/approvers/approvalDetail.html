@@ -34,8 +34,8 @@
     </h1>
     <section class="py-4">
         {% include 'partials/_alerts.html' %}
-        <table class="table mt-4">
-            <thead>
+        <table class="table mt-4 table-bordered">
+            <thead class="thead-dark">
                 <tr>
                     <th scope="col">Patch ID</th>
                     <th scope="col">Patch date</th>
@@ -52,8 +52,8 @@
                 </tr>
             </tbody>
         </table>
-        <table class="table mt-4">
-            <thead>
+        <table class="table mt-4 table-bordered">
+            <thead class="thead-dark">
                 <tr>
                     <th scope="col">Exception ID</th>
                     <th scope="col">Exception client</th>
@@ -78,14 +78,15 @@
     </div>
 
     <br>
-    <button class="my-4 btn btn-primary btn-lg">Send message to requester</button>
+    <!-- <button class="my-4 btn btn-primary btn-lg">Send message to requester</button> -->
+    <button class="my-4 btn btn-primary btn-lg" data-toggle="modal" data-target="#inquiryModal3">Notification module</button>
 
     <hr style="margin: 1rem;">
     <div>
         <br>
         <h4>Approvers</h4>
-        <table class="table mt-4">
-            <thead>
+        <table class="table mt-4 table-striped table-bordered">
+            <thead class="table-info ">
                 <tr>
                     <!-- <th scope="col">Send notification</th> -->       
                     <th scope="col">Approver ID</th>
@@ -110,8 +111,12 @@
                                 {% else %}
                                     <td>No</td>
                                 {% endif %}
-                                <td> {{ j.comment }} </td>
 
+
+                                {#<td> {{ j.comment }} </td>#}
+
+                                <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal2" value={{ j.comment }}>Read</button></td>
+                                
                                 {% if user.id == i.id %}
                                     {% if j.state == 'Approved' %}
                                         <td><button class="btn btn-success btn-block" data-toggle="modal" data-target="#inquiryModal"> {{ j.state }} </button></td>
@@ -197,6 +202,41 @@
     </div>
 </div>
 
+<!-- Inquiry Modal notification module-->
+  <div class="modal fade" id="inquiryModal3" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="inquiryModalLabel">Notification module</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">                
+            <form action="{% url 'authorize' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="exception_id" value={{ exceptionQuery.id }}>
+                
+                <div class="form-group">
+                    <label for="title" class="col-form-label">Title:</label>
+                    <input type="text" name="title" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="comment" class="col-form-label">Comment:</label>
+                    <textarea rows="7" name="comment" class="form-control" required></textarea>
+                </div>
+
+                <hr>
+                
+                <input type="submit" name="state" class="btn btn-block btn-success col-md">
+            </form>
+        </div>
+      </div>
+    </div>
+</div>
+
+
 <!-- Inquiry Modal authorize exception-->
 <div class="modal fade" id="inquiryModal" role="dialog">
     <div class="modal-dialog">
@@ -247,7 +287,7 @@
           </button>
         </div>
         <div class="modal-body">                
-            <textarea readonly rows="7" name="comment" class="form-control" >{{ k.comment}} </textarea>
+            <textarea readonly rows="7" name="comment" class="form-control" >{{ j.comment }} </textarea>
             <hr>
             <input type="submit" name="state" value="Close" class="btn btn-block btn-success col-md" data-dismiss="modal">
         </div>

@@ -106,12 +106,12 @@ def approvalDetail(request, exclude_patch_ID):
     path = patchApproverRelationship.objects.filter(approver_id=request.user.id).filter(patch_id=patch_exc.id).values_list('approver_id', flat=True)
     
     if request.user.is_authenticated:
-        #try:
-        if request.user.profile.role == 2:
-            #if request.user.id == path[0]:
-            return render(request, 'approvers/approvalDetail.html', context)
-        else:
-        #except:    
+        try:
+            #if request.user.profile.role == 2:
+            if request.user.id == path[0]:
+                return render(request, 'approvers/approvalDetail.html', context)
+        #else:
+        except:    
             messages.error(request, 'Not allowed to enter here')
             return redirect('index')
     else:

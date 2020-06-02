@@ -1,5 +1,6 @@
 #services {
-  background: url(../img/building.jpg) no-repeat top center fixed/cover;
+  /*background: url(../img/building.jpg) no-repeat top center fixed/cover;*/
+  background: url(../img/building.jpg) no-repeat top center /cover;
   min-height: 300px;
   position: relative;
   overflow: hidden;

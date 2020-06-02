@@ -29,7 +29,8 @@
 }
 
 #showcase-inner {
-    background: url(../img/building.jpg) no-repeat top center fixed/cover;
+    /*background: url(../img/building.jpg) no-repeat top center fixed/cover;*/
+    background: url(../img/building.jpg) no-repeat top center /cover;
     position: relative;
     overflow: hidden;
     min-height: 200px;
