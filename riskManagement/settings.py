@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'exception.apps.ExceptionConfig',
     'roles.apps.RolesConfig',
     'clients.apps.ClientsConfig',
+    'servers.apps.ServersConfig',
+    'advisory.apps.AdvisoryConfig',
     #
     'django.contrib.admin',
     'django.contrib.auth',

@@ -1,9 +1,9 @@
 from django.db import models
 from datetime import datetime
+from servers.models import SERVER
+from advisory.models import ADVISORY
 
-#se utiliza para utilizar el id foraneo del usuario
 from django.conf import settings
-#from approvers.models import patch
 
 class patch(models.Model):
     client = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -12,17 +12,18 @@ class patch(models.Model):
     time = models.DateTimeField(default=datetime.now, blank=False)
     criticality = models.CharField(max_length=30, null=True)
 
-    #approver = models.ForeignKey(settings.AUTH_USER_MODEL,
-       #on_delete=models.CASCADE, null=True, related_name='approvers')
-
     def __str__(self):
-	    #return self.criticality
-        #return self.patch_id
-        return str(self.id)
+	    return str(self.id)
 
+class PATCHES(models.Model):
+    is_supported=models.PositiveSmallIntegerField(default=1)
+    due_date=models.DateTimeField(default=datetime.now, blank=False)
+    is_overdue=models.PositiveSmallIntegerField(default=0)
 
-# on_delete=models.CASCADE 
-# When the referenced object is deleted, also delete the objects that have references to it .
+    server=models.ForeignKey(SERVER, on_delete=models.CASCADE, null=True)
+    advisory=models.ForeignKey(ADVISORY, on_delete=models.CASCADE, null=True)
+    #FALTA AGREGAR LA EXCEPCION
+
 
 # NO SE TE OLVIDE QUITAR EL NULL CUANDO EN EL CAMPO DEL USER,
 # AL MOMENTO QUE HAGAS DEL DEPLOY AL SERVER.
