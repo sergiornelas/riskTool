@@ -11,16 +11,9 @@ class PATCHES(models.Model):
     scheduled_date=models.DateTimeField(default=datetime.now, blank=False)
     is_overdue=models.PositiveSmallIntegerField(default=0)
 
-    #server=models.ForeignKey(SERVER, on_delete=models.CASCADE, null=True)
+    server=models.ForeignKey(SERVER, on_delete=models.CASCADE, null=True)
     advisory=models.ForeignKey(ADVISORY, on_delete=models.CASCADE, null=True)
     #falta agregar el id de exception (?)
-
-class SERVER_PATCH_RELATION(models.Model):
-    server = models.ForeignKey(SERVER, on_delete=models.CASCADE, null=True)
-    patch = models.ForeignKey(PATCHES, on_delete=models.CASCADE, null=True)
-
-
-
 
 
 #---------------------OLD RISK MANAGEMENT-----------------------------------------------------
