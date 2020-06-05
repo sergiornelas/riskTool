@@ -12,20 +12,48 @@ state_choices = (
     (PEND, "Pending"),
 )
 
+Patch = "Patch"
+Server = "Server"
+
+exception_choices = (
+    (Patch, "Patch"),
+    (Server, "Server"),
+)
+
+class EXCEPTION_TYPE(models.Model):
+    #type = models.CharField(max_length=10)
+    kind = models.CharField(max_length=8, choices = exception_choices)
+
+class AUTHORIZE_TYPE(models.Model):
+    #type = models.CharField(max_length=10)
+    kind = models.CharField(max_length=8, choices = state_choices)
+
 class EXCEPTION(models.Model):
-    patch_id = models.IntegerField(null=True)
+    #kind = models.ForeignKey(EXCEPTION_TYPE, null=True, on_delete=models.CASCADE) #patch, server
+    #state = models.ForeignKey(AUTHORIZE_TYPE, null=True, on_delete=models.CASCADE) #approved, rejected, pending
+    exception_type = models.IntegerField(null=True)
+
+    patch_id = models.IntegerField(null=True) #!
     title = models.CharField(max_length=30)
     justification = models.TextField(blank=False)
     action_plan=models.TextField(blank=False)
     exclude_date = models.DateTimeField(default=datetime.now, blank=False)
-    state = models.CharField(max_length=8, choices = state_choices, default = PEND)
+    content=models.TextField(blank=False, null=True)
+    
+    client = models.ForeignKey(settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE, null=True)
 
 class AUTHORIZE_EXCEPTION(models.Model):
-    exception_id = models.IntegerField(null=True)
+    #state = models.ForeignKey(AUTHORIZE_TYPE, null=True, on_delete=models.CASCADE) #approved, rejected, pending
+    state = models.CharField(max_length=8, choices = state_choices, default = PEND)
+    exception_id = models.IntegerField(null=True) #!
+    
+    comment = models.TextField(blank=True, default="Pending")
+    #state = models.CharField(max_length=8, choices = state_choices, default = PEND)
     approver = models.ForeignKey(settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE, null=True)
-    comment = models.TextField(blank=True, default="Pending")
-    state = models.CharField(max_length=8, choices = state_choices, default = PEND)
+
+
 
     
 

@@ -4,53 +4,43 @@
 
 <script type="text/javascript">
     
-    jQuery(document).ready(function () {
-        $(".clickbtn").click(function () {
-            $("#btnpress").val(this.id);
-        });
-    });
+   $(document).ready(function () {
+      $(".exception_type_servidor").click(function () {	
+          $("#exception_type_IDD").val(this.id);	
+      });	
+   });
+
+   $(document).ready(function () {
+      $(".clickbtn").click(function () {
+          $("#btnpress").val(this.id);
+      });
+   });
+
+   var hostname;
+   var server_id;
+
+   $(document).ready(function(){  
+      $(".serverPoll").click(function() {
+         if (this.checked){
+
+            hostname = $('.serverPoll').val(this.value);
+            //alert(hostname.val());
+
+            //server_id = $('.serverPoll').val(this.id);
+            //alert(server_id.val());
+
+            //alert("Server ID: " + server_id.val() + " Hostname: " + hostname.val());
+         }
+      });
+   });
     
-    //$('.serverPoll').val(this.id);
+   $(document).ready(function() {
+      $(".btnPoll").on("click", function() {
+         //$('#output').html($('.serverPoll').val());
+         $('#output').html(hostname.val());
+      });
+   });
 
-    var hostname;
-    var server_id;
-
-    $(document).ready(function(){  
-        $(".serverPoll").click(function() {
-            if (this.checked){
-                //$('.serverPoll').val(this.id);
-                $('.serverPoll').val(this.value);
-
-                hostname = $('.serverPoll').val(this.value);
-                alert(hostname.val());
-                //server_id = $('.serverPoll').val(this.id);
-                //alert($('.serverPoll').val());
-                
-                server_id = $('.serverPoll').val(this.id);
-                alert(server_id.val());
-
-                alert("Server ID: " + server_id.val() + " Hostname: " + hostname.val());
-            }
-
-            //<p><input id ="{{ alias.id }}" style="margin: .5rem;" type="checkbox" class="serverPoll" value = {{ alias.hostname }} >{{ alias.hostname }}</p>
-            /*else {
-                alert("No está activado");
-            }*/
-        });
-    });
-    
-    $(document).ready(function() {
-        $(".btnPoll").on("click", function() {
-            //$('#output').html($('.serverPoll').val());
-            $('#output').html(hostname.val());
-        });
-    });
-
-    /*
-    $(document).ready(function() {
-        alert("Hello world !! document is ready");
-    }); 
-    */
 </script>
 
 <section id="showcase-inner" class="py-5 text-white">
@@ -101,11 +91,10 @@
                     <tbody>
                         {% for alias in patches %}
                             <tr>
-                                <!-- <td><input type="checkbox"></td> -->
                                 <td>{{ alias.id }}</td>
                                 <td>{{ alias.server }}</td>
                                 <td>{{ alias.advisory }}</td>
-                                <td>{{ alias.scheduled_date }}</td>           
+                                <td>{{ alias.scheduled_date }}</td>  
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -114,323 +103,231 @@
                     <p>You have not patches</p>
                 {% endif %}
             </div>
-                {#<button class="btn btn-primary btn-block clickbtn" id="{{ alias.id }}" data-toggle="modal" data-target="#inquiryModal"> Exclude patch </button>#}                
         </div>
     </div>
 </section>
 
-  <!-- Inquiry Modal -->
-  <div class="modal fade" id="inquiryModal" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="inquiryModalLabel">Patch exception</h5>
-          <button type="button" class="close" data-dismiss="modal">
-            <span>&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <!-- 'EXCLUDE' SE REFIERE AL PRIMER CAMPO DEL PATH DE URL.PY -->
-            <form action="{% url 'exclude' %}" method="POST">
-                {% csrf_token %}
-                
-                <input id="btnpress" type="hidden" name="patch_id">
-                <!-- <input id="btnpress" type="hidden" name="approver"> -->
-
-                <!-- Estos se introducen del modelo de exception -->
-                <div class="form-group">
-                    <label for="title" class="col-form-label">Title:</label>
-                    <input type="text" name="title" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="justification" class="col-form-label">Action plan:</label>
-                    <textarea rows="7" name="justification" class="form-control" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="excludeDate" class="col-form-label">Exclude date:</label>
-                    <input type="datetime" name="exclude_date" class="form-control" required>
-                </div>
-                <hr>
-                <input type="submit" value="Send" class="btn btn-block btn-secondary">
-            </form>
-        </div>
+<section id="services" class="py-5 bg-secondary text-white">
+   <div class="container">
+   <div class="row text-center">
+      <div class="col-md-12">
+         <i class="fas fa-comment fa-4x mr-4"></i>
+         <hr>
+         <h2>Risk management tool</h2>
+         <br>
+         <h4>Request the exclusion for a certain period either due to a business need or interferences between
+         applications.</h4>
       </div>
-    </div>
-  </div>
-
-  <section id="services" class="py-5 bg-secondary text-white">
-    <div class="container">
-      <div class="row text-center">
-        <div class="col-md-12">
-          <i class="fas fa-comment fa-4x mr-4"></i>
-          <hr>
-          <h2>Risk management tool</h2>
-          <br>
-          <h4>Request the exclusion for a certain period either due to a business need or interferences between
-            applications.</h4>
-        </div>
-      </div>
-    </div>
-  </section>
-
+   </div>
+   </div>
+</section>
 
 <!------------------------------------------------------------- A ------------------------------------------------------------->
-
-<!-- <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal1">
-    Open modal 
-    </button> -->
-    
-    <!-- Modal -->
-    <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-       <div class="modal-dialog">
-          <div class="modal-content">
-             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Kind of exception </h4>
-             </div>
-             <div class="modal-body">
-                <form role="form" action="" method="post" class="registration-form">
-                   <fieldset style="display: block;">
-                      <div class="form-top">
-                         <div class="form-top-left">
-                            <p>What do you want to make an exception?:</p>
-                         </div>
-                      </div>
-                      <div class="form-bottom">
-                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal2" data-dismiss="modal" >Server</button>
-                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal5" data-dismiss="modal" >Patch</button>
-                        <!-- <button type="button" class="btn btn-default btn-next">Patch</button> -->
-                      </div>
-                   </fieldset>
-                </form>
-             </div>
-             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-             </div>
-          </div>
-       </div>
-    </div>
-
+<!------------------------------------------------- Select SERVER OR PATCH?:------------------------------------->
+  
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel"> A </h4>
+         </div>
+         <div class="modal-body">
+            <form role="form" action="" method="post" class="registration-form">
+               <fieldset style="display: block;">
+                  <div class="form-top">
+                     <div class="form-top-left">
+                        <p>What do you want to make an exception?:</p>
+                     </div>
+                  </div>
+                  <div class="form-bottom">
+                  {#<button id ="{{ exception_type_server.id }}" type="button" class="btn btn-default exception_type_servidor" data-toggle="modal" data-target="#myModal2" data-dismiss="modal" >Server</button>#}
+                  <button id ="2" type="button" class="btn btn-default exception_type_servidor" data-toggle="modal" data-target="#myModal2" data-dismiss="modal" >Server</button>
+                  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal4" data-dismiss="modal" >Patch</button>
+                  </div>
+               </fieldset>
+            </form>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+         </div>
+      </div>
+   </div>
+</div>
 
 <!------------------------------------------------------------- B ------------------------------------------------------------->
+<!------------------------------------------------- Which servers do you want to exclude?:------------------------------------->
 
-    <!-- Modal -->
-    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-       <div class="modal-dialog">
-          <div class="modal-content">
-             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Modal title 2</h4>
-             </div>
-             <div class="modal-body">
-               <form method="POST">
-                <fieldset>
-                      <div class="form-top">
-                         <div class="form-top-left">
-                            <p> Which servers do you want to exclude?:</p>
-                         </div>
-                      </div>
-                      <div class="form-bottom">
-                        {% for alias in serversPoll %}
-                            {#<p><input id ="{{ alias.hostname }}" style="margin: .5rem;" type="checkbox" class="serverPoll" value={{ alias.hostname }} >{{ alias.hostname }}</p>#}
-                            <p><input id ="{{ alias.id }}" style="margin: .5rem;" type="checkbox" class="serverPoll" value = {{ alias.hostname }} >{{ alias.hostname }}</p>
-                        {% endfor %}
-                        <button type="button" class="btn btn-next btnPoll">Next</button>
-                        <button type="button" class="btn btn-default btn-prev">Previous</button>
-                      </div>
-                   </fieldset>
-               </form>
-             </div>
-             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-             </div>
-          </div>
-       </div>
-    </div>
-    <!-- Modal -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">B</h4>
+         </div>
+         <div class="modal-body">
+         <form method="POST">
+            <fieldset>
+                  <div class="form-top">
+                     <div class="form-top-left">
+                        <p> Which servers do you want to exclude?:</p>
+                     </div>
+                  </div>
+                  <div class="form-bottom">
+
+                  {% for alias in serversPoll %}
+                        {#<p><input id ="{{ alias.hostname }}" style="margin: .5rem;" type="checkbox" class="serverPoll" value={{ alias.hostname }} >{{ alias.hostname }}</p>#}
+                        <p><input id ="{{ alias.id }}" style="margin: .5rem;" type="checkbox" class="serverPoll" value = {{ alias.hostname }} >{{ alias.hostname }}</p>
+                  {% endfor %}
+
+                  <button type="button" class="btn btn-next btnPoll">Next</button>                        
+                  <button type="button" class="btn btn-default btn-prev">Previous</button>
+                  </div>
+               </fieldset>
+         </form>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+         </div>
+      </div>
+   </div>
+</div>
 
 <!------------------------------------------------------------- C ------------------------------------------------------------->
+<!----------------------------------------------------- SERVER inquiry modal--------------------------------------------------->
 
-    <!-- Modal -->
-    <div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-           <div class="modal-content">
-              <div class="modal-header">
-                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                 <h4 class="modal-title" id="myModalLabel">Modal title 2</h4>
-              </div>
-              <div class="modal-body">
-                <form>
-                 <fieldset>
-                       <div class="form-top">
-                          <div class="form-top-left">
-                            <p id="output"></p>
-                             <p> This server has these packages, uncheck the patches you don't want an exception:
-                                (this action will prevent future updates of the selected packages)</p>
-                          </div>
-                       </div>
-                       <div class="form-bottom">
-                           
-                         {#{% for alias in patches %}#}
-                                 {#<p>{{ alias.server }}</p>#}
-                         {#{% endfor %}#}
-                          <button type="button" class="btn btn-next">Next</button>
-                          <button type="button" class="btn btn-default btn-prev">Previous</button>
-                       </div>
-                    </fieldset>
-                </form>
-              </div>
-              <div class="modal-footer">
-                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              </div>
-           </div>
-        </div>
+<div class="modal fade" id="myModal3" role="dialog">
+   <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="inquiryModalLabel">Server exception</h5>
+         <button type="button" class="close" data-dismiss="modal">
+           <span>&times;</span>
+         </button>
+       </div>
+       <div class="modal-body">
+           <!-- 'exclude_server' SE REFIERE AL PRIMER CAMPO DEL PATH DE URL.PY -->
+            <form action="{% url 'exclude_server' %}" method="POST">
+               {% csrf_token %}
+               
+               <input class="serverPoll" type="hidden" name="content">
+               <input id="exception_type_IDD" type="hidden" name="exception_type">
+               
+               <p id="output"></p>
+               
+               <!-- Estos se introducen del modelo de exception -->
+               <div class="form-group">
+                   <label for="title" class="col-form-label">Title:</label>
+                   <input type="text" name="title" class="form-control" required>
+               </div>
+               <div class="form-group">
+                   <label for="justification" class="col-form-label">Action plan:</label>
+                   <textarea rows="7" name="justification" class="form-control" required></textarea>
+               </div>
+               <div class="form-group">
+                   <label for="excludeDate" class="col-form-label">Exclude date:</label>
+                   <input type="datetime" name="exclude_date" class="form-control" required>
+               </div>
+               <!-- FALTA AGREGAR EL ACTION PLAN -->
+               <hr>
+               <input style="margin-bottom: 1rem;" type="submit" value="Send" class="btn btn-block btn-secondary">
+               <button type="button" class="btn btn-info btn-prev ">Back</button>
+
+               <!-- name = database field, value = input value to db -->
+           </form>
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
      </div>
-     <!-- Modal -->
+   </div>
+ </div>
+
 
 <!------------------------------------------------------------- D ------------------------------------------------------------->
+<!------------------------------------------------- Select PATCHES you want to exclude:------------------------------------->
 
-    <!-- Modal -->
-    <div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-           <div class="modal-content">
-              <div class="modal-header">
-                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                 <h4 class="modal-title" id="myModalLabel">Modal title 2</h4>
-              </div>
-              <div class="modal-body">
-                <form>
-                 <fieldset>
-                       <div class="form-top">
-                          <div class="form-top-left">
-                             <p> >> Title</p>
-                          </div>
-                       </div>
-                       <div class="form-bottom">
-                         {#{% for alias in patches %}#}
-                                 {#<p>{{ alias.server }}</p>#}
-                         {#{% endfor %}#}
-                          <button type="button" class="btn btn-next">Next</button>
-                          <button type="button" class="btn btn-default btn-prev">Previous</button>
-                       </div>
-                    </fieldset>
-                </form>
-              </div>
-              <div class="modal-footer">
-                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              </div>
-           </div>
-        </div>
-     </div>
-     <!-- Modal -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">D</h4>
+         </div>
+         <div class="modal-body">
+            <form>
+            <fieldset>
+                  <div class="form-top">
+                     <div class="form-top-left">
+                        <p> Select PATCHES you want to exclude:</p>
+                     </div>
+                  </div>
+                  <div class="form-bottom">
+                     {#{% for alias in patches %}#}
+                           {#<p>{{ alias.server }}</p>#}
+                     {#{% endfor %}#}
+                     <button type="button" class="btn btn-next">Next</button>
+                     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal1" data-dismiss="modal" >Previous</button>
+                  </div>
+               </fieldset>
+            </form>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+         </div>
+      </div>
+   </div>
+</div>
 
 <!------------------------------------------------------------- E ------------------------------------------------------------->
+<!----------------------------------------------------- PATCH inquiry modal--------------------------------------------------->
 
-    <!-- Modal -->
-    <div class="modal fade" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-           <div class="modal-content">
-              <div class="modal-header">
-                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                 <h4 class="modal-title" id="myModalLabel">Modal title 2</h4>
-              </div>
-              <div class="modal-body">
-                <form>
-                 <fieldset>
-                       <div class="form-top">
-                          <div class="form-top-left">
-                             <p> Select patches you want to exclude: </p>
-                          </div>
-                       </div>
-                       <div class="form-bottom">
-                         {#{% for alias in patches %}#}
-                                 {#<p>{{ alias.server }}</p>#}
-                         {#{% endfor %}#}
-                          <button type="button" class="btn btn-next">Next</button>
-                          <!-- <button type="button" class="btn btn-default btn-prev">Previous</button> -->
-                          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal1" data-dismiss="modal" >Previous</button>
-                       </div>
-                    </fieldset>
-                </form>
-              </div>
-              <div class="modal-footer">
-                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              </div>
-           </div>
-        </div>
+<div class="modal fade" id="myModal5" role="dialog">
+   <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="inquiryModalLabel">Patch exception</h5>
+         <button type="button" class="close" data-dismiss="modal">
+           <span>&times;</span>
+         </button>
+       </div>
+       <div class="modal-body">
+           <!-- 'exclude_server' SE REFIERE AL PRIMER CAMPO DEL PATH DE URL.PY -->
+            <form action="{% url 'exclude_server' %}" method="POST">
+               {% csrf_token %}
+               
+               <input class="serverPoll" type="hidden" name="content">
+               <input id="exception_type_IDD" type="hidden" name="exception_type">
+               
+               <p id="output"></p>
+               
+               <!-- Estos se introducen del modelo de exception -->
+               <div class="form-group">
+                   <label for="title" class="col-form-label">Title:</label>
+                   <input type="text" name="title" class="form-control" required>
+               </div>
+               <div class="form-group">
+                   <label for="justification" class="col-form-label">Action plan:</label>
+                   <textarea rows="7" name="justification" class="form-control" required></textarea>
+               </div>
+               <div class="form-group">
+                   <label for="excludeDate" class="col-form-label">Exclude date:</label>
+                   <input type="datetime" name="exclude_date" class="form-control" required>
+               </div>
+               <!-- FALTA AGREGAR EL ACTION PLAN -->
+               <hr>
+               <input style="margin-bottom: 1rem;" type="submit" value="Send" class="btn btn-block btn-secondary">
+               <button type="button" class="btn btn-info btn-prev ">Back</button>
+
+               <!-- name = database field, value = input value to db -->
+           </form>
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
      </div>
-     <!-- Modal -->
+   </div>
+ </div>
 
-<!------------------------------------------------------------- F ------------------------------------------------------------->
-
-    <!-- Modal -->
-    <div class="modal fade" id="myModal6" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-           <div class="modal-content">
-              <div class="modal-header">
-                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                 <h4 class="modal-title" id="myModalLabel">Modal title 2</h4>
-              </div>
-              <div class="modal-body">
-                <form>
-                 <fieldset>
-                       <div class="form-top">
-                          <div class="form-top-left">
-                             <p> That package is in these servers, uncheck the server you don't want to make a patch exception:</p>
-                          </div>
-                       </div>
-                       <div class="form-bottom">
-                         {#{% for alias in patches %}#}
-                                 {#<p>{{ alias.server }}</p>#}
-                         {#{% endfor %}#}
-                          <button type="button" class="btn btn-next">Next</button>
-                          <button type="button" class="btn btn-default btn-prev">Previous</button>
-                       </div>
-                    </fieldset>
-                </form>
-              </div>
-              <div class="modal-footer">
-                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              </div>
-           </div>
-        </div>
-     </div>
-     <!-- Modal -->
-
-<!------------------------------------------------------------- G ------------------------------------------------------------->
-
-    <!-- Modal -->
-    <div class="modal fade" id="myModal7" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-           <div class="modal-content">
-              <div class="modal-header">
-                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                 <h4 class="modal-title" id="myModalLabel">Modal title 2</h4>
-              </div>
-              <div class="modal-body">
-                <form>
-                 <fieldset>
-                       <div class="form-top">
-                          <div class="form-top-left">
-                             <p> >> Title PATCHH</p>
-                          </div>
-                       </div>
-                       <div class="form-bottom">
-                         {#{% for alias in patches %}#}
-                                 {#<p>{{ alias.server }}</p>#}
-                         {#{% endfor %}#}
-                          <button type="button" class="btn btn-next">Next</button>
-                          <button type="button" class="btn btn-default btn-prev">Previous</button>
-                       </div>
-                    </fieldset>
-                </form>
-              </div>
-              <div class="modal-footer">
-                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              </div>
-           </div>
-        </div>
-     </div>
-     <!-- Modal -->
 
 {% endblock %}

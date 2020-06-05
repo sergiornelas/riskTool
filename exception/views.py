@@ -23,11 +23,11 @@ def exclude(request):
         # approver = 0
         
         #Check if user has made inquiry already
-        if request.user.is_authenticated:
-            has_contacted = exclude_patch.objects.all().filter(patch_id=patch_id, client=client)
-            if has_contacted:
-                messages.error(request, 'You have already made an exception for this patch')
-                return redirect('dashboard')
+        # if request.user.is_authenticated:
+        #     has_contacted = exclude_patch.objects.all().filter(patch_id=patch_id, client=client)
+        #     if has_contacted:
+        #         messages.error(request, 'You have already made an exception for this patch')
+        #         return redirect('dashboard')
                
         exclude = exclude_patch(patch_id=patch_id, client=client, title=title, justification=justification, exclude_date=exclude_date)
         exclude.save()
