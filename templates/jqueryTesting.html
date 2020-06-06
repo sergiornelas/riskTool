@@ -1,0 +1,123 @@
+<script type="text/javascript">
+    // when a user clicks the button with id 'trigger'
+    $('trigger').click(function(){
+        
+        // change the body background to yellow
+        $('body').css("background", "yellow");
+        
+        //fade out all img's over 3 seconds
+        $('img').fadeOut(3000, function(){
+        
+        //remove imgs from page when fadeOut is done
+        $(this).remove();
+        });
+    });
+</script>
+
+    - select elements with $()
+    - use .css() to style elements:
+        $(selector).css(property, value):
+            $("#special").css("border", "2px solid red");
+        $("li").css({
+            fontSize: "10px",
+            border: "3px dashed purple"
+        });
+
+    - to select all img tags: $('img')
+    - to select all elements with class 'sale': $('.sale')
+    - to select all elements with id 'bonus': $('#bonus')
+    - to select all a tags inside of li's: $("li a") {anchor tag inside list elements}
+
+>> $("li")
+<< selecciona todos los elementos de la lista.
+
+Puedes almacenar valores jquery dentro de una variable:
+    var style = {
+        backgroundColor : "pink",
+        fontWeight: "bold"
+    };
+
+    $("#special").css(styles);
+
+--------------- Text and HTML ---------------
+val() ESTO PUEDE SERVIRNOS PARA BUSCAR PARCHES CON EL INPUT TEXT
+    - Get the value from the input. Es la version "text()" de value. Puedes asignar un value a un input text
+    Si no ponemos argumentos, nos regresará el valor particular del elemento seleccionado
+        >> $("input").val("Rusty Steele");
+        << el input text seleccionado tendrá el valor de Rusty Steele
+
+text()
+    - Convierte en un texto simple (por ejemplo una tabla completa convertirla a una sola linea)
+    - Cambia el texto contenido de una etiqueta:
+        >> $("h1").text("New Text!!!");
+        << _el encabezado h1 de la página ahora su texto es "New Text!!!"
+        
+attr()
+    - Cambia los atributos deseados en una etiqueta
+        $( "#greatphoto").attr({
+            alt: "Beijing Brush Seller",
+            title: "photo by Kelly Clark"
+        });
+
+        >> $('img').attr("src", "https://....jpg")
+        << cambia la imagen de animalito bonito a animal terrorífico
+
+html()
+    - Selecciona las lineas html hijas de la etiqueta atribuida:
+        >> $('ul').html();
+        << <li>Skittles</li><li>Starburst</li>
+        >> $('ul').html("<li>I hacked your UL</li><li>I hacked your UL</li>");
+        << actualiza las listas dentro de ul a <li>I hacked your UL</li><li>I hacked your UL</li>
+
+addClass()
+    - Le añade classes a la etiqueta deseada, (assing class) {las classes las declaraste en el style de head}
+        >> $("p").addClass("myClass yourClass");
+
+removeClass()
+    - Quita classes
+toggleClass()
+    - Si el elemento no tiene la clase, la agrega. Si la tiene, la quita.
+
+    :last() -> .last()
+
+--------------- jQuery Events ---------------
+click()
+    Agrega un evento cuando se le da click a la etiqueta (puede ser cualquier cosa (<h1>))
+        //prints when item with id 'submit' is clicked
+            $('#submit').click(function(){
+                console.log("Another click");
+            });
+        
+        //when any button is clicked, changes the background color to pink. ($(this) = refers to the element that is clicked, its like js "this")
+            $('button').click(function(){
+                $(this).css("background", "pink")
+            });
+
+keypress(), keydown(), keyup()
+            keydown is fired any time that we press a key 
+            keyup is fired when you release a key
+            keypress fires in between down and key up usually, not always
+
+on() 
+    Works similarly to addEventListener. It lets you specify the type of event to listen for.
+    When use on?:
+            click() only adds listeners for existing elements.
+            on() will add listeners for all potential future elements.
+
+    //prints when item with id 'submit' is clicked
+    $('#submit').on('click', function(){
+        console.log("Another click");
+    });
+
+    //alerts when ANY button is clicked
+    $('button').on('click', function(){
+        console.log("Button click");
+    });
+
+    //pinta de color morado el h1 que le des click 
+    //si en el $(this) hubieses dejado "h1", pintaría todos los h1 de la página, en lugar del actual.
+    $("h1").on("click", function(){
+        $(this).css("color", "purple);
+    });
+
+    

@@ -4,10 +4,11 @@
 
 <script type="text/javascript">
     
+   //if the exception is server type
    $(document).ready(function () {
       $(".exception_type_servidor").click(function () {	
-          $("#exception_type_IDD").val(this.id);	
-      });	
+          $("#exception_type_IDD").val("2");	
+      });
    });
 
    $(document).ready(function () {
@@ -19,20 +20,43 @@
    var hostname;
    var server_id;
 
-   $(document).ready(function(){  
-      $(".serverPoll").click(function() {
-         if (this.checked){
+   //$(document).ready(function(){  
+      //$(".serverPoll").click(function() {
+         //if (this.checked){
 
-            hostname = $('.serverPoll').val(this.value);
+            //hostname = $('.serverPoll').val(this.value);
+            //console.log(hostname);
             //alert(hostname.val());
 
             //server_id = $('.serverPoll').val(this.id);
             //alert(server_id.val());
 
             //alert("Server ID: " + server_id.val() + " Hostname: " + hostname.val());
+         //}
+      //});
+   //});
+
+   
+   //var a = "{{ serversPoll }}";
+   var a = "{{ serversPoll|safe }}";   //django model Object to javascript array
+   
+   
+   //alert(a);
+
+   $(document).ready(function(){  
+      $(".serverPoll").on("click", function() {
+         if($(this).prop('checked')){
+            hostname = $('.serverPoll').val(this.value);
+            //alert('Seleccionado');
+         }
+         if($(this).prop('unchecked')){
+            hostname = "sergio";
+            //alert('Seleccionado');
          }
       });
    });
+
+   
     
    $(document).ready(function() {
       $(".btnPoll").on("click", function() {
@@ -142,7 +166,10 @@
                   </div>
                   <div class="form-bottom">
                   {#<button id ="{{ exception_type_server.id }}" type="button" class="btn btn-default exception_type_servidor" data-toggle="modal" data-target="#myModal2" data-dismiss="modal" >Server</button>#}
-                  <button id ="2" type="button" class="btn btn-default exception_type_servidor" data-toggle="modal" data-target="#myModal2" data-dismiss="modal" >Server</button>
+                  
+                  <button type="button" class="btn btn-default exception_type_servidor" data-toggle="modal" data-target="#myModal2" data-dismiss="modal" >Server</button>
+                  
+
                   <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal4" data-dismiss="modal" >Patch</button>
                   </div>
                </fieldset>
@@ -179,7 +206,6 @@
                         {#<p><input id ="{{ alias.hostname }}" style="margin: .5rem;" type="checkbox" class="serverPoll" value={{ alias.hostname }} >{{ alias.hostname }}</p>#}
                         <p><input id ="{{ alias.id }}" style="margin: .5rem;" type="checkbox" class="serverPoll" value = {{ alias.hostname }} >{{ alias.hostname }}</p>
                   {% endfor %}
-
                   <button type="button" class="btn btn-next btnPoll">Next</button>                        
                   <button type="button" class="btn btn-default btn-prev">Previous</button>
                   </div>
@@ -266,6 +292,11 @@
                      {#{% for alias in patches %}#}
                            {#<p>{{ alias.server }}</p>#}
                      {#{% endfor %}#}
+                     {% for alias in serversPoll %}
+                        
+                        {#<p><input id ="{{ alias.hostname }}" style="margin: .5rem;" type="checkbox" class="serverPoll" value={{ alias.hostname }} >{{ alias.hostname }}</p>#}
+                        <p><input id ="{{ alias.id }}" style="margin: .5rem;" type="checkbox" class="patchPoll" value = {{ alias.hostname }} >{{ alias.hostname }}</p>
+                     {% endfor %}
                      <button type="button" class="btn btn-next">Next</button>
                      <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal1" data-dismiss="modal" >Previous</button>
                   </div>
@@ -297,7 +328,7 @@
                {% csrf_token %}
                
                <input class="serverPoll" type="hidden" name="content">
-               <input id="exception_type_IDD" type="hidden" name="exception_type">
+               <input id="exception_type_IDDD" type="hidden" name="exception_type">
                
                <p id="output"></p>
                

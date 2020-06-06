@@ -31,6 +31,7 @@ class AUTHORIZE_TYPE(models.Model):
 class EXCEPTION(models.Model):
     #kind = models.ForeignKey(EXCEPTION_TYPE, null=True, on_delete=models.CASCADE) #patch, server
     #state = models.ForeignKey(AUTHORIZE_TYPE, null=True, on_delete=models.CASCADE) #approved, rejected, pending
+    state = models.CharField(max_length=8, choices = state_choices, default = PEND)
     exception_type = models.IntegerField(null=True)
 
     patch_id = models.IntegerField(null=True) #!

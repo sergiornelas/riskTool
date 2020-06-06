@@ -21,6 +21,4 @@ $("div[id^='myModal']").each(function(){
       currentModal.modal('hide');
       currentModal.closest("div[id^='myModal']").prevAll("div[id^='myModal']").first().modal('show'); 
     });
-  
   });
-  
