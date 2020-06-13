@@ -3,8 +3,11 @@ from django.contrib import messages
 from patches.models import PATCHES
 from servers.models import SERVER_USER_RELATION, SERVER
 from exception.models import EXCEPTION, EXCEPTION_TYPE
+from django.http import HttpResponse
+from django.core import serializers
 
 def dashboard(request):
+    
     client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
     #los servidores que posee el cliente logeado.
 
@@ -13,6 +16,7 @@ def dashboard(request):
         servers_ids.append(server.server_id)
 
     patches = PATCHES.objects.filter(server_id__in=servers_ids) #faltaría filtrar aqui con el status_id=2
+
 
     serversPoll = SERVER.objects.filter(pk__in=client_has_server)
 
@@ -36,6 +40,19 @@ def dashboard(request):
     else:
         return render(request, 'pages/index.html')
 
+def patch_server_list(request):
+    client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
+    servers_ids=[]
+    for server in client_has_server:
+        servers_ids.append(server.server_id)
+    patches = PATCHES.objects.filter(server_id__in=servers_ids) #faltaría filtrar aqui con el status_id=2
+    serversPoll = SERVER.objects.filter(pk__in=client_has_server)
+
+    if request.method == "GET":
+        #return HttpResponse(serializers.serialize("json", patches))
+        return HttpResponse(serializers.serialize("json", serversPoll))
+        #return HttpResponse(serializers.serialize("json", PATCHES.objects.all()))
+
 
 def exclude_server(request):
     if request.method == 'POST':
@@ -54,8 +71,6 @@ def exclude_server(request):
         #         messages.error(request, 'You have already made an exception for this patch')
         #         return redirect('dashboard')
                
-        #exclude = exclude_patch(patch_id=patch_id, client=client, title=title, justification=justification, exclude_date=exclude_date)
-        #exclude_this_server = EXCEPTION(client=client, title=title, justification=justification, exclude_date=exclude_date, content=content)
         exclude_this_server = EXCEPTION(client=client, title=title, justification=justification, exclude_date=exclude_date, content=content, exception_type=exception_type)
         exclude_this_server.save()
 
