@@ -81,6 +81,20 @@
    </div>
 </section>
 
+<script>
+   var arrayFullServers = [];
+   var arrayServerPatches = [];
+   Array.prototype.remove = function() {
+      var what, a = arguments, L = a.length, ax;
+      while (L && this.length) {
+          what = a[--L];
+          while ((ax = this.indexOf(what)) !== -1) {
+              this.splice(ax, 1);
+          }
+      }
+      return this;
+  };
+</script>
 <!------------------------------------------------------------- A ------------------------------------------------------------->
 <!------------------------------------------------- Select SERVER OR PATCH?:------------------------------------->
 
@@ -136,19 +150,6 @@
 
 <!------------------------------------------------------------- B ------------------------------------------------------------->
 <!------------------------------------------------- Which servers do you want to exclude?:------------------------------------->
-<script>
-   var arrayFullServers = [];
-   Array.prototype.remove = function() {
-      var what, a = arguments, L = a.length, ax;
-      while (L && this.length) {
-          what = a[--L];
-          while ((ax = this.indexOf(what)) !== -1) {
-              this.splice(ax, 1);
-          }
-      }
-      return this;
-  };
-</script>
 <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog">
       <div class="modal-content">
@@ -311,48 +312,16 @@
                         <h5> Select patch/patches you want to exclude</h5>
                      </div>
                   </div>
-                  <div class="form-bottom">
-                    <div id="aaaaa"><a href="">Server</a></div>
-                    <div id="bbbbb"></div>
-
-                     <script>
-                        $(document).ready(function(){
-                           $("#aaaaa a").click(function(e){
-                                e.preventDefault();
-
-                                $.ajax({
-                                    url:'patch_server_list', //AQUI SE EXTRAERÁN LOS DATOS
-                                    type:'GET', //OBTENDREMOS DATOS
-                                    dataType:"text", //"json"  //FORMATO DE LOS DATOS
-                                    success:function(data){  //SI TODO SALE BIEN (DATOS EXISTENTES, CONEXIÓN CON EL SERVIDOR)
-                                        data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON
-                                        
-                                       $.each(data,function(key,index){
-                                                //console.log(data[key].fields.scheduled_date);
-                                                console.log(index.fields.hostname);
-                                            $("#bbbbb").append("<br>"+index.fields.hostname);
-                                       })
-                                    },
-                                    error:function(data){
-                                        console.log(data);
-                                        $("#bbbbb").append("<br>"+data.statusText);
-                                    }
-                                })
-
-                            })
-                        })
-                    </script>
-                    
+                  <div class="form-bottom">                   
                      <br>
                      <!-- SELECT  -->
                      <div style="margin-bottom: 1em;">Server:</div>
                      
-                     <select data-placeholder="Select server/servers" style="width:47em;" id="selectServers" multiple="multiple">
+                     <select data-placeholder="Select server/servers" style="width:47em;" id="selectServers_patch" multiple="multiple"></select>
                      <!-- <select data-placeholder="Select server/servers" style="width:47em;" id="selectServers"> -->
                         {#{% for n in serversPoll %}#}
                            {#<option class="patchPoll1" value="{{n.id}}">{{ n.hostname }}</option>#}
-                        {#{% endfor %}#}
-                     </select>
+                        {#{% endfor %}#}                   
 
                      <div style="margin-bottom: 1em;">Patch:</div>
 
@@ -370,13 +339,41 @@
                               type:'GET', //OBTENDREMOS DATOS
                               dataType:"text", //"json"  //FORMATO DE LOS DATOS
                               success:function(data){  //SI TODO SALE BIEN (DATOS EXISTENTES, CONEXIÓN CON EL SERVIDOR)
-                                    data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON
-                                 $.each(data, function(serversPoll) {
+                                 data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON
+
+                                 //$.each(data, function(serversPoll) {
+                                 $.each(data,function(key,index){
                                     //serverOptions+="<option value='"+serversPoll+"'>"+serversPoll+"</option>.addClass('serverOptionsClass')";
-                                    serverOptions+="<option value='"+this+"' >"+this.fields.hostname+"</option>";
+                                    //serverOptions+="<option value='"+this+"' >"+this.fields.hostname+"</option>";
+                                    serverOptions+="<option value='"+index+"' >"+index.fields.hostname+"</option>";
                                     //console.log(this.fields.hostname);
                                  });
-                                 $('#selectServers').html(serverOptions);
+
+                                 // AGREGA LOS SERVIDORES A LA DROP-DOWN-LIST
+                                 $('#selectServers_patch').html(serverOptions);
+                                 
+                                 //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (AGREGA).
+                                 $('#selectServers_patch').on('select2:select', function (e) {
+                                    var data = e.params.data;
+                                    arrayServerPatches.push(data.text);
+                                    console.log(arrayServerPatches);
+                                    document.getElementById('totalServersPatch').value = arrayServerPatches;
+                                    
+                                    //ESTO ES PARA MOSTRAR EL RESULTADO NOMÁS.                                       
+                                    $('#output2').html(arrayServerPatches);
+                                 });
+
+                                 //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (ELIMINA).
+                                 $('#selectServers_patch').on('select2:unselect', function (e) {
+                                    var data = e.params.data;
+                                    arrayServerPatches.remove(data.text);
+                                    console.log(arrayServerPatches);
+                                    document.getElementById('totalServersPatch').value = arrayServerPatches;
+                                    
+                                    //ESTO ES PARA MOSTRAR EL RESULTADO NOMÁS.
+                                    $('#output2').html(arrayServerPatches);
+                                 });
+
                               },
                               error:function(data){
                                     console.log(data);
@@ -385,23 +382,9 @@
                            })
                         })
 
-                        //clase dentro de ajax
-                        /*
-                        $(document).ready(function(){
-                           $(".serverOptionsClass").on("click", function(){
-                              console.log("ñaca");
-                           });
-                        });
-                        $(document).ready(function(){
-                           $(".serverOptionsClass").click(function(){
-                              console.log("ñaca");
-                           });
-                        });
-                        */
-                        
                         
                         $(document).ready(function(){
-                           $("#selectServers").select2({
+                           $("#selectServers_patch").select2({
                               placeholder: function(){
                                  $(this).data('placeholder');
                               }
@@ -450,7 +433,10 @@
             <form action="{% url 'exclude_server' %}" method="POST">
                {% csrf_token %}
 
-               <input class="serverPoll" type="hidden" name="content">
+               <!-- <input class="serverPoll" type="hidden" name="content"> -->
+
+               <input id ="totalServersPatch" type="hidden" name="content" value="">
+
                <input id="exception_type_IDDD" type="hidden" name="exception_type">
 
                <p id="output2"></p>
