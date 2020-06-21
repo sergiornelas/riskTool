@@ -27,6 +27,67 @@ justification: <input type="text" id="last"> -->
     - each(), loop through data
     - JSON.parse() convierte text plano a JSON.
 -->
+
+<script>
+    
+    $(document).ready(function(){
+        $("#country").select2({
+           placeholder: function(){
+              $(this).data('placeholder');
+           }
+        });
+     });
+
+    $(function(){
+    var countryOptions;
+    var stateOptions;
+    var districtOptions;
+        $.getJSON('countries.json',function(result){
+
+            $.each(result, function(i,country) {
+                //<option value='countrycode'>contryname</option>
+                countryOptions+="<option value='"
+                +country.code+
+                "'>"
+                +country.name+
+                "</option>";
+            });
+            $('#country').html(countryOptions);
+            
+        });
+        $("#country").change(function(){
+        if($(this).val()=="IN"){
+                $.getJSON('indianStates.json',function(result){
+                $.each(result, function(stateCode,stateName) {
+                    //<option value='stateCode'>stateName</option>
+                    stateOptions+="<option value='"
+                    +stateCode+
+                    "'>"
+                    +stateName+
+                    "</option>";
+                     });
+                     $('#state').html(stateOptions);
+                });
+            }
+        });
+    });
+    
+    </script>
+
+Country:
+<select id="country" multiple="multiple" placeholder="COUNTRY" style="width: 9rem;">
+</select>
+State:
+<select id="state">
+</select>
+District:
+<select id="district">
+</select>
+
+<script src="jquery-2.2.4.min.js"></script>
+<script src="custom.js"></script>
+
+
 <script>
     $(document).ready(function(){
         $("#myBtn a").click(function(e){
@@ -49,10 +110,9 @@ justification: <input type="text" id="last"> -->
                             //console.log(index);
                         //imprime solo los campos que necesitamos.
                             console.log(data[key].fields.scheduled_date);
-                            console.log(index.fields.scheduled_date);
-                            console.log(index['fields.scheduled_date']);
+                            //console.log(index.fields.scheduled_date);
                         $("#output").append("<br>"+index.fields.scheduled_date);
-                })
+                    })
                     
                 },
                 error:function(data){
@@ -78,5 +138,6 @@ justification: <input type="text" id="last"> -->
         })
     })
 </script>
+
 
 {% endblock %}

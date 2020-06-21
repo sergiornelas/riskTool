@@ -40,6 +40,8 @@ def dashboard(request):
     else:
         return render(request, 'pages/index.html')
 
+
+#AJAX
 def patch_server_list(request):
     client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
     servers_ids=[]
@@ -48,10 +50,14 @@ def patch_server_list(request):
     patches = PATCHES.objects.filter(server_id__in=servers_ids) #faltaría filtrar aqui con el status_id=2
     serversPoll = SERVER.objects.filter(pk__in=client_has_server)
 
+    #print(serversPoll)
+    print(client_has_server)
+
     if request.method == "GET":
         #return HttpResponse(serializers.serialize("json", patches))
         return HttpResponse(serializers.serialize("json", serversPoll))
         #return HttpResponse(serializers.serialize("json", PATCHES.objects.all()))
+        #return HttpResponse(serializers.serialize("json", client_has_server))
 
 
 def exclude_server(request):
