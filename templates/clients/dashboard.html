@@ -84,6 +84,7 @@
 <script>
    var arrayFullServers = [];
    var arrayServerPatches = [];
+   var arrayPatchesPatches = [];
    Array.prototype.remove = function() {
       var what, a = arguments, L = a.length, ax;
       while (L && this.length) {
@@ -173,7 +174,7 @@
                         $(document).ready(function(){
                            var serverOptions;
                            $.ajax({
-                              url:'patch_server_list', //AQUI SE EXTRAERÁN LOS DATOS
+                              url:'server_user_list', //AQUI SE EXTRAERÁN LOS DATOS
                               type:'GET', //OBTENDREMOS DATOS
                               dataType:"text", //"json"  //FORMATO DE LOS DATOS
                               success:function(data){  //SI TODO SALE BIEN (DATOS EXISTENTES, CONEXIÓN CON EL SERVIDOR)
@@ -321,21 +322,23 @@
                      <!-- <select data-placeholder="Select server/servers" style="width:47em;" id="selectServers"> -->
                         {#{% for n in serversPoll %}#}
                            {#<option class="patchPoll1" value="{{n.id}}">{{ n.hostname }}</option>#}
-                        {#{% endfor %}#}                   
+                        {#{% endfor %}#}
 
                      <div style="margin-bottom: 1em;">Patch:</div>
 
-                     <select data-placeholder="Select patch/patches" style="width:47em;" id="selectPatches" multiple="multiple">
-                        {% for n in patches %}
-                           <option class="patchPoll2" value="{{n.id}}">{{ n.advisory }}</option>
-                        {% endfor %}
-                     </select>
+                     <select data-placeholder="Select patch/patches" style="width:47em;" id="selectPatches_patch" multiple="multiple"></select>
+                     <!-- <select data-placeholder="Select patch/patches" style="width:47em;" id="selectPatches" multiple="multiple"> -->
+                        {#{% for n in patches %}#}
+                           {#<option class="patchPoll2" value="{{n.id}}">{{ n.advisory }}</option>#}
+                        {#{% endfor %}#}
+                     <!-- </select> -->
 
                      <script>
+                        //SERVER DROP-DOWN-LIST
                         $(document).ready(function(){
                            var serverOptions;
                            $.ajax({
-                              url:'patch_server_list', //AQUI SE EXTRAERÁN LOS DATOS
+                              url:'server_user_list', //AQUI SE EXTRAERÁN LOS DATOS
                               type:'GET', //OBTENDREMOS DATOS
                               dataType:"text", //"json"  //FORMATO DE LOS DATOS
                               success:function(data){  //SI TODO SALE BIEN (DATOS EXISTENTES, CONEXIÓN CON EL SERVIDOR)
@@ -382,7 +385,61 @@
                            })
                         })
 
+                        //PATCHES DROP-DOWN-LIST
+                        $(document).ready(function(){
+                           var serverOptions;
+                           $.ajax({
+                              url:'patch_user_list', //AQUI SE EXTRAERÁN LOS DATOS
+                              type:'GET', //OBTENDREMOS DATOS
+                              dataType:"text", //"json"  //FORMATO DE LOS DATOS
+                              success:function(data){  //SI TODO SALE BIEN (DATOS EXISTENTES, CONEXIÓN CON EL SERVIDOR)
+                                 data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON
+
+                                 //$.each(data, function(serversPoll) {
+                                 $.each(data,function(key,index){
+                                    //serverOptions+="<option value='"+serversPoll+"'>"+serversPoll+"</option>.addClass('serverOptionsClass')";
+                                    //serverOptions+="<option value='"+this+"' >"+this.fields.hostname+"</option>";
+                                    serverOptions+="<option value='"+index+"' >"+index.fields.advisory+"</option>";
+                                    //console.log(this.fields.hostname);
+                                 });
+
+                                 // AGREGA LOS SERVIDORES A LA DROP-DOWN-LIST
+                                 $('#selectPatches_patch').html(serverOptions);
+                                 
+                                 //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (AGREGA).
+                                 $('#selectPatches_patch').on('select2:select', function (e) {
+                                    var data = e.params.data;
+                                    arrayPatchesPatches.push(data.text);
+                                    console.log(arrayPatchesPatches);
+                                    
+                                    document.getElementById('totalPatchesPatch').value = arrayPatchesPatches;
+                                    
+                                    //ESTO ES PARA MOSTRAR EL RESULTADO NOMÁS.                                       
+                                    $('#output3').html(arrayPatchesPatches);
+                                 });
+
+                                 //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (ELIMINA).
+                                 $('#selectPatches_patch').on('select2:unselect', function (e) {
+                                    var data = e.params.data;
+                                    arrayPatchesPatches.remove(data.text);
+                                    console.log(arrayPatchesPatches);
+                                    
+                                    document.getElementById('totalPatchesPatch').value = arrayPatchesPatches;
+                                    
+                                    //ESTO ES PARA MOSTRAR EL RESULTADO NOMÁS.
+                                    $('#output3').html(arrayPatchesPatches);
+                                 });
+
+                              },
+                              error:function(data){
+                                    console.log(data);
+                                    $("#bbbbb").append("<br>"+data.statusText);
+                              }
+                           })
+                        })
+
                         
+                        //MOSTRAR EL PLACE HOLDER
                         $(document).ready(function(){
                            $("#selectServers_patch").select2({
                               placeholder: function(){
@@ -391,9 +448,9 @@
                            });
                         });
                         
-
+                        //MOSTRAR EL PLACE HOLDER
                         $(document).ready(function(){
-                           $("#selectPatches").select2({
+                           $("#selectPatches_patch").select2({
                               placeholder: function(){
                                  $(this).data('placeholder');
                               }
@@ -433,13 +490,14 @@
             <form action="{% url 'exclude_server' %}" method="POST">
                {% csrf_token %}
 
-               <!-- <input class="serverPoll" type="hidden" name="content"> -->
-
                <input id ="totalServersPatch" type="hidden" name="content" value="">
+
+               <input id ="totalPatchesPatch" type="hidden" name="content" value="">
 
                <input id="exception_type_IDDD" type="hidden" name="exception_type">
 
                <p id="output2"></p>
+               <p id="output3"></p>
 
                <!-- Estos se introducen del modelo de exception -->
                <div class="form-group">

@@ -41,23 +41,28 @@ def dashboard(request):
         return render(request, 'pages/index.html')
 
 
-#AJAX
-def patch_server_list(request):
+#AJAX LISTA DE SERVIDORES DEL CLIENTE INGRESADO
+def server_user_list(request):
+    client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
+    serversPoll = SERVER.objects.filter(pk__in=client_has_server)
+
+    if request.method == "GET":
+        return HttpResponse(serializers.serialize("json", serversPoll))
+
+
+#AJAX LISTA DE PARCHES DEL CLIENTE INGRESADO
+def patch_user_list(request):
     client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
     servers_ids=[]
     for server in client_has_server:
         servers_ids.append(server.server_id)
     patches = PATCHES.objects.filter(server_id__in=servers_ids) #faltaría filtrar aqui con el status_id=2
-    serversPoll = SERVER.objects.filter(pk__in=client_has_server)
+    #serversPoll = SERVER.objects.filter(pk__in=client_has_server)
 
-    #print(serversPoll)
-    print(client_has_server)
+    print(patches);
 
     if request.method == "GET":
-        #return HttpResponse(serializers.serialize("json", patches))
-        return HttpResponse(serializers.serialize("json", serversPoll))
-        #return HttpResponse(serializers.serialize("json", PATCHES.objects.all()))
-        #return HttpResponse(serializers.serialize("json", client_has_server))
+        return HttpResponse(serializers.serialize("json", patches))
 
 
 def exclude_server(request):
