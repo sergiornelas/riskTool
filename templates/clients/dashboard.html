@@ -336,20 +336,10 @@
                      <div style="margin-bottom: 1em;">Server:</div>
                      
                      <select data-placeholder="Select server/servers" style="width:47em;" id="selectServers_patch" multiple="multiple"></select>
-                     <!-- <select data-placeholder="Select server/servers" style="width:47em;" id="selectServers"> -->
-                        {#{% for n in serversPoll %}#}
-                           {#<option class="patchPoll1" value="{{n.id}}">{{ n.hostname }}</option>#}
-                        {#{% endfor %}#}
 
                      <div style="margin-bottom: 1em;">Patch:</div>
 
                      <select data-placeholder="Select patch/patches" style="width:47em;" id="selectPatches_patch" multiple="multiple"></select>
-                     <!-- <select data-placeholder="Select patch/patches" style="width:47em;" id="selectPatches" multiple="multiple"> -->
-                        {#{% for n in patches %}#}
-                           {#<option class="patchPoll2" value="{{n.id}}">{{ n.advisory }}</option>#}
-                        {#{% endfor %}#}
-                     <!-- </select> -->
-
                      
                      <script>
                         //SERVER DROP-DOWN-LIST
@@ -362,19 +352,15 @@
                               success:function(data){  //SI TODO SALE BIEN (DATOS EXISTENTES, CONEXIÓN CON EL SERVIDOR)
                                  data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON
 
-                                 //$.each(data, function(serversPoll) {
                                  $.each(data,function(key,index, value){
-                                    //serverOptions+="<option value='"+serversPoll+"'>"+serversPoll+"</option>.addClass('serverOptionsClass')";
-                                    //serverOptions+="<option value='"+this+"' >"+this.fields.hostname+"</option>";
                                     serverOptions+="<option value='"+index+"' >"+index.fields.hostname+"</option>";
-                                    //console.log(this.fields.hostname);
                                  });
 
                                  
                                  // AGREGA LOS SERVIDORES A LA DROP-DOWN-LIST
                                  $('#selectServers_patch').html(serverOptions);
                                  
-                                 //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (AGREGA).
+                                 //AL MOMENTO EN QUE EL CLIENTE DA CLICK A UN SERVER (AGREGA).
                                  $('#selectServers_patch').on('select2:select', function (e) {
                                     var data = e.params.data;
                                     arrayServerPatches.push(data.text);
@@ -383,8 +369,6 @@
                                     
                                     //ESTO ES PARA MOSTRAR EL RESULTADO NOMÁS.                                       
                                     $('#output2').html(arrayServerPatches);
-
-               //////////////////////////////////////////////// PRUEBAS ////////////////////////////////
 
                                     var xtest = JSON.stringify(arrayServerPatches);
                                     xtest = xtest.replace(/"/g, '');
@@ -397,39 +381,47 @@
                                        },
                                        url:'testing',
                                     })
-                                       .done(function(qwe){
-                                          //qwe = JSON.parse(qwe)
-                                          console.log(qwe);
+                                       .done(function(data){
 
-/*
                                           var patchesOptions;
                                           
-                                                data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON
+                                          data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
+                                          console.log(data);
+                                          
+                                          $.each(data,function(key,index){
+                                             //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
+                                             patchesOptions+="<option value='"+index.fields.pk+"' >"+index.fields.description+"</option>";
 
-                                                //$.each(data, function(serversPoll) {
-                                                $.each(data,function(key,index){
-                                                   //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
-                                                   patchesOptions+="<option value='"+index.fields.advisory+"' >"+index.fields.advisory+"</option>";
-                                                   //patchesOptions+="<option value='"+index.fields.advisory+"' >{{ advisory|safe }}</option>";
-                                                   //patchesOptions+="<option value='"+index.fields.advisory+"' >1</option>";
-                                                   
-                                                   console.log(index);
-                                                });
+                                             console.log(index);
+                                          });
 
-                                                // AGREGA LOS SERVIDORES A LA DROP-DOWN-LIST
-                                                //$('#selectPatches_patch').html(patchesOptions);
-                                                $('#selectPatches_patch').html(patchesOptions);
+                                          // AGREGA LOS SERVIDORES A LA DROP-DOWN-LIST
+                                          $('#selectPatches_patch').html(patchesOptions);
 
-*/
+                                          //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (AGREGA).
+                                          $('#selectPatches_patch').on('select2:select', function (e) {
+                                             var data = e.params.data;
+                                             arrayPatchesPatches.push(data.text);
+                                             console.log(arrayPatchesPatches);
+                                             
+                                             document.getElementById('totalPatchesPatch').value = arrayPatchesPatches;
+                                             
+                                             //ESTO ES PARA MOSTRAR EL RESULTADO NOMÁS.                                       
+                                             $('#output3').html(arrayPatchesPatches);
+                                          });
 
-
-
-
-
-
+                                          //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (ELIMINA).
+                                          $('#selectPatches_patch').on('select2:unselect', function (e) {
+                                             var data = e.params.data;
+                                             arrayPatchesPatches.remove(data.text);
+                                             console.log(arrayPatchesPatches);
+                                             
+                                             document.getElementById('totalPatchesPatch').value = arrayPatchesPatches;
+                                             
+                                             //ESTO ES PARA MOSTRAR EL RESULTADO NOMÁS.
+                                             $('#output3').html(arrayPatchesPatches);
+                                          });
                                        });
-
-               //////////////////////////////////////////////// PRUEBAS /////////////////////////////////
 
                                  });
 
@@ -451,65 +443,6 @@
                               }
                            })
                         })
-
-                        //PATCHES DROP-DOWN-LIST
-                        
-
-                        $(document).ready(function(){
-                           var patchesOptions;
-                           $.ajax({
-                              url:'patch_user_list', //AQUI SE EXTRAERÁN LOS DATOS
-                              type:'GET', //OBTENDREMOS DATOS
-                              dataType:"text", //"json"  //FORMATO DE LOS DATOS
-                              success:function(data){  //SI TODO SALE BIEN (DATOS EXISTENTES, CONEXIÓN CON EL SERVIDOR)
-                                 data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON
-
-                                 //$.each(data, function(serversPoll) {
-                                 $.each(data,function(key,index){
-                                    //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
-                                    patchesOptions+="<option value='"+index.fields.advisory+"' >"+index.fields.advisory+"</option>";
-                                    //patchesOptions+="<option value='"+index.fields.advisory+"' >{{ advisory|safe }}</option>";
-                                    //patchesOptions+="<option value='"+index.fields.advisory+"' >1</option>";
-                                    
-                                    console.log(index);
-                                 });
-
-                                 // AGREGA LOS SERVIDORES A LA DROP-DOWN-LIST
-                                 //$('#selectPatches_patch').html(patchesOptions);
-                                 $('#selectPatches_patch').html(patchesOptions);
-
-                                 //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (AGREGA).
-                                 $('#selectPatches_patch').on('select2:select', function (e) {
-                                    var data = e.params.data;
-                                    arrayPatchesPatches.push(data.text);
-                                    console.log(arrayPatchesPatches);
-                                    
-                                    document.getElementById('totalPatchesPatch').value = arrayPatchesPatches;
-                                    
-                                    //ESTO ES PARA MOSTRAR EL RESULTADO NOMÁS.                                       
-                                    $('#output3').html(arrayPatchesPatches);
-                                 });
-
-                                 //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (ELIMINA).
-                                 $('#selectPatches_patch').on('select2:unselect', function (e) {
-                                    var data = e.params.data;
-                                    arrayPatchesPatches.remove(data.text);
-                                    console.log(arrayPatchesPatches);
-                                    
-                                    document.getElementById('totalPatchesPatch').value = arrayPatchesPatches;
-                                    
-                                    //ESTO ES PARA MOSTRAR EL RESULTADO NOMÁS.
-                                    $('#output3').html(arrayPatchesPatches);
-                                 });
-
-                              },
-                              error:function(data){
-                                    console.log(data);
-                                    $("#bbbbb").append("<br>"+data.statusText);
-                              }
-                           })
-                        })
-                        
                         
                         //MOSTRAR EL PLACE HOLDER
                         $(document).ready(function(){
@@ -598,6 +531,5 @@
       </div>
    </div>
 </div>
-
 
 {% endblock %}

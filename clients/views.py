@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.http import JsonResponse
 
 #DASHBOARD
 def dashboard(request):
@@ -76,29 +77,6 @@ def patch_user_list(request):
 
 
 
-#PRUEBA EL ADVISORY
-def advisoryName(request):
-
-    #advisories = ADVISORY.objects.filter(advisory_id__in=patches) #faltaría filtrar aqui con el status_id=2
-
-    client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
-    servers_ids=[]
-    for server in client_has_server:
-        servers_ids.append(server.server_id)
-
-    patches = PATCHES.objects.filter(server_id__in=servers_ids) #faltaría filtrar aqui con el status_id=2
-    
-    #advisories = PATCHES.objects.filter(advisory_id__in=patches) #faltaría filtrar aqui con el status_id=2
-
-    #COMO EL server_user_list: puedes agarrar advisories directo.
-    #client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
-    #serversPoll = SERVER.objects.filter(pk__in=client_has_server)
-    
-    if request.method == "GET":
-        return HttpResponse(serializers.serialize("json", patches))
-        #return HttpResponse(patches)
-
-
 
 #POST REQUEST CREAR EXCEPCIÓN
 def exclude_server(request):
@@ -149,20 +127,21 @@ def testing(request):
 
         #utilizamos los id de los advisories para obtener los objetos completos
         getAdvisoriesObjects = ADVISORY.objects.filter(pk__in=takeAdvisories)
+        print(type(getAdvisoriesObjects))
 
-        #obtenemos solo la descripción de esos objetos
+        #LISTA
+        #obtenemos solo la descripción de esos objetos, REGRESA UN SOLO STRING
         takeAdvisoriesDescription = [o.description for o in getAdvisoriesObjects]
 
+        #print(type(takeAdvisoriesDescription))
         print(takeAdvisoriesDescription)
 
-        #print(patches2)
-        #print(takeAdvisories)
-        
-
+    
         context = {
 		    #'xtest':xtest,
             #'takeServers':takeServers
-            'advisories':advisories,
+            #'advisories':advisories,
+            'takeAdvisoriesDescription':takeAdvisoriesDescription,
         }
 
         
@@ -171,5 +150,9 @@ def testing(request):
 
 
         #return HttpResponse(json.dumps(context))
-        #return HttpResponse(serializers.serialize("json", context))
-        return HttpResponse(takeAdvisoriesDescription)
+        return HttpResponse(serializers.serialize("json", getAdvisoriesObjects))
+
+        #return JsonResponse(json.loads(takeAdvisoriesDescription))
+
+        #this works:
+        #return HttpResponse(takeAdvisoriesDescription)

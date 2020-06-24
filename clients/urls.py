@@ -11,8 +11,6 @@ urlpatterns = [
     path('server_user_list', views.server_user_list, name='server_user_list'),
     path('patch_user_list', views.patch_user_list, name='patch_user_list'),
     
-    path('advisoryName', views.advisoryName, name='advisoryName'),
-    
     path('testing', views.testing, name='testing'),
     #path('testing/<int:number>', views.testing, name='testing'),
     
