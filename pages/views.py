@@ -14,10 +14,7 @@ def ajax(request):
     return render(request, 'ajax.html')
 
 def test(request):
-    return render(request, 'test.txt')
-
-def javascript(request):
-    return render(request, 'testClock.html')
+    return render(request, 'pages/test.html')
 
 
 
