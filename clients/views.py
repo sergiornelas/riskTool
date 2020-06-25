@@ -64,17 +64,54 @@ def server_user_list(request):
         return HttpResponse(serializers.serialize("json", serversPoll))
 
 
-#AJAX LISTA DE PARCHES DEL CLIENTE INGRESADO
-def patch_user_list(request):
-    client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
-    servers_ids=[]
-    for server in client_has_server:
-        servers_ids.append(server.server_id)
-    patches = PATCHES.objects.filter(server_id__in=servers_ids) #faltaría filtrar aqui con el status_id=2
-    
-    if request.method == "GET":
-        return HttpResponse(serializers.serialize("json", patches))
 
+#TESTING
+@csrf_exempt
+def filterPatches(request):
+    if request.method == 'POST':        
+        #toma el servidor seleccionado
+        
+        selectedServer = request.POST['selectedServer'] #wdcdmzyz22033245,wdcgz22050068
+
+        #toma los objetos de los servidores que contengan el hostname seleccionado
+        takeServers = SERVER.objects.filter(hostname=selectedServer)
+
+        servers_ids=[]
+
+        #almacenamos los ids de los servidores que contengan el hostname seleccionado
+        #en un arreglo
+        for server in takeServers:
+            servers_ids.append(server.pk)
+
+        #hacemos comunicación entre un advisory y un server a través del parche.
+        #por eso para conocer los advisories necesitamos los objetos patches.
+        patch_advisory = PATCHES.objects.filter(server_id__in=servers_ids)
+
+        #tomamos los id de los advisories de los parches que estan involucrados
+        #con el servidor seleccionado.
+        takeAdvisories = [o.advisory_id for o in patch_advisory]
+
+        #utilizamos los id de los advisories para obtener los objetos completos
+        getAdvisoriesObjects = ADVISORY.objects.filter(pk__in=takeAdvisories)
+        #print(type(getAdvisoriesObjects))
+
+        #LISTA <NO SE USA>
+        #obtenemos solo la descripción de esos objetos, REGRESA UN SOLO STRING
+        takeAdvisoriesDescription = [o.description for o in getAdvisoriesObjects]
+        #print(takeAdvisoriesDescription)
+
+        context = {
+            #'takeServers':takeServers
+            #'advisories':advisories,
+            'takeAdvisoriesDescription':takeAdvisoriesDescription,
+        }
+
+        return HttpResponse(serializers.serialize("json", getAdvisoriesObjects))
+        
+        #return HttpResponse(data, content_type="application/json")
+        #return HttpResponse(json.dumps(context))
+        #return JsonResponse(json.loads(takeAdvisoriesDescription))
+        #return HttpResponse(takeAdvisoriesDescription)
 
 
 
@@ -102,57 +139,3 @@ def exclude_server(request):
         messages.success(request, "Your request has been submitted, an approver will get back to you soon")
 
         return redirect('exceptionsBoard')
-
-#TESTING
-@csrf_exempt
-def testing(request):
-    if request.method == 'POST':
-        print("SE LLAMÓ AL SERVER");
-
-        
-        xtest = request.POST['xtest']
-
-        takeServers = SERVER.objects.filter(hostname=xtest)
-
-        #print(takeServers)
-
-        servers_ids=[]
-        for server in takeServers:
-            servers_ids.append(server.pk)
-
-        advisories = PATCHES.objects.filter(server_id__in=servers_ids) #faltaría filtrar aqui con el status_id=2
-
-        #tomamos los id de los advisories
-        takeAdvisories = [o.advisory_id for o in advisories]
-
-        #utilizamos los id de los advisories para obtener los objetos completos
-        getAdvisoriesObjects = ADVISORY.objects.filter(pk__in=takeAdvisories)
-        print(type(getAdvisoriesObjects))
-
-        #LISTA
-        #obtenemos solo la descripción de esos objetos, REGRESA UN SOLO STRING
-        takeAdvisoriesDescription = [o.description for o in getAdvisoriesObjects]
-
-        #print(type(takeAdvisoriesDescription))
-        print(takeAdvisoriesDescription)
-
-    
-        context = {
-		    #'xtest':xtest,
-            #'takeServers':takeServers
-            #'advisories':advisories,
-            'takeAdvisoriesDescription':takeAdvisoriesDescription,
-        }
-
-        
-        #data = serializers.serialize('json', context)
-        #return HttpResponse(data, content_type="application/json")
-
-
-        #return HttpResponse(json.dumps(context))
-        return HttpResponse(serializers.serialize("json", getAdvisoriesObjects))
-
-        #return JsonResponse(json.loads(takeAdvisoriesDescription))
-
-        #this works:
-        #return HttpResponse(takeAdvisoriesDescription)

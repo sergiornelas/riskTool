@@ -105,7 +105,7 @@
           }
       }
       return this;
-  };
+   };
 </script>
 <!------------------------------------------------------------- A ------------------------------------------------------------->
 <!------------------------------------------------- Select SERVER OR PATCH?:------------------------------------->
@@ -336,57 +336,73 @@
                      <div style="margin-bottom: 1em;">Server:</div>
                      
                      <select data-placeholder="Select server/servers" style="width:47em;" id="selectServers_patch" multiple="multiple"></select>
-
+                     
                      <div style="margin-bottom: 1em;">Patch:</div>
 
                      <select data-placeholder="Select patch/patches" style="width:47em;" id="selectPatches_patch" multiple="multiple"></select>
                      
                      <script>
+
                         //SERVER DROP-DOWN-LIST
                         $(document).ready(function(){
+                           
                            var serverOptions;
                            $.ajax({
-                              url:'server_user_list', //AQUI SE EXTRAERÁN LOS DATOS
+                              url:'server_user_list', //AQUI SE EXTRAEN LOS SERVIDORES DEL CLIENTE LOGGEADO
                               type:'GET', //OBTENDREMOS DATOS
                               dataType:"text", //"json"  //FORMATO DE LOS DATOS
                               success:function(data){  //SI TODO SALE BIEN (DATOS EXISTENTES, CONEXIÓN CON EL SERVIDOR)
-                                 data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON
+                                 data = JSON.parse(data); //LOS SERVIDORES LOS CONVERTIMOS A JSON
 
                                  $.each(data,function(key,index, value){
                                     serverOptions+="<option value='"+index+"' >"+index.fields.hostname+"</option>";
                                  });
 
-                                 
                                  // AGREGA LOS SERVIDORES A LA DROP-DOWN-LIST
                                  $('#selectServers_patch').html(serverOptions);
                                  
+                                 // ------------ PATCHES ------------
+
                                  //AL MOMENTO EN QUE EL CLIENTE DA CLICK A UN SERVER (AGREGA).
                                  $('#selectServers_patch').on('select2:select', function (e) {
                                     var data = e.params.data;
-                                    arrayServerPatches.push(data.text);
+                                    arrayServerPatches.push(data.text); // añadimos el campo seleccionado por el cliente al arreglo
                                     console.log(arrayServerPatches);
-                                    document.getElementById('totalServersPatch').value = arrayServerPatches;
+                                    document.getElementById('totalServersPatch').value = arrayServerPatches; //PREPARAMOS LOS SERVIDORES PARA LA BASE DE DATOS.
                                     
-                                    //ESTO ES PARA MOSTRAR EL RESULTADO NOMÁS.                                       
+                                    //ESTO ES PARA MOSTRAR EL RESULTADO AL INQUIRY (TESTING).
                                     $('#output2').html(arrayServerPatches);
 
-                                    var xtest = JSON.stringify(arrayServerPatches);
-                                    xtest = xtest.replace(/"/g, '');
-                                    xtest = xtest.replace(/[\[\]']+/g,'')
+                                    //console.log(typeof arrayServerPatches)
+
+                                    //var jsonz = JSON.stringify(arrayServerPatches);
+                                    
+
+                                    
+                                    //CONVERITR EL SERVIDOR JSON A STRING
+                                    var selectedServer = JSON.stringify(arrayServerPatches);
+                                    //REGEXP QUITAR CORCHETES Y COMILLAS (CLEAR DATA)
+                                    selectedServer = selectedServer.replace(/"/g, '');
+                                    selectedServer = selectedServer.replace(/[\[\]']+/g,'')
+
+                                    console.log(selectedServer)
+                                    
+
+                     // ------------------------------ AQUI EMPIEZA LO IMPORTANTE -------------------------------- 
                                     
                                     $.ajax({
                                        method: "POST",
                                        data: {
-                                          xtest: xtest
+                                          selectedServer: selectedServer
+                                          //jsonz: jsonz
                                        },
-                                       url:'testing',
+                                       url:'filterPatches',
                                     })
-                                       .done(function(data){
-
+                                       .done(function(data){ //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
+                                          
                                           var patchesOptions;
                                           
                                           data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
-                                          console.log(data);
                                           
                                           $.each(data,function(key,index){
                                              //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
@@ -395,10 +411,10 @@
                                              console.log(index);
                                           });
 
-                                          // AGREGA LOS SERVIDORES A LA DROP-DOWN-LIST
+                                          // AGREGA LOS PARCHES A LA DROP-DOWN-LIST
                                           $('#selectPatches_patch').html(patchesOptions);
 
-                                          //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (AGREGA).
+                                          //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA PARCHE (AGREGA).
                                           $('#selectPatches_patch').on('select2:select', function (e) {
                                              var data = e.params.data;
                                              arrayPatchesPatches.push(data.text);
@@ -410,7 +426,7 @@
                                              $('#output3').html(arrayPatchesPatches);
                                           });
 
-                                          //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (ELIMINA).
+                                          //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA PARCHE (ELIMINA).
                                           $('#selectPatches_patch').on('select2:unselect', function (e) {
                                              var data = e.params.data;
                                              arrayPatchesPatches.remove(data.text);
@@ -421,19 +437,85 @@
                                              //ESTO ES PARA MOSTRAR EL RESULTADO NOMÁS.
                                              $('#output3').html(arrayPatchesPatches);
                                           });
+                                          console.log("termina el metodo")
+                                          //data=""
                                        });
-
                                  });
 
-                                 //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (ELIMINA).
+                                 //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA SERVER (ELIMINA).
+                                 //SE APLICA CUANDO SE ELIMINA CUALQUIER ELEMENTO, NO UNO EN ESPECÍFICO.
+
+                                 //TAREA: VER EN LA DOCUMENTACIÓN CUANDO SE ELIMINA UNA OPCION EN ESPECIFICO, QUE PALABRA USAR
+
                                  $('#selectServers_patch').on('select2:unselect', function (e) {
                                     var data = e.params.data;
                                     arrayServerPatches.remove(data.text);
                                     console.log(arrayServerPatches);
-                                    document.getElementById('totalServersPatch').value = arrayServerPatches;
+                                    document.getElementById('totalServersPatch').value = arrayServerPatches; //PREPARAMOS LOS SERVIDORES SELECCIONADOS PARA 
+                                                                                                             // LA SUBIDA A LA BASE DE DATOS
+                                    console.log("se eliminó un servidor");
+                                    "<option >Eliminado</option>";
                                     
+                                    //LA DROPDOWN DE PARCHES
+                                    document.getElementById('selectPatches_patch').innerHTML = "elimindoo";
+                                    
+
                                     //ESTO ES PARA MOSTRAR EL RESULTADO NOMÁS.
                                     $('#output2').html(arrayServerPatches);
+                                    /*
+                                    var selectedServer = JSON.stringify(arrayServerPatches);
+                                    selectedServer = selectedServer.replace(/"/g, '');
+                                    selectedServer = selectedServer.replace(/[\[\]']+/g,'')
+                                    
+                                    $.ajax({
+                                       method: "POST",
+                                       data: {
+                                          selectedServer: selectedServer
+                                       },
+                                       url:'filterPatches',
+                                    })
+                                       .done(function(data){
+
+                                          var patchesOptions;
+                                          
+                                          data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
+                                          console.log(data);
+                                          
+                                          $.each(data,function(key,index){
+                                             //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
+                                             //patchesOptions+="<option value='"+index.fields.pk+"' >"+index.fields.description+"</option>";
+                                             patchesOptions+="<option value='"+index.fields.pk+"' >Eliminado</option>";
+
+                                             console.log(index);
+                                          });
+
+                                          // AGREGA LOS SERVIDORES A LA DROP-DOWN-LIST
+                                          $('#selectPatches_patch').html(patchesOptions);
+
+                                          //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA PARCHE (AGREGA).
+                                          $('#selectPatches_patch').on('select2:select', function (e) {
+                                             var data = e.params.data;
+                                             arrayPatchesPatches.push(data.text);
+                                             console.log(arrayPatchesPatches);
+                                             
+                                             document.getElementById('totalPatchesPatch').value = arrayPatchesPatches;
+                                             
+                                             //ESTO ES PARA MOSTRAR EL RESULTADO NOMÁS.                                       
+                                             $('#output3').html(arrayPatchesPatches);
+                                          });
+
+                                          //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA PARCHE (ELIMINA).
+                                          $('#selectPatches_patch').on('select2:unselect', function (e) {
+                                             var data = e.params.data;
+                                             arrayPatchesPatches.remove(data.text);
+                                             console.log(arrayPatchesPatches);
+                                             
+                                             document.getElementById('totalPatchesPatch').value = arrayPatchesPatches;
+                                             
+                                             //ESTO ES PARA MOSTRAR EL RESULTADO NOMÁS.
+                                             $('#output3').html(arrayPatchesPatches);
+                                          });
+                                       });*/
                                  });
 
                               },

@@ -9,9 +9,8 @@ urlpatterns = [
     
     path('exclude_server', views.exclude_server, name='exclude_server'),
     path('server_user_list', views.server_user_list, name='server_user_list'),
-    path('patch_user_list', views.patch_user_list, name='patch_user_list'),
     
-    path('testing', views.testing, name='testing'),
+    path('filterPatches', views.filterPatches, name='filterPatches'),
     #path('testing/<int:number>', views.testing, name='testing'),
     
 ]
