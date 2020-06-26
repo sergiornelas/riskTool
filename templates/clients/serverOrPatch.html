@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section id="showcase-inner" class="py-5 text-white">
+   <div class="container">
+      <div class="row text-center">
+         <div class="col-md-12">
+            <h1 class="display-4">Type of exception</h1>
+            <p class="lead">Manage your patches if you have struggles</p>
+         </div>
+      </div>
+   </div>
+</section>
+
+<!-- Breadcrumb -->
+<section id="bc" class="mt-3">
+   <div class="container">
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+               <a href="{% url 'dashboard' %}">
+                  <i class="fas fa-home"></i> Dashboard </a>
+            </li>
+            <li class="breadcrumb-item">
+               <a href="{% url 'exceptionsBoard' %}">
+                  <i class="fas fa-calendar-check"></i> Requests </a>
+            </li>
+         </ol>
+      </nav>
+   </div>
+</section>
+
+<section id="dashboard" class="py-4">
+   <div class="container">
+      <form role="form" action="" method="post" class="registration-form">
+         <fieldset style="display: block;">
+            <div class="form-top">
+               <div class="form-top-left">
+                  <p>What do you want to make an exception?:</p>
+               </div>
+            </div>
+
+            <div style="margin-bottom: 2em; margin-top: 2em;" class="progress">
+               <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100" style="width:33%; ">
+                 33%
+               </div>
+             </div>
+
+            <div class="form-bottom">
+               <a href="{% url 'selectServers' %}" class="btn btn-primary btn-block">Server</a>
+               <a href="{% url 'selectServerPatch' %}" class="btn btn-primary btn-block">Patch</a>
+            </div>
+         </fieldset>
+      </form>
+   </div>
+</section>
+
+<section id="services" class="py-5 bg-secondary text-white">
+   <div class="container">
+      <div class="row text-center">
+         <div class="col-md-12">
+            <i class="fas fa-comment fa-4x mr-4"></i>
+            <hr>
+            <h2>Risk management tool</h2>
+            <br>
+            <h4>Request the exclusion for a certain period either due to a business need or interferences between
+               applications.</h4>
+         </div>
+      </div>
+   </div>
+</section>
+
+{% endblock %}

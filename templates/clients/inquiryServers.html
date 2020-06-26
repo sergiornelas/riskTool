@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<script>
+   console.log(localStorage.arrayFullServers)
+   $(document).ready(function () {
+      $("#content").val(localStorage.arrayFullServers);
+      $("#exception_type_IDD").val("2");
+   });
+</script>
+
+<section id="showcase-inner" class="py-5 text-white">
+   <div class="container">
+      <div class="row text-center">
+         <div class="col-md-12">
+            <h1 class="display-4">INQUIRY SERVERS</h1>
+            <p class="lead">Manage your patches if you have struggles</p>
+         </div>
+      </div>
+   </div>
+</section>
+
+<!-- Breadcrumb -->
+<section id="bc" class="mt-3">
+   <div class="container">
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+               <a href="{% url 'dashboard' %}">
+                  <i class="fas fa-home"></i> Dashboard </a>
+            </li>
+            <li class="breadcrumb-item">
+               <a href="{% url 'exceptionsBoard' %}">
+                  <i class="fas fa-calendar-check"></i> Requests </a>
+            </li>
+         </ol>
+      </nav>
+   </div>
+</section>
+
+<!-- <section id="dashboard" class="py-4"> -->
+<div class="container">
+   <div style="margin-bottom: 2em; margin-top: 2em;" class="progress">
+      <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; ">
+      100%
+      </div>
+    </div>
+   <!-- <form role="form" action="" method="post" class="registration-form"> -->
+   <div class="form-top">
+      <div class="form-top-left">
+         <p>What do you want to make an exception?:</p>
+      </div>
+   </div>
+   <form action="{% url 'exclude_server' %}" method="POST">
+
+      <!-- <p id="demo"></p>
+            <script>
+                document.getElementById("demo").innerHTML=localStorage.arrayFullServers;
+            </script> -->
+
+      {% csrf_token %}
+
+      <!-- <input id ="totalServers" type="hidden" name="content" value=localStorage.arrayFullServers> -->
+      <input id="content" type="hidden" name="content">
+
+      <input id="exception_type_IDD" type="hidden" name="exception_type">
+      <!-- <input type="hidden" name="exception_type" value=2> -->
+
+      <!-- Estos se introducen del modelo de exception -->
+      <div class="form-group">
+         <label for="title" class="col-form-label">Title:</label>
+         <input type="text" name="title" class="form-control" required>
+      </div>
+      <div class="form-group">
+         <label for="justification" class="col-form-label">Action plan:</label>
+         <textarea rows="7" name="justification" class="form-control" required></textarea>
+      </div>
+
+
+      <div class="form-group">
+         <label for="excludeDate" class="col-form-label">Exclude date:</label>
+         <input type="datetime" name="exclude_date" class="form-control" required>
+      </div>
+
+      <!--     CALENDAR      -->
+
+      <!-- FALTA AGREGAR EL ACTION PLAN -->
+      <hr>
+      
+      <input style="margin-bottom: 1rem;" type="submit" value="Send" class="btn btn-block btn-secondary" />
+
+      <!-- name = database field, value = input value to db -->
+   </form>
+</div>
+<!-- </section> -->
+
+<section id="services" class="py-5 bg-secondary text-white">
+   <div class="container">
+      <div class="row text-center">
+         <div class="col-md-12">
+            <i class="fas fa-comment fa-4x mr-4"></i>
+            <hr>
+            <h2>Risk management tool</h2>
+            <br>
+            <h4>Request the exclusion for a certain period either due to a business need or interferences between
+               applications.</h4>
+         </div>
+      </div>
+   </div>
+</section>
+
+{% endblock %}

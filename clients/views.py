@@ -60,8 +60,15 @@ def server_user_list(request):
     client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
     serversPoll = SERVER.objects.filter(pk__in=client_has_server)
 
+    """
+    context={
+        'serversPoll':serversPoll
+    }
+    """
+
     if request.method == "GET":
         return HttpResponse(serializers.serialize("json", serversPoll))
+    #return render(request, 'clients/selectServers.html', context)
 
 
 
@@ -114,6 +121,23 @@ def filterPatches(request):
         #return HttpResponse(takeAdvisoriesDescription)
 
 
+def serverOrPatch(request):
+    return render(request, 'clients/serverOrPatch.html')
+
+def selectServers(request):
+    return render(request, 'clients/selectServers.html')
+
+def selectServerPatch(request):
+    return render(request, 'clients/selectServerPatch.html')
+
+def selectPatches(request):
+    return render(request, 'clients/selectPatches.html')
+
+def inquiryPatches(request):
+    return render(request, 'clients/inquiryPatches.html')
+
+def inquiryServers(request):
+    return render(request, 'clients/inquiryServers.html')
 
 #POST REQUEST CREAR EXCEPCIÓN
 def exclude_server(request):

@@ -11,6 +11,13 @@ urlpatterns = [
     path('server_user_list', views.server_user_list, name='server_user_list'),
     
     path('filterPatches', views.filterPatches, name='filterPatches'),
-    #path('testing/<int:number>', views.testing, name='testing'),
+    
+    #new
+    path('serverOrPatch', views.serverOrPatch, name='serverOrPatch'),
+    path('selectServers', views.selectServers, name='selectServers'),
+    path('selectServerPatch', views.selectServerPatch, name='selectServerPatch'),
+    path('selectPatches', views.selectPatches, name='selectPatches'),
+    path('inquiryServers', views.inquiryServers, name='inquiryServers'),
+    path('inquiryPatches', views.inquiryPatches, name='inquiryPatches'),
     
 ]

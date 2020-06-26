@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section id="showcase-inner" class="py-5 text-white">
+   <div class="container">
+      <div class="row text-center">
+         <div class="col-md-12">
+            <h1 class="display-4">Select PATCH server</h1>
+            <p class="lead">Manage your patches if you have struggles</p>
+         </div>
+      </div>
+   </div>
+</section>
+
+<!-- Breadcrumb -->
+<section id="bc" class="mt-3">
+   <div class="container">
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+               <a href="{% url 'dashboard' %}">
+                  <i class="fas fa-home"></i> Dashboard </a>
+            </li>
+            <li class="breadcrumb-item">
+               <a href="{% url 'exceptionsBoard' %}">
+                  <i class="fas fa-calendar-check"></i> Requests </a>
+            </li>
+         </ol>
+      </nav>
+   </div>
+</section>
+
+<section id="dashboard" class="py-4">
+   <div class="container">
+      <form role="form" action="" method="post" class="registration-form">
+         <fieldset style="display: block;">
+
+            <div style="margin-bottom: 2em; margin-top: 2em;" class="progress">
+               <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100" style="width:55%; ">
+                  55%
+               </div>
+             </div>
+
+            <div class="form-top">
+               <div class="form-top-left">
+                  <p>What do you want to make an exception?:</p>
+               </div>
+            </div>
+            <div class="form-bottom">
+
+               SERVIDORES parche
+
+               {#<form action="{% url 'exclude_server' %}" method="POST">#}
+               <form>
+                  <select data-placeholder="Select server/servers" style="width:27em;" id="serverServer"
+                     multiple="multiple" required></select>
+                  <div style="margin-bottom: 1em;"></div>
+                  <script>
+
+                     var arrayServerPatches = [];
+
+                     Array.prototype.remove = function () {
+                        var what, a = arguments, L = a.length, ax;
+                        while (L && this.length) {
+                           what = a[--L];
+                           while ((ax = this.indexOf(what)) !== -1) {
+                              this.splice(ax, 1);
+                           }
+                        }
+                        return this;
+                     };
+
+                     $(document).ready(function () {
+                        var serverOptions;
+                        $.ajax({
+                           url: 'server_user_list', //AQUI SE EXTRAERÁN LOS DATOS
+                           type: 'GET', //OBTENDREMOS DATOS
+                           dataType: "text", //"json"  //FORMATO DE LOS DATOS
+                           success: function (data) {  //SI TODO SALE BIEN (DATOS EXISTENTES, CONEXIÓN CON EL SERVIDOR)
+                              data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON
+
+                              $.each(data, function (key, index) {
+                                 //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
+                                 //imprime solo los campos que necesitamos.
+                                 //console.log(data[key]); //todo el objeto
+                                 //console.log(data[key].fields.hostname); // el hostname solamente
+                                 serverOptions += "<option value='" + index + "' >" + index.fields.hostname + "</option>";
+                              })
+
+                              // AGREGA LOS SERVIDORES A LA DROP-DOWN-LIST
+                              $('#serverServer').html(serverOptions);
+
+                              //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (AGREGA).
+                              $('#serverServer').on('select2:select', function (e) {
+                                 var data = e.params.data;
+                                 arrayServerPatches.push(data.text);
+                                 console.log(arrayServerPatches);
+
+                                 var saveServers = arrayServerPatches
+                                 localStorage.arrayServerPatches = saveServers;
+                              });
+
+                              //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (ELIMINA).
+                              $('#serverServer').on('select2:unselect', function (e) {
+                                 var data = e.params.data;
+                                 arrayServerPatches.remove(data.text);
+                                 console.log(arrayServerPatches);
+
+                                 var saveServers = arrayServerPatches
+                                 localStorage.arrayServerPatches = saveServers;
+                              });
+                           },
+                           error: function (data) {
+                              console.log(data);
+                              $("#bbbbb").append("<br>" + data.statusText);
+                           }
+                        });
+                     });
+
+                     //MOSTRAR EL PLACE HOLDER
+                     $(document).ready(function () {
+                        $("#serverServer").select2({
+                           placeholder: function () {
+                              $(this).data('placeholder');
+                           }
+                        });
+                     });
+                  </script>
+
+                  <a href="{% url 'selectPatches' %}" class="btn btn-primary btn-block">Next</a>
+
+               </form>
+            </div>
+         </fieldset>
+      </form>
+   </div>
+</section>
+
+<section id="services" class="py-5 bg-secondary text-white">
+   <div class="container">
+      <div class="row text-center">
+         <div class="col-md-12">
+            <i class="fas fa-comment fa-4x mr-4"></i>
+            <hr>
+            <h2>Risk management tool</h2>
+            <br>
+            <h4>Request the exclusion for a certain period either due to a business need or interferences between
+               applications.</h4>
+         </div>
+      </div>
+   </div>
+</section>
+
+{% endblock %}
