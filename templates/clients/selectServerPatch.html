@@ -7,6 +7,7 @@
       <div class="row text-center">
          <div class="col-md-12">
             <h1 class="display-4">Select PATCH server</h1>
+            <i class="fa fa-server fa-5x" aria-hidden="true"></i>
             <p class="lead">Manage your patches if you have struggles</p>
          </div>
       </div>
@@ -37,10 +38,11 @@
          <fieldset style="display: block;">
 
             <div style="margin-bottom: 2em; margin-top: 2em;" class="progress">
-               <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100" style="width:55%; ">
+               <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="55"
+                  aria-valuemin="0" aria-valuemax="100" style="width:55%; ">
                   55%
                </div>
-             </div>
+            </div>
 
             <div class="form-top">
                <div class="form-top-left">
@@ -97,8 +99,22 @@
                                  arrayServerPatches.push(data.text);
                                  console.log(arrayServerPatches);
 
+                                 //string simple (LOCALSTORAGE SOLO NOS PERMITE GUARDAR UN STRING)
                                  var saveServers = arrayServerPatches
                                  localStorage.arrayServerPatches = saveServers;
+
+
+                                 //object
+                                 //var saveServers = arrayServerPatches
+                                 //// Guardo el objeto como un string
+                                 //localStorage.setItem('data', JSON.stringify(saveServers));
+                                 //console.log(typeof(saveServers))
+
+
+                                 //TESTING
+                                 //var miObjeto = { 'marcado': 'html5', 'estilo': 'css3', 'comportamiento': 'js' };
+                                    // Guardo el objeto como un string
+                                 //localStorage.setItem('datos', JSON.stringify(miObjeto));
                               });
 
                               //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (ELIMINA).
@@ -128,27 +144,22 @@
                      });
                   </script>
 
-                  <a href="{% url 'selectPatches' %}" class="btn btn-primary btn-block">Next</a>
+                  <div class="container">
+                     <div class="row">
+                        <div style="padding-top: 2em;" class="col-md-3">
+                           <a style="background-color:#D0D0D5"href="{% url 'serverOrPatch' %}" class="btn btn-block">Back</a>
+                        </div>
+                        <div style="padding-top: 2em;" class="col-md-3">
+                           <a href="{% url 'selectPatches' %}" class="btn btn-primary btn-block">Next</a>
+                        </div>
+                        <div class="col-md-6"> </div>
+                     </div>
+                  </div>
 
                </form>
             </div>
          </fieldset>
       </form>
-   </div>
-</section>
-
-<section id="services" class="py-5 bg-secondary text-white">
-   <div class="container">
-      <div class="row text-center">
-         <div class="col-md-12">
-            <i class="fas fa-comment fa-4x mr-4"></i>
-            <hr>
-            <h2>Risk management tool</h2>
-            <br>
-            <h4>Request the exclusion for a certain period either due to a business need or interferences between
-               applications.</h4>
-         </div>
-      </div>
    </div>
 </section>
 

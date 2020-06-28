@@ -9,6 +9,7 @@ from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http import JsonResponse
+from urllib import parse
 
 #DASHBOARD
 def dashboard(request):
@@ -75,24 +76,58 @@ def server_user_list(request):
 #TESTING
 @csrf_exempt
 def filterPatches(request):
-    if request.method == 'POST':        
+    if request.method == 'POST':
         #toma el servidor seleccionado
-        
+
+        #string mode
         selectedServer = request.POST['selectedServer'] #wdcdmzyz22033245,wdcgz22050068
 
-        #toma los objetos de los servidores que contengan el hostname seleccionado
-        takeServers = SERVER.objects.filter(hostname=selectedServer)
+        #object mode
+        #selectedServer = request.POST.getlist['selectedServer'] #'method' object is not subscriptable
+        #yourdict = json.loads(request.POST.get('selectedServer')) #the JSON object must be str, bytes or bytearray, not NoneType
+        #print(yourdict)
 
+        #arr = request.POST.get('selectedServer')
+        #dict_ = json.loads(arr)
+
+        #selectedServer = request.POST['selectedServer'] #wdcdmzyz22033245,wdcgz22050068
+        #value = parse.parse_qs(self.request.POST.get('selectedServer'))
+        
+        
+        #agrega aqui:
+        #---------------------------------------------------------------------------
+        #los servidores que posee el cliente logeado.
+        client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
+        
         servers_ids=[]
+        for server in client_has_server:
+            servers_ids.append(server.server_id)
 
-        #almacenamos los ids de los servidores que contengan el hostname seleccionado
-        #en un arreglo
+        #---------------------------------------------------------------------------
+
+
+        #---------------------------------------------------------------------------
+        #TESTING
+        list=["wdcdmzyz22033245","wdcgz22050068"]
+        print("testing:")
+        print(list) #['wdcdmzyz22033245', 'wdcgz22050068']
+        print(list[0]) #wdcdmzyz22033245
+        #---------------------------------------------------------------------------
+
+
+        #toma los objetos de los servidores que contengan los id de los servidores del
+        #usuario loggeado y el hostname seleccionado en el dropdown list.
+        takeServers=SERVER.objects.filter(pk__in=servers_ids).filter(hostname=selectedServer)
+
+        servers_selected_ids=[]
+
+        #almacenamos los ids de los servidores que contengan takeServers
         for server in takeServers:
-            servers_ids.append(server.pk)
+            servers_selected_ids.append(server.pk)
 
         #hacemos comunicación entre un advisory y un server a través del parche.
         #por eso para conocer los advisories necesitamos los objetos patches.
-        patch_advisory = PATCHES.objects.filter(server_id__in=servers_ids)
+        patch_advisory = PATCHES.objects.filter(server_id__in=servers_selected_ids)
 
         #tomamos los id de los advisories de los parches que estan involucrados
         #con el servidor seleccionado.

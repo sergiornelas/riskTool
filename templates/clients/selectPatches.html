@@ -3,14 +3,30 @@
 {% block content %}
 
 <script>
+    //string simple
     console.log(localStorage.arrayServerPatches)
+    
+    //testing
+    //var guardado = localStorage.getItem('datos');
+    //console.log('objetoObtenido: ', JSON.parse(guardado));
+
+    //object
+    //var serversObject = localStorage.getItem('data');
+    //var serversObjectJSON = JSON.parse(serversObject);
+    
+    //console.log('object: ', JSON.parse(serversObject));  //object
+    //console.log(serversObjectJSON)
+    //console.log(typeof(serversObject))  //string
+    //console.log(typeof(JSON.parse(serversObject))) // object
+    //console.log(typeof(serversObjectJSON)) // object
 </script>
 
 <section id="showcase-inner" class="py-5 text-white">
     <div class="container">
         <div class="row text-center">
             <div class="col-md-12">
-                <h1 class="display-4">Select PATCHES</h1>
+                <h1 class="display-4">Select Patches</h1>
+                <i class="fa fa-toolbox fa-5x" aria-hidden="true"></i>
                 <p class="lead">Manage your patches if you have struggles</p>
             </div>
         </div>
@@ -78,20 +94,31 @@
 
                             $(document).ready(function () {
 
-                                var selectedServer = JSON.stringify(localStorage.arrayServerPatches);
+                                //console.log(localStorage.arrayServerPatches)
+                                //var selectedServer = JSON.stringify(localStorage.arrayServerPatches);
+                                
+                                //var selectedServer = JSON.stringify(serversObjectJSON);
 
                                 //REGEXP QUITAR CORCHETES Y COMILLAS (CLEAR DATA)
-                                selectedServer = selectedServer.replace(/"/g, '');
-                                selectedServer = selectedServer.replace(/[\[\]']+/g, '')
+                                //selectedServer = selectedServer.replace(/"/g, '');
+                                //selectedServer = selectedServer.replace(/[\[\]']+/g, '')
 
                                 //console.log(selectedServer)
 
                                 $.ajax({
+
                                     method: "POST",
+                                    
                                     data: {
-                                        selectedServer: selectedServer
-                                        //jsonz: jsonz
+                                        //simple string
+                                        selectedServer: localStorage.arrayServerPatches
+                                        
+                                        //object
+                                        //selectedServer: serversObjectJSON
+                                        //object
+                                        //selectedServer: selectedServer
                                     },
+                                    
                                     url: 'filterPatches',
                                 })
                                     .done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
@@ -142,29 +169,24 @@
                                 });
                             });
                         </script>
-
-                        <a href="{% url 'inquiryPatches' %}" class="btn btn-primary btn-block">Next</a>
+                      
+                        <div class="container">
+                            <div class="row">
+                               <div style="padding-top: 2em;" class="col-md-3">
+                                  <a style="background-color:#D0D0D5"href="{% url 'selectServerPatch' %}" class="btn btn-block">Back</a>
+                               </div>
+                               <div style="padding-top: 2em;" class="col-md-3">
+                                <a href="{% url 'inquiryPatches' %}" class="btn btn-primary btn-block">Next</a>
+                               </div>
+                               <div class="col-md-6"> </div>
+                            </div>
+                         </div>
 
                     </form>
 
                 </div>
             </fieldset>
         </form>
-    </div>
-</section>
-
-<section id="services" class="py-5 bg-secondary text-white">
-    <div class="container">
-        <div class="row text-center">
-            <div class="col-md-12">
-                <i class="fas fa-comment fa-4x mr-4"></i>
-                <hr>
-                <h2>Risk management tool</h2>
-                <br>
-                <h4>Request the exclusion for a certain period either due to a business need or interferences between
-                    applications.</h4>
-            </div>
-        </div>
     </div>
 </section>
 

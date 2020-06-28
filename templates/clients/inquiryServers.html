@@ -16,6 +16,7 @@
       <div class="row text-center">
          <div class="col-md-12">
             <h1 class="display-4">INQUIRY SERVERS</h1>
+            <i class="fa fa-clipboard fa-5x" aria-hidden="true"></i>
             <p class="lead">Manage your patches if you have struggles</p>
          </div>
       </div>
@@ -89,26 +90,22 @@
       <!-- FALTA AGREGAR EL ACTION PLAN -->
       <hr>
       
-      <input style="margin-bottom: 1rem;" type="submit" value="Send" class="btn btn-block btn-secondary" />
+      
+
+      <div class="container">
+         <div class="row">
+            <div style="padding-top: 2em;" class="col-md-3">
+               <a style="background-color:#D0D0D5"href="{% url 'selectServers' %}" class="btn btn-block">Back</a>
+            </div>
+            <div style="padding-top: 2em;" class="col-md-3">
+               <input style="margin-bottom: 1rem;" type="submit" value="Send" class="btn btn-block btn-secondary" />
+            </div>
+            <div class="col-md-6"> </div>
+         </div>
+      </div>
 
       <!-- name = database field, value = input value to db -->
    </form>
 </div>
-<!-- </section> -->
-
-<section id="services" class="py-5 bg-secondary text-white">
-   <div class="container">
-      <div class="row text-center">
-         <div class="col-md-12">
-            <i class="fas fa-comment fa-4x mr-4"></i>
-            <hr>
-            <h2>Risk management tool</h2>
-            <br>
-            <h4>Request the exclusion for a certain period either due to a business need or interferences between
-               applications.</h4>
-         </div>
-      </div>
-   </div>
-</section>
 
 {% endblock %}
