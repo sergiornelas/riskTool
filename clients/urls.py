@@ -19,5 +19,7 @@ urlpatterns = [
     path('selectPatches', views.selectPatches, name='selectPatches'),
     path('inquiryServers', views.inquiryServers, name='inquiryServers'),
     path('inquiryPatches', views.inquiryPatches, name='inquiryPatches'),
+
+    path('getDaysLimit', views.getDaysLimit, name='getDaysLimit'),
     
 ]

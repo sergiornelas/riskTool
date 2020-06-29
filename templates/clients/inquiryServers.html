@@ -2,7 +2,6 @@
 
 {% block content %}
 
-
 <script>
    console.log(localStorage.arrayFullServers)
    $(document).ready(function () {
@@ -40,6 +39,34 @@
       </nav>
    </div>
 </section>
+
+<script>
+   //window.dias;
+   //var dias;
+   var limit
+   $(document).ready(function () {
+      $.ajax({
+
+         async: false,
+
+         method: "POST",
+         data: {
+             //limitDay: localStorage.arrayServerPatches
+             limitDay: localStorage.arrayFullServers
+         },
+         url: 'getDaysLimit',
+      }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
+         //console.log(data)
+         limit=data;
+         return limit;
+      });
+   });
+</script>
+   
+<script>
+   
+   console.log(limit);
+</script>
 
 <!-- <section id="dashboard" class="py-4"> -->
 <div class="container">
@@ -82,25 +109,54 @@
 
       <div class="form-group">
          <label for="excludeDate" class="col-form-label">Exclude date:</label>
-         <input type="datetime" name="exclude_date" class="form-control" required>
+         <input type="datetime" readonly="readonly" name="exclude_date" class="tail-datetime-field form-control col-md-2" autocomplete="off" required>
+         <label for="excludeDate" class="col-md-10 col-form-label">This is defined by major patch criticality</label>
       </div>
 
       <!--     CALENDAR      -->
 
+      <script type="text/javascript">
+         
+         var today = new Date();
+         var dd = String(today.getDate()).padStart(2, '0');
+         var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+         var yyyy = today.getFullYear();
+
+         today = yyyy + '-' + mm + '-' + dd;        
+
+         document.addEventListener("DOMContentLoaded", function(){
+            
+            tail.DateTime(".tail-datetime-field", { 
+               dateRanges: [
+               // Will Disable 05-JAN -> 07-JAN completely
+               {
+                   //start: new Date(2020, 5, 5),
+                   start: today,
+                   end: new Date(2020, 5, 30),
+                   // days: true                 // This is the default
+               }], 
+               dateStart: new Date(2018, 0, 5),
+               dateBlacklist: false,
+               viewDecades: false
+            }
+            );
+         });
+         
+      </script>
+
       <!-- FALTA AGREGAR EL ACTION PLAN -->
-      <hr>
-      
-      
+      <hr>     
 
       <div class="container">
          <div class="row">
+            <div class="col-md-6"> </div>
             <div style="padding-top: 2em;" class="col-md-3">
                <a style="background-color:#D0D0D5"href="{% url 'selectServers' %}" class="btn btn-block">Back</a>
             </div>
             <div style="padding-top: 2em;" class="col-md-3">
                <input style="margin-bottom: 1rem;" type="submit" value="Send" class="btn btn-block btn-secondary" />
             </div>
-            <div class="col-md-6"> </div>
+            
          </div>
       </div>
 

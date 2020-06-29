@@ -55,6 +55,23 @@ def exceptionsBoard(request):
     }
     return render(request, 'clients/exceptionsBoard.html', context)
 
+def serverOrPatch(request):
+    return render(request, 'clients/serverOrPatch.html')
+
+def selectServers(request):
+    return render(request, 'clients/selectServers.html')
+
+def selectServerPatch(request):
+    return render(request, 'clients/selectServerPatch.html')
+
+def selectPatches(request):
+    return render(request, 'clients/selectPatches.html')
+
+def inquiryPatches(request):
+    return render(request, 'clients/inquiryPatches.html')
+
+def inquiryServers(request):
+    return render(request, 'clients/inquiryServers.html')
 
 #AJAX LISTA DE SERVIDORES DEL CLIENTE INGRESADO
 def server_user_list(request):
@@ -161,25 +178,74 @@ def filterPatches(request):
         #return JsonResponse(json.loads(takeAdvisoriesDescription))
         #return HttpResponse(takeAdvisoriesDescription)
 
+@csrf_exempt
+def getDaysLimit(request):
+    if request.method == 'POST':
+        limitDay = request.POST['limitDay']
+        #print(limitDay)
+
+        #print(selectedServer)
+        limitDay = limitDay.replace(",", " ")
+        limitDay = limitDay.split()
+
+        
+        #los servidores que posee el cliente logeado.
+        client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
+
+        #almacenamos en una lista los id de los servidores del cliente loggeado.        
+        servers_ids=[]
+        for server in client_has_server:
+            servers_ids.append(server.server_id)
+
+        #toma los objetos de los servidores que contengan los id de los servidores del
+        #usuario loggeado y el hostname seleccionado en el dropdown list.
+        takeServers=SERVER.objects.filter(pk__in=servers_ids).filter(hostname__in=limitDay)
+        
+        servers_selected_ids=[]
+
+        #almacenamos los ids de los servidores que contengan takeServers
+        for server in takeServers:
+            servers_selected_ids.append(server.pk)
+
+        #hacemos comunicación entre un advisory y un server a través del parche.
+        #por eso para conocer los advisories necesitamos los objetos patches.
+        patch_advisory = PATCHES.objects.filter(server_id__in=servers_selected_ids)
+
+        #print(patch_advisory)
+
+        takeAdvisories = [o.advisory_id for o in patch_advisory]
+        #print("takeadvisories: ",takeAdvisories)
+
+        getAdvisoriesObjects = ADVISORY.objects.filter(pk__in=takeAdvisories)
+        getCriticality = [o.criticality for o in getAdvisoriesObjects]
+
+        print("Criticalities: ",getCriticality)
+
+        #names = ['Alice','Bob','Cassie','Diane','Ellen']
+        #for name in names:
+        #    if name[0] in "AEIOU":
+        #        print(name + " starts with a vowel")
+		
+        days=0
+
+        for critical in getCriticality:
+            if critical == "High":
+                #print(critical," es alto")
+                days = 30
+                break
+            elif critical == "Medium":
+                #print(critical," es medio")
+                days = 90
+                break
+            elif critical == "Low":
+                #print(critical," es bajo")
+                days = 180
+
+        print(days)
+        
+        return HttpResponse(days)
 
 
-def serverOrPatch(request):
-    return render(request, 'clients/serverOrPatch.html')
-
-def selectServers(request):
-    return render(request, 'clients/selectServers.html')
-
-def selectServerPatch(request):
-    return render(request, 'clients/selectServerPatch.html')
-
-def selectPatches(request):
-    return render(request, 'clients/selectPatches.html')
-
-def inquiryPatches(request):
-    return render(request, 'clients/inquiryPatches.html')
-
-def inquiryServers(request):
-    return render(request, 'clients/inquiryServers.html')
 
 #POST REQUEST CREAR EXCEPCIÓN
 def exclude_server(request):
