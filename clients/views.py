@@ -81,44 +81,34 @@ def filterPatches(request):
 
         #string mode
         selectedServer = request.POST['selectedServer'] #wdcdmzyz22033245,wdcgz22050068
+        #print(selectedServer)
+        selectedServer = selectedServer.replace(",", " ")
+        selectedServer = selectedServer.split()
 
+        #print(type(x))
+
+        """
         #object mode
-        #selectedServer = request.POST.getlist['selectedServer'] #'method' object is not subscriptable
-        #yourdict = json.loads(request.POST.get('selectedServer')) #the JSON object must be str, bytes or bytearray, not NoneType
-        #print(yourdict)
+            selectedServer = request.POST.getlist['selectedServer'] #'method' object is not subscriptable
+            yourdict = json.loads(request.POST.get('selectedServer')) #the JSON object must be str, bytes or bytearray, not NoneType
+            print(yourdict)
 
-        #arr = request.POST.get('selectedServer')
-        #dict_ = json.loads(arr)
-
-        #selectedServer = request.POST['selectedServer'] #wdcdmzyz22033245,wdcgz22050068
-        #value = parse.parse_qs(self.request.POST.get('selectedServer'))
+            arr = request.POST.get('selectedServer')
+            dict_ = json.loads(arr)
+        """
         
-        
-        #agrega aqui:
-        #---------------------------------------------------------------------------
         #los servidores que posee el cliente logeado.
         client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
-        
+
+        #almacenamos en una lista los id de los servidores del cliente loggeado.        
         servers_ids=[]
         for server in client_has_server:
             servers_ids.append(server.server_id)
 
-        #---------------------------------------------------------------------------
-
-
-        #---------------------------------------------------------------------------
-        #TESTING
-        list=["wdcdmzyz22033245","wdcgz22050068"]
-        print("testing:")
-        print(list) #['wdcdmzyz22033245', 'wdcgz22050068']
-        print(list[0]) #wdcdmzyz22033245
-        #---------------------------------------------------------------------------
-
-
         #toma los objetos de los servidores que contengan los id de los servidores del
         #usuario loggeado y el hostname seleccionado en el dropdown list.
-        takeServers=SERVER.objects.filter(pk__in=servers_ids).filter(hostname=selectedServer)
-
+        takeServers=SERVER.objects.filter(pk__in=servers_ids).filter(hostname__in=selectedServer)
+        
         servers_selected_ids=[]
 
         #almacenamos los ids de los servidores que contengan takeServers
@@ -129,31 +119,48 @@ def filterPatches(request):
         #por eso para conocer los advisories necesitamos los objetos patches.
         patch_advisory = PATCHES.objects.filter(server_id__in=servers_selected_ids)
 
+        return HttpResponse(serializers.serialize("json", patch_advisory))
+
+        
+        
+        
+        
+        
+        #----------------------------------------------------------------
+
         #tomamos los id de los advisories de los parches que estan involucrados
         #con el servidor seleccionado.
         takeAdvisories = [o.advisory_id for o in patch_advisory]
+        print("takeadvisories: ",takeAdvisories)
 
         #utilizamos los id de los advisories para obtener los objetos completos
-        getAdvisoriesObjects = ADVISORY.objects.filter(pk__in=takeAdvisories)
+        #getAdvisoriesObjects = ADVISORY.objects.filter(pk__in=takeAdvisories)
         #print(type(getAdvisoriesObjects))
 
-        #LISTA <NO SE USA>
-        #obtenemos solo la descripción de esos objetos, REGRESA UN SOLO STRING
-        takeAdvisoriesDescription = [o.description for o in getAdvisoriesObjects]
-        #print(takeAdvisoriesDescription)
+        #get() returns a single object. 
+                
+        getAdvisoriesObjects = ADVISORY.objects.filter(pk__in=takeAdvisories)
+        #print("getAdvisoriesObjects: ",getAdvisoriesObjects)
 
-        context = {
-            #'takeServers':takeServers
-            #'advisories':advisories,
-            'takeAdvisoriesDescription':takeAdvisoriesDescription,
-        }
-
-        return HttpResponse(serializers.serialize("json", getAdvisoriesObjects))
+        """
+        #UNION: When they querysets are from different models, the FIELDS and their datatypes should MATCH.
+        #Junta dos query sets, evitando las repeticiones (+<User: rishab>)
+            total = ADVISORY.objects.filter(pk__in=takeAdvisories).union(ADVISORY.objects.filter(pk__in=[1, 2]), all=True)
+            print("total: ",total)
+        """
         
+        """
+        #obtenemos solo la descripción de esos objetos, REGRESA UN SOLO STRING
+            takeAdvisoriesDescription = [o.description for o in getAdvisoriesObjects]
+            print(takeAdvisoriesDescription)
+        """
+
+        #return HttpResponse(serializers.serialize("json", getAdvisoriesObjects))
         #return HttpResponse(data, content_type="application/json")
         #return HttpResponse(json.dumps(context))
         #return JsonResponse(json.loads(takeAdvisoriesDescription))
         #return HttpResponse(takeAdvisoriesDescription)
+
 
 
 def serverOrPatch(request):

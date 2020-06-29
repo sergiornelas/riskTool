@@ -6,6 +6,8 @@
     //string simple
     console.log(localStorage.arrayServerPatches)
     
+    //window.fecha;
+    
     //testing
     //var guardado = localStorage.getItem('datos');
     //console.log('objetoObtenido: ', JSON.parse(guardado));
@@ -72,13 +74,13 @@
 
                     {#<form action="{% url 'exclude_server' %}" method="POST">#}
                     <form>
-                        <select data-placeholder="Select patch/patches" style="width:27em;" id="selectPatches_patch"
+                        <select data-placeholder="Select patch/patches" style="width:50em;" id="selectPatches_patch"
                             multiple="multiple"></select>
 
                         <div style="margin-bottom: 1em;"></div>
 
                         <script>
-
+                            
                             var arrayPatchesPatches = [];
 
                             Array.prototype.remove = function () {
@@ -93,7 +95,7 @@
                             };
 
                             $(document).ready(function () {
-
+                                
                                 //console.log(localStorage.arrayServerPatches)
                                 //var selectedServer = JSON.stringify(localStorage.arrayServerPatches);
                                 
@@ -104,7 +106,7 @@
                                 //selectedServer = selectedServer.replace(/[\[\]']+/g, '')
 
                                 //console.log(selectedServer)
-
+                                
                                 $.ajax({
 
                                     method: "POST",
@@ -123,14 +125,15 @@
                                 })
                                     .done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
 
-                                        var patchesOptions;
+                                        var patchesOptions;                                        
 
                                         data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
 
-                                        $.each(data, function (key, index) {
+                                        $.each(data, function (key, index, value) {
                                             //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
-                                            patchesOptions += "<option value='" + index.fields.pk + "' >" + index.fields.description + "</option>";
-
+                                            //patchesOptions += "<option value='" + index.fields.pk + "' >" + index.fields.description + "</option>";
+                                            patchesOptions += "<option value='" + index.fields.pk + "' >" + index.fields.server + ": " + index.fields.advisory + "</option>";
+                                            
                                             console.log(index);
                                         });
 
