@@ -57,20 +57,46 @@
     <div class="container">
         <form role="form" action="" method="post" class="registration-form">
             <fieldset style="display: block;">
-                <div style="margin-bottom: 2em; margin-top: 2em;" class="progress">
-                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="77" aria-valuemin="0" aria-valuemax="100" style="width:77%; ">
-                       77%
-                    </div>
-                  </div>
 
-                <div class="form-top">
-                    <div class="form-top-left">
-                        <p>What do you want to make an exception?:</p>
+            <!--  PROGRESS BAR -->
+                <div class="container">
+                    <div class="steps">
+                    <ul class="steps-container">
+                        <li style="width:25%;" class="activated">
+                            <div class="step">
+                                <div class="step-image"><span></span></div>
+                                <div class="step-current">Type of exception</div>
+                                <div class="step-description">Server or patch</div>
+                            </div>
+                        </li>
+                        <li style="width:25%;"class="activated">
+                            <div class="step">
+                                <div class="step-image"><span></span></div>
+                                <div class="step-current">Choose server</div>
+                                <div class="step-description">Select server</div>
+                            </div>
+                        </li>
+                        <li style="width:25%;"class="activated">
+                            <div class="step">
+                                <div class="step-image"><span></span></div>
+                                <div class="step-current">Choose patch</div>
+                                <div class="step-description">Select patches</div>
+                            </div>
+                        </li>
+                        <li style="width:25%;">
+                            <div class="step">
+                                <div class="step-image"><span></span></div>
+                                <div class="step-current">Inquiry</div>
+                                <div class="step-description">Form</div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="step-bar" style="width: 65%;"></div>
                     </div>
                 </div>
-                <div class="form-bottom">
 
-                    PARCHES
+                <div style="margin-bottom: 4em;"></div>
+                <div>Choose patch:
 
                     {#<form action="{% url 'exclude_server' %}" method="POST">#}
                     <form>
@@ -124,17 +150,35 @@
                                     url: 'filterPatches',
                                 })
                                     .done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
+                                        
+                                        //var x = JSON.stringify(data);
 
-                                        var patchesOptions;                                        
+                                        //REGEXP QUITAR CORCHETES Y COMILLAS (CLEAR DATA)
+                                        //x = x.replace(/PATCHES/g, '');
+                                        //x = x.replace(/<\[\>']+/g, '')
+                                        //x = x.replace(/QuerySet/g, '');
+                                        //console.log(x)
+                                        console.log("ENTRAN LOS DATOS: ") //string
+                                        console.log(typeof(data)) //string
+                                        console.log(data)
+
+                                        var patchesOptions;
+
+                                        //data = JSON.stringify(data);
 
                                         data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
+
+                                        console.log("DATOS PARSEADOS A JSON: ") //string
+                                        console.log(typeof(data)) //object
+                                        console.log(data)
 
                                         $.each(data, function (key, index, value) {
                                             //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
                                             //patchesOptions += "<option value='" + index.fields.pk + "' >" + index.fields.description + "</option>";
                                             patchesOptions += "<option value='" + index.fields.pk + "' >" + index.fields.server + ": " + index.fields.advisory + "</option>";
+                                            //patchesOptions += "<option>" + index.fields.patch.server + ": " + index.fields.patch.advisory + "</option>";
                                             
-                                            console.log(index);
+                                            //console.log(index);
                                         });
 
                                         // AGREGA LOS PARCHES A LA DROP-DOWN-LIST

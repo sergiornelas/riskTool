@@ -6,7 +6,7 @@
    <div class="container">
       <div class="row text-center">
          <div class="col-md-12">
-            <h1 class="display-4">Select PATCH server</h1>
+            <h1 class="display-4">Select patch server</h1>
             <i class="fa fa-server fa-5x" aria-hidden="true"></i>
             <p class="lead">Manage your patches if you have struggles</p>
          </div>
@@ -37,21 +37,45 @@
       <form role="form" action="" method="post" class="registration-form">
          <fieldset style="display: block;">
 
-            <div style="margin-bottom: 2em; margin-top: 2em;" class="progress">
-               <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="55"
-                  aria-valuemin="0" aria-valuemax="100" style="width:55%; ">
-                  55%
-               </div>
+               <!--  PROGRESS BAR -->
+         <div class="container">
+            <div class="steps">
+               <ul class="steps-container">
+                  <li style="width:25%;" class="activated">
+                     <div class="step">
+                        <div class="step-image"><span></span></div>
+                        <div class="step-current">Type of exception</div>
+                        <div class="step-description">Server or patch</div>
+                     </div>
+                  </li>
+                  <li style="width:25%;"class="activated">
+                     <div class="step">
+                        <div class="step-image"><span></span></div>
+                        <div class="step-current">Choose server</div>
+                        <div class="step-description">Select server</div>
+                     </div>
+                  </li>
+                  <li style="width:25%;">
+                     <div class="step">
+                        <div class="step-image"><span></span></div>
+                        <div class="step-current">Choose patch</div>
+                        <div class="step-description">Select patches</div>
+                     </div>
+                  </li>
+                  <li style="width:25%;">
+                     <div class="step">
+                        <div class="step-image"><span></span></div>
+                        <div class="step-current">Inquiry</div>
+                        <div class="step-description">Form</div>
+                     </div>
+                  </li>
+               </ul>
+               <div class="step-bar" style="width: 40%;"></div>
             </div>
+         </div>
 
-            <div class="form-top">
-               <div class="form-top-left">
-                  <p>What do you want to make an exception?:</p>
-               </div>
-            </div>
-            <div class="form-bottom">
-
-               SERVIDORES parche
+         <div style="margin-bottom: 4em;"></div>
+            <div>Choose patch servers: 
 
                {#<form action="{% url 'exclude_server' %}" method="POST">#}
                <form>

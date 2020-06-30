@@ -15,6 +15,21 @@ class PATCHES(models.Model):
     advisory=models.ForeignKey(ADVISORY, on_delete=models.CASCADE, null=True)
     #falta agregar el id de exception (?)
 
+    #estos solo funcionan en python (server side):
+    #def __str__(self):
+    #    return (self.server.hostname + " : " + self.advisory.description)
+
+    def __str__(self):
+        return (self.server.hostname + " : " + "'" + self.advisory.description + "'" +" , ")
+        
+        # return ("["+
+        #     "patch"+":" +"{"+
+        #         #"id":"1",
+        #         "server"+":"+self.server.hostname+","+
+        #         "advisory"+":"+self.advisory.description+","+
+        #     "}"+","+
+        # "]")
+
 
 #---------------------OLD RISK MANAGEMENT-----------------------------------------------------
 

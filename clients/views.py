@@ -134,10 +134,39 @@ def filterPatches(request):
 
         #hacemos comunicación entre un advisory y un server a través del parche.
         #por eso para conocer los advisories necesitamos los objetos patches.
+        
         patch_advisory = PATCHES.objects.filter(server_id__in=servers_selected_ids)
 
-        return HttpResponse(serializers.serialize("json", patch_advisory))
+        #return HttpResponse(serializers.serialize("json", patch_advisory))
 
+        #----------------------------------------------------------------
+
+        #sample_instance = SERVER.objects.get(id=2)
+            #sample_instance = SERVER.objects.filter(pk=request.user.id)
+        #value_of_name = sample_instance.hostname
+            #print(value_of_name)
+        
+        #list=["manzana", "banana", "pera"]
+
+        thisdict = {
+            "brand": "Ford",
+            "model": "Mustang",
+            "year": 1964
+        }
+
+        result = json.dumps(thisdict)
+        
+        print(patch_advisory)
+
+        print(type(patch_advisory)) #'django.db.models.query.QuerySet'
+        print(type(serializers.serialize("json", patch_advisory))) #'str'
+                
+        return HttpResponse(serializers.serialize("json", patch_advisory))
+        #return HttpResponse(patch_advisory)
+        
+        
+        
+        
         
         
         
@@ -187,7 +216,6 @@ def getDaysLimit(request):
         #print(selectedServer)
         limitDay = limitDay.replace(",", " ")
         limitDay = limitDay.split()
-
         
         #los servidores que posee el cliente logeado.
         client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)

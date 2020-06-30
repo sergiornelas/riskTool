@@ -37,20 +37,42 @@
       <form role="form" action="" method="post" class="registration-form">
 
          <!--  PROGRESS BAR -->
-         <div style="margin-bottom: 2em; margin-top: 2em;" class="progress">
-            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="66"
-               aria-valuemin="0" aria-valuemax="100" style="width:66%; ">
-               66%
+         <div class="container">
+            <div class="steps">
+               <ul class="steps-container">
+                  <li style="width:33%;" class="activated">
+                     <div class="step">
+                        <div class="step-image"><span></span></div>
+                        <div class="step-current">Type of exception</div>
+                        <div class="step-description">Server or patch</div>
+                     </div>
+                  </li>
+                  <li style="width:33%;"class="activated">
+                     <div class="step">
+                        <div class="step-image"><span></span></div>
+                        <div class="step-current">Choose server</div>
+                        <div class="step-description">Select server</div>
+                     </div>
+                  </li>
+                  <li style="width:33%;">
+                     <div class="step">
+                        <div class="step-image"><span></span></div>
+                        <div class="step-current">Inquiry</div>
+                        <div class="step-description">Form</div>
+                     </div>
+                  </li>
+               </ul>
+               <div class="step-bar" style="width: 66%;"></div>
             </div>
          </div>
 
-         <div class="form-top">
-            <div class="form-top-right">
-               <p style="font-size: 1.2em;">This action will prevent also future coming patches </p>
-            </div>
+         <div style="margin-top:2.5em; "></div>
+
+         <div style="margin-top:10px;" >
+               <p style="margin-top:10px;">This action will prevent also future coming patches </p>
          </div>
 
-         <div style="margin-top:2.5em; font-size: 1.2em;" class="form-bottom">
+         <div style="margin-top:2.5em; " class="form-bottom">
             Choose server:
             <form>
                <select data-placeholder="Select server/servers" style="width:27em;" id="serverServer"
