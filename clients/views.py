@@ -153,13 +153,29 @@ def filterPatches(request):
             "model": "Mustang",
             "year": 1964
         }
+        
+        
 
-        result = json.dumps(thisdict)
+        #result = json.dumps(thisdict)
         
         print(patch_advisory)
 
         print(type(patch_advisory)) #'django.db.models.query.QuerySet'
         print(type(serializers.serialize("json", patch_advisory))) #'str'
+
+
+        # takeAdvisoriesid = [o.advisory_id for o in patch_advisory]
+        # print("takeadvisories: ",takeAdvisoriesid)
+
+        # takeduedate = [o.due_date for o in patch_advisory]
+        # print("takeadvisories: ",takeduedate)
+
+        # thisdict = {
+        #     "takeAdvisoriesid": takeAdvisoriesid,
+        #     "takeduedate": takeduedate,
+        # }
+
+        #print("thisdict: ", thisdict)
                 
         return HttpResponse(serializers.serialize("json", patch_advisory))
         #return HttpResponse(patch_advisory)
@@ -278,7 +294,8 @@ def getDaysLimit(request):
 #POST REQUEST CREAR EXCEPCIÓN
 def exclude_server(request):
     if request.method == 'POST':
-        #patch_id = request.POST['patch_id']
+        patch_id = request.POST['patch_id']
+        action_plan = request.POST['action_plan']
         client = request.user
         title = request.POST['title']
         justification = request.POST['justification']
@@ -293,9 +310,48 @@ def exclude_server(request):
         #         messages.error(request, 'You have already made an exception for this patch')
         #         return redirect('dashboard')
                
-        exclude_this_server = EXCEPTION(client=client, title=title, justification=justification, exclude_date=exclude_date, content=content, exception_type=exception_type)
+        exclude_this_server = EXCEPTION(patch_id=patch_id, action_plan=action_plan, client=client, title=title, justification=justification, exclude_date=exclude_date, content=content, exception_type=exception_type)
+        #exclude_this_server = EXCEPTION(client=client, title=title, justification=justification, exclude_date=exclude_date, content=content, exception_type=exception_type)
         exclude_this_server.save()
 
         messages.success(request, "Your request has been submitted, an approver will get back to you soon")
 
         return redirect('exceptionsBoard')
+
+
+
+
+@csrf_exempt
+def transform(request): # << 1:1, 1:3, 2:3
+    if request.method == 'POST':
+
+        serverPatch = request.POST['serverPatch']
+
+        serverPatch = serverPatch.replace(" ", "")
+        serverPatch = serverPatch.replace(":", "")
+        serverPatch = serverPatch.replace(",", "")
+
+        #print(serverPatch)
+
+        array=[]
+
+        arrayAdvisories=[]
+        arrayServers=[]
+
+        for x in serverPatch:
+            #print(x)
+            array.append(x)
+
+        arrayServers = array[::2]
+        arrayAdvisories = array[1::2]
+        
+        print(arrayServers)
+        print(arrayAdvisories)
+
+        #patches = PATCHES.objects.filter(server_id__in=arrayServers).filter(advisory_id__in=arrayAdvisories)
+        patches = PATCHES.objects.filter(server_id__in=arrayServers, advisory_id__in=arrayAdvisories)
+
+        print("AQUI:")
+        print(patches)
+
+        return HttpResponse(serializers.serialize("json", patches))

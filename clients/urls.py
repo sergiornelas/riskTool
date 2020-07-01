@@ -21,5 +21,6 @@ urlpatterns = [
     path('inquiryPatches', views.inquiryPatches, name='inquiryPatches'),
 
     path('getDaysLimit', views.getDaysLimit, name='getDaysLimit'),
-    
+
+    path('transform', views.transform, name='transform'),
 ]

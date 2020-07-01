@@ -91,7 +91,7 @@
                             </div>
                         </li>
                     </ul>
-                    <div class="step-bar" style="width: 65%;"></div>
+                    <div class="step-bar" style="width: 76%;"></div>
                     </div>
                 </div>
 
@@ -174,12 +174,14 @@
 
                                         $.each(data, function (key, index, value) {
                                             //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
-                                            //patchesOptions += "<option value='" + index.fields.pk + "' >" + index.fields.description + "</option>";
-                                            patchesOptions += "<option value='" + index.fields.pk + "' >" + index.fields.server + ": " + index.fields.advisory + "</option>";
+                                            //patchesOptions += "<option value='" + index.pk + "' >" + index.fields.description + "</option>";
+                                            patchesOptions += "<option value='" + index.pk + "' >" + index.fields.server + ": " + index.fields.advisory + "</option>";
                                             //patchesOptions += "<option>" + index.fields.patch.server + ": " + index.fields.patch.advisory + "</option>";
                                             
                                             //console.log(index);
                                         });
+                                        console.log("patchesOptions:")
+                                        console.log(patchesOptions)
 
                                         // AGREGA LOS PARCHES A LA DROP-DOWN-LIST
                                         $('#selectPatches_patch').html(patchesOptions);

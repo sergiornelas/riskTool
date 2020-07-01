@@ -34,7 +34,8 @@ class EXCEPTION(models.Model):
     state = models.CharField(max_length=8, choices = state_choices, default = PEND)
     exception_type = models.IntegerField(null=True)
 
-    patch_id = models.IntegerField(null=True) #!
+    #patch_id = models.IntegerField(null=True) #!
+    patch_id = models.TextField(null=True) #!
     title = models.CharField(max_length=30)
     justification = models.TextField(blank=False)
     action_plan=models.TextField(blank=False)
