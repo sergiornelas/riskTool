@@ -327,8 +327,6 @@ def exclude_server(request):
         return redirect('exceptionsBoard')
 
 
-
-
 @csrf_exempt
 def transform(request): # << 1:1, 1:3, 2:3
     if request.method == 'POST':

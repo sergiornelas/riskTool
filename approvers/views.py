@@ -153,6 +153,19 @@ def approvalDet(request, exclude_patch_ID):
 
     exceptionQuery = EXCEPTION.objects.filter(pk=exclude_patch_ID)
     
+    #-----------servers que el aprobador tiene#-----------
+
+    client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
+
+        #almacenamos en una lista los id de los servidores del cliente loggeado.        
+    servers_ids=[]
+    for server in client_has_server:
+        servers_ids.append(server.server_id)
+
+    takeServers=SERVER.objects.filter(pk__in=servers_ids)
+
+    #-----------servers que el aprobador tiene#-----------
+
     takeExceptionPatchIDS=[]
 
     #almacenamos un solo string a una lista porque vamos a necesitarla después.
@@ -174,7 +187,8 @@ def approvalDet(request, exclude_patch_ID):
 
     #print(takeExceptionPatchIDS)
     
-    patchObjects = PATCHES.objects.filter(pk__in=takeExceptionPatchIDS)
+    #patchObjects = PATCHES.objects.filter(pk__in=takeExceptionPatchIDS)
+    patchObjects = PATCHES.objects.filter(pk__in=takeExceptionPatchIDS).filter(server_id__in=takeServers)
 
     arrayAdvisories = []
 
@@ -183,15 +197,23 @@ def approvalDet(request, exclude_patch_ID):
 
     print(arrayAdvisories)
     
-    
+    #bug
     advisories = ADVISORY.objects.filter(pk__in=arrayAdvisories)
     print(advisories)
 
-    #print(patchObjects)
+    #comienza la tabla de aprobadores xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    
+    approver_detail = User.objects.filter(pk__in=SERVER_USER_RELATION.objects.all())
+
+    print("approver_detail")
+    
+    print(approver_detail)
+
+    #approver_detail_pending = approver_detail.exclude(pk__in=authorize.values_list('approver_id'))
 
     context = {
         'justException':justException,
-        'exceptionQuery': exceptionQuery,
+        #'exceptionQuery': exceptionQuery,
         'patchObjects':patchObjects,
         'advisories':advisories
     }

@@ -29,7 +29,7 @@
 </section>
 
 <div class="p-5 container text-center">
-    <h1 style="margin-bottom:2rem" class="display-4">
+    <h1 style="margin-bottom:.5rem" class="display-4">
         Approval detail
     </h1>
     <section class="py-4">
@@ -40,39 +40,62 @@
             table, th, td {
                 border: 1px solid black;
                 border-collapse: collapse;
+                font-size: 15px;
             }
             th, td {
                 padding: 5px;
                 text-align: left;
+                /*font-size: 15px;*/
             }
               
-            .tere { display: block; float: left; }
-            .tede { display: block; }
+            .tere { display: block; float: left; font-size: 1em; }
+            .tede { display: block; font-size: 1em; }
         </style>
 
-        <table class="table mt-4 table-bordered">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <br>
+                    <h4>Type of exception:</h4>
+                    
+                    {% if  justException.exception_type == 1 %}
+                        <p style="font-size:1.5em;" ><u>Patch</u></p>
+                    {% elif  justException.exception_type  == 2 %}
+                        <p style="font-size:1.5em;"  ><u>Full server</u></p>
+                    {% else %}
+                        <p style="font-size:1.5em;"><u>Unknown</u></p>
+                    {% endif %}
+                </div>
+                <div style="padding-top: 1.5em;" class="col-md-6">
+                    <h4>Server:</h4>
+                    <p >{{ justException.content }}</p>
+                </div>
+            </div>
+        </div>
+
+        <table style="font-size:2em;" class="table mt-4 table-bordered">
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">Exception ID</th>
-                    <th scope="col">Exception client</th>
-                    <th scope="col">Exception date</th>
+                    <th style="text-align:center; font-size:.5em;" scope="col">Exception ID</th>
+                    <th style="text-align:center; font-size:.5em;" scope="col">Exception client</th>
+                    <th style="text-align:center; font-size:.5em;" scope="col">Exception date</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>{{ justException.id }}</td>
-                    <td>{{ justException.client }}</td>
-                    <td>{{ justException.exclude_date }}</td>
+                    <td style="text-align:center; font-size:.5em;"> {{ justException.id }}</td>
+                    <td style="text-align:center; font-size:.5em;">{{ justException.client }}</td>
+                    <td style="text-align:center; font-size:.5em;">{{ justException.exclude_date }}</td>
                 </tr>
             </tbody>
         </table>
 
         <br>
 
-        <table style="width:100%">
+        <table style="width:100%; font-size: 1em;">
 
             <tr class="tere">
-              <th>Patch ID</th>
+              <th >Patch ID</th>
                 {% for alias in patchObjects %}
                     <td class="tede">{{ alias.id }}</td>
                 {% endfor %}
@@ -89,6 +112,18 @@
                     <td class="tede">{{ alias.description }}</td>
                 {% endfor %}
             </tr>
+            <tr class="tere">
+                <th>Criticality</th>
+                  {% for alias in advisories %}
+                      <td class="tede">{{ alias.criticality }}</td>
+                  {% endfor %}
+              </tr>
+              <tr class="tere">
+                <th>Scheduled date</th>
+                  {% for alias in patchObjects %}
+                      <td class="tede">{{ alias.scheduled_date }}</td>
+                  {% endfor %}
+              </tr>
         </table>
 
     </section>
@@ -97,13 +132,13 @@
         <br>
         <h2>{{ justException.title }}</h2>
         <h4>Customer justification</h4>
-        <textarea style="padding:15px;" readonly class="form-control border border-primary" rows="3">{{ justException.justification }}</textarea>            
+        <textarea style="padding:15px;" readonly class="form-control border border-primary" rows="3">{{ justException.justification }}</textarea>
     </div>
 
     <div>
         <br>
         <h4>Customer action plan</h4>
-        <textarea style="padding:15px;" readonly class="form-control border border-primary" rows=5">{{ justException.action_plan }}</textarea>            
+        <textarea style="padding:15px;" readonly class="form-control border border-primary" rows=5">{{ justException.action_plan }}</textarea>
     </div>
 
     <br>
