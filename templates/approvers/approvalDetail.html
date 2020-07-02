@@ -34,24 +34,22 @@
     </h1>
     <section class="py-4">
         {% include 'partials/_alerts.html' %}
-        <table class="table mt-4 table-bordered">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">Patch ID</th>
-                    <th scope="col">Patch date</th>
-                    <th scope="col">Patch server or package</th>
-                    <th scope="col">Patch criticality</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ patch_exc.id }}</td>
-                    <td>{{ patch_exc.time }}</td>
-                    <td>{{ patch_exc.server_package }}</td>
-                    <td>{{ patch_exc.criticality}}</td>
-                </tr>
-            </tbody>
-        </table>
+
+        <style>
+            
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 5px;
+                text-align: left;
+            }
+              
+            .tere { display: block; float: left; }
+            .tede { display: block; }
+        </style>
+
         <table class="table mt-4 table-bordered">
             <thead class="thead-dark">
                 <tr>
@@ -62,24 +60,55 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>{{ exceptionQuery.id }}</td>
-                    <td>{{ exceptionQuery.client }}</td>
-                    <td>{{ exceptionQuery.exclude_date }}</td>
+                    <td>{{ justException.id }}</td>
+                    <td>{{ justException.client }}</td>
+                    <td>{{ justException.exclude_date }}</td>
                 </tr>
             </tbody>
         </table>
+
+        <br>
+
+        <table style="width:100%">
+
+            <tr class="tere">
+              <th>Patch ID</th>
+                {% for alias in patchObjects %}
+                    <td class="tede">{{ alias.id }}</td>
+                {% endfor %}
+            </tr>
+            <tr class="tere">
+              <th>Server ID</th>
+                {% for alias in patchObjects %}
+                    <td class="tede">{{ alias.server_id }}</td>
+                {% endfor %}
+            </tr>
+            <tr class="tere">
+              <th>Content</th>
+                {% for alias in advisories %}
+                    <td class="tede">{{ alias.description }}</td>
+                {% endfor %}
+            </tr>
+        </table>
+
     </section>
 
     <div>
         <br>
-        <h2>{{ exceptionQuery.title }}</h2>
+        <h2>{{ justException.title }}</h2>
+        <h4>Customer justification</h4>
+        <textarea style="padding:15px;" readonly class="form-control border border-primary" rows="3">{{ justException.justification }}</textarea>            
+    </div>
+
+    <div>
+        <br>
         <h4>Customer action plan</h4>
-        <textarea style="padding:15px;" readonly class="form-control border border-primary" rows="7">{{ exceptionQuery.justification }}</textarea>            
+        <textarea style="padding:15px;" readonly class="form-control border border-primary" rows=5">{{ justException.action_plan }}</textarea>            
     </div>
 
     <br>
     <!-- <button class="my-4 btn btn-primary btn-lg">Send message to requester</button> -->
-    <button class="my-4 btn btn-primary btn-lg" data-toggle="modal" data-target="#inquiryModal3">Notification module</button>
+    <!-- <button class="my-4 btn btn-primary btn-lg" data-toggle="modal" data-target="#inquiryModal3">Notification module</button> -->
 
     <hr style="margin: 1rem;">
     <div>
@@ -296,20 +325,6 @@
     </div>
 </div>
 
-<section id="services" class="py-5 bg-secondary text-white">
-    <div class="container">
-        <div class="row text-center">
-            <div class="col-md-12">
-                <i class="fas fa-comment fa-4x mr-4"></i>
-                <hr>
-                <h2>Risk management tool</h2>
-                <br>
-                <h4>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Recusandae quas, asperiores eveniet vel
-                    nostrum magnam
-                    voluptatum tempore! Consectetur, id commodi!</h4>
-            </div>
-        </div>
-    </div>
-</section>
+
 
 {% endblock %}

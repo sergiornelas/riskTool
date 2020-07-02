@@ -44,31 +44,33 @@
             <thead class="table-dark ">
               <tr>
                 <!-- <th scope="col">ID</th> -->
-                <th scope="col">Title</th>
-                <th scope="col">Date</th>
-                <th scope="col">Exception type</th>
+                <th style="text-align:center" scope="col">Title</th>
+                <th style="text-align:center" scope="col">Date</th>
+                <th style="text-align:center" scope="col">Exception type</th>
                 {# <th scope="col">Client ID</th> #}
-                <th scope="col">Customer name</th>
-                <th scope="col">Patch ID</th>
+                <th style="text-align:center" scope="col">Customer name</th>
+                <th style="text-align:center" scope="col">Patch ID</th>
+                <th style="text-align:center" scope="col">Content</th>
               </tr>
             </thead>
             <tbody>
               {% for alias in exceptions %}
                 <tr>
-                  <td>{{ alias.title}}</td>
-                  <td>{{ alias.exclude_date}}</td>
+                  <td style="text-align:center" >{{ alias.title}}</td>
+                  <td style="text-align:center" >{{ alias.exclude_date}}</td>
 
                   {% if alias.exception_type == 1 %}
-                    <td>Patch</td>
+                    <td style="text-align:center" >Patch</td>
                   {% elif alias.exception_type == 2 %}
-                    <td>Full server</td>
+                    <td style="text-align:center" >Full server</td>
                   {% else %}
-                    <td>Unknown</td>
+                    <td style="text-align:center" >Unknown</td>
                   {% endif %}
-                  <td> {{ alias.client}} </td>
-                  <td>{{ alias.patch_id }}</td>
-                  <td>
-                    <a href="{% url 'approvalDetail' alias.id %}" class="btn btn-primary btn-block">More Info</a>
+                  <td style="text-align:center" > {{ alias.client}} </td>
+                  <td style="text-align:center" >{{ alias.patch_id }}</td>
+                  <td style="text-align:center" >{{ alias.content }}</td>
+                  <td style="text-align:center" >
+                    <a href="{% url 'approvalDet' alias.id %}" class="btn btn-primary btn-block">More Info</a>
                   </td>
                 </tr>
               {% endfor %}
