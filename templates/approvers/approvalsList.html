@@ -46,7 +46,7 @@
                 <!-- <th scope="col">ID</th> -->
                 <th scope="col">Title</th>
                 <th scope="col">Date</th>
-                <th scope="col">Action plan</th>
+                <th scope="col">Exception type</th>
                 {# <th scope="col">Client ID</th> #}
                 <th scope="col">Customer name</th>
                 <th scope="col">Patch ID</th>
@@ -55,11 +55,16 @@
             <tbody>
               {% for alias in exceptions %}
                 <tr>
-                  {# <td>{{ alias.id}}</td> #}
                   <td>{{ alias.title}}</td>
                   <td>{{ alias.exclude_date}}</td>
-                  <td>{{ alias.justification}}</td>
-                  {#<td>{{ alias.client_id}}</td> #}
+
+                  {% if alias.exception_type == 1 %}
+                    <td>Patch</td>
+                  {% elif alias.exception_type == 2 %}
+                    <td>Full server</td>
+                  {% else %}
+                    <td>Unknown</td>
+                  {% endif %}
                   <td> {{ alias.client}} </td>
                   <td>{{ alias.patch_id }}</td>
                   <td>

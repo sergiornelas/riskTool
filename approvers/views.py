@@ -13,40 +13,123 @@ from django.contrib import auth
 
 #*
 from patches.models import patch
+from patches.models import PATCHES
 from roles.models import Profile
 from exception.models import exclude_patch
+from exception.models import EXCEPTION
 from .models import patchApproverRelationship
 from .models import authorize_Exception
 from django.http import HttpResponse
 from django import forms
 from django.forms import ModelForm
 from django.core import serializers
+
+from servers.models import SERVER_USER_RELATION
+from servers.models import SERVER
 #*
 
+# def approvalsList(request):
+#     var = patchApproverRelationship.objects.filter(approver=request.user.id).values_list('patch_id')
+#                                                                            #.values_list('patch_id', flat=True)
+#     exceptions = exclude_patch.objects.filter(patch_id__in=var)
+#                               #objects.select_related('patch', 'patch__client')
+    
+#     #hello = exclude_patch.objects.filter(pk__in=[1,2,3])
+#                                  #.filter(patch_id__in=[1,3])
+    
+#     patches = patch.objects.all()
+
+#     context = {
+#         'exceptions': exceptions,
+#         'patches':patches
+#     }
+
+#     if request.user.is_authenticated:
+#         if request.user.profile.role == 2:
+#             return render(request, 'approvers/approvalsList.html', context)
+#         else:
+#             messages.error(request, 'Not allowed to enter here')
+#             return redirect('index')
+#     else:
+#         return render(request, 'pages/index.html')
+
 def approvalsList(request):
-    var = patchApproverRelationship.objects.filter(approver=request.user.id).values_list('patch_id')
+    #var = patchApproverRelationship.objects.filter(approver=request.user.id).values_list('patch_id')
                                                                            #.values_list('patch_id', flat=True)
-    exceptions = exclude_patch.objects.filter(patch_id__in=var)
-                              #objects.select_related('patch', 'patch__client')
+
+    serversApprover = SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
     
-    #hello = exclude_patch.objects.filter(pk__in=[1,2,3])
-                                 #.filter(patch_id__in=[1,3])
-    
-    patches = patch.objects.all()
+    takeServerID = [o.server_id for o in serversApprover]
+    print(takeServerID)
+
+    servers = SERVER.objects.filter(pk__in=takeServerID)
+    print(servers)
+
+    takeHostnames = [o.hostname for o in servers]
+    print(takeHostnames) #list
+
+    #print(type(takeHostnames[1])) #str
+   
+    #si un field en la db contiene algun hostname
+    for hostname in takeHostnames:
+        exceptionsApprover = EXCEPTION.objects.filter(content__icontains=hostname) #tiene que ser el valor exacto.
+
+    print("exceptionsApprover")
+    print(exceptionsApprover)
+
 
     context = {
-        'exceptions': exceptions,
-        'patches':patches
+        'exceptions': exceptionsApprover
     }
 
     if request.user.is_authenticated:
         if request.user.profile.role == 2:
-            return render(request, 'approvers/approvalsList.html', context)
+            return render(request, 'approvers/approvalsList.html', context)            
         else:
             messages.error(request, 'Not allowed to enter here')
             return redirect('index')
     else:
         return render(request, 'pages/index.html')
+
+    #print("exceptions:")
+    #print(exceptionsApprover)
+    
+    
+    #patchesApprover = PATCHES.objects.filter(server_id__in=serversApprover)
+    #print(patchesApprover)
+
+    #takePatchesID = [o.pk for o in patchesApprover]
+    #print(takePatchesID)
+
+    #exceptionsApprover = EXCEPTION.objects.filter(patch_id__in=takePatchesID)
+    
+    #serverPatch = serverPatch.replace(" ", "")
+    #serverPatch = serverPatch.replace(":", "")
+    #serverPatch = serverPatch.replace(",", "")
+
+    #exceptions = exclude_patch.objects.filter(patch_id__in=var)
+                              #objects.select_related('patch', 'patch__client')
+    
+    #hello = exclude_patch.objects.filter(pk__in=[1,2,3])
+                                 #.filter(patch_id__in=[1,3])
+    
+    #patches = patch.objects.all()
+
+    # context = {
+    #     'exceptions': exceptions,
+    #     'patches':patches
+    # }
+
+    if request.user.is_authenticated:
+        if request.user.profile.role == 2:
+            #return render(request, 'approvers/approvalsList.html', context)
+            return render(request, 'approvers/approvalsList.html')
+        else:
+            messages.error(request, 'Not allowed to enter here')
+            return redirect('index')
+    else:
+        return render(request, 'pages/index.html')
+
 
 
 def approvalDetail(request, exclude_patch_ID):

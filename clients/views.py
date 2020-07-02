@@ -312,7 +312,15 @@ def exclude_server(request):
                
         exclude_this_server = EXCEPTION(patch_id=patch_id, action_plan=action_plan, client=client, title=title, justification=justification, exclude_date=exclude_date, content=content, exception_type=exception_type)
         #exclude_this_server = EXCEPTION(client=client, title=title, justification=justification, exclude_date=exclude_date, content=content, exception_type=exception_type)
-        exclude_this_server.save()
+        
+        
+        for x in exclude_this_server:
+            x.save()
+        
+        #exclude_this_server.save()
+        
+
+        
 
         messages.success(request, "Your request has been submitted, an approver will get back to you soon")
 
@@ -331,7 +339,7 @@ def transform(request): # << 1:1, 1:3, 2:3
         serverPatch = serverPatch.replace(":", "")
         serverPatch = serverPatch.replace(",", "")
 
-        #print(serverPatch)
+        print(serverPatch)
 
         array=[]
 
@@ -348,10 +356,17 @@ def transform(request): # << 1:1, 1:3, 2:3
         print(arrayServers)
         print(arrayAdvisories)
 
-        #patches = PATCHES.objects.filter(server_id__in=arrayServers).filter(advisory_id__in=arrayAdvisories)
-        patches = PATCHES.objects.filter(server_id__in=arrayServers, advisory_id__in=arrayAdvisories)
+        patches = PATCHES.objects.filter(server_id__in=arrayServers).filter(advisory_id__in=arrayAdvisories)
+        
+        #1: 2,1: 1,2: 4,1: 4:
 
-        print("AQUI:")
-        print(patches)
+            #serverArrays:    patchArrays:
+            #[1, 1, 1]   ->  [2, 1, 4]
+            #[2]         ->  [4]       
+
+        #context = {
+            #'patches':patches,
+            #'servers':servers,
+        #} 
 
         return HttpResponse(serializers.serialize("json", patches))
