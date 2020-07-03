@@ -19,7 +19,8 @@ from advisory.models import ADVISORY
 from roles.models import Profile
 from exception.models import exclude_patch
 from exception.models import EXCEPTION
-from exception.models import AUTHORIZE_EXCEPTION
+#from exception.models import AUTHORIZE_EXCEPTION
+from exception.models import VALIDATE_EXCEPTION
 from .models import patchApproverRelationship
 from .models import authorize_Exception
 from django.http import HttpResponse
@@ -140,14 +141,7 @@ def approvalDetail(request, exclude_patch_ID):
     else:
         return redirect('login')
 
-
-
-
-
-
-
 def approvalDet(request, exclude_patch_ID):
-    
     justException = get_object_or_404(EXCEPTION, pk=exclude_patch_ID)
     #EXCEPTION object (94)
 
@@ -167,6 +161,11 @@ def approvalDet(request, exclude_patch_ID):
     takeServers=SERVER.objects.filter(pk__in=servers_ids)
     #<QuerySet [<SERVER: wdcgz22050068>]>
 
+    takeServersFront= [o.hostname for o in takeServers] #FRONTEND
+    #['wdcgz22050068']
+    takeServersFront =  ''.join(takeServersFront) #FRONTEND
+    #wdcgz22050068
+    
         #-----------takeException Case#-----------
 
     takeExceptionPatchIDS=[]
@@ -208,10 +207,6 @@ def approvalDet(request, exclude_patch_ID):
     #<ADVISORY: Security Bulletin: Vulnerabilities in tcpdumb affect AIX>,
     #<ADVISORY: Security Bulletin: Vulnerabilities tcpdumb foo RHEL>]>
 
-    
-    
-    
-    
     #comienza la tabla de aprobadores xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
     #-----------takeException Hostname#-----------
@@ -249,31 +244,54 @@ def approvalDet(request, exclude_patch_ID):
     approver_detail = User.objects.filter(pk__in=serverApprover)
     #<QuerySet [<User: approver>, <User: approver2>, <User: approver3>]>
 
-    #authorize = authorize_Exception.objects.filter(exception_id=exceptionQuery.id).filter(approver_id__in =approver_detail)
-    #authorize = AUTHORIZE_EXCEPTION.objects.filter(exception_id=justException.id)
-    #authorize = AUTHORIZE_EXCEPTION.objects.get(exception_id=94)
-    #authorize = AUTHORIZE_EXCEPTION.objects.all()
-    #print(authorize)
+    authorize = VALIDATE_EXCEPTION.objects.filter(exception_id=justException.id).filter(approver_id__in =approver_detail)
+    #<QuerySet [<VALIDATE_EXCEPTION: VALIDATE_EXCEPTION object (1)>,
+    #<VALIDATE_EXCEPTION: VALIDATE_EXCEPTION object (2)>,
+    #<VALIDATE_EXCEPTION: VALIDATE_EXCEPTION object (3)>]>
 
-    #justException = get_object_or_404(EXCEPTION, pk=exclude_patch_ID)
-    #EXCEPTION object (94)
+    approver_detail_pending = approver_detail.exclude(pk__in=authorize.values_list('approver_id'))
+    #<QuerySet [<User: approver>, <User: approver2>, <User: approver3>]>
 
+    countTotal = 0
+    for a in approver_detail:
+        countTotal +=1
+    print(countTotal)
+
+    countApproved = 0
+    for p in authorize:
+        if p.state == 'Approved':
+            countApproved+=1
+        if countApproved == countTotal:
+            print("Approved")
+            justException.state = 'Approved'
+            justException.save(update_fields=['state'])
+            break
+        if p.state == 'Rejected':
+            print("Rejected")
+            justException.state = 'Rejected'
+            justException.save(update_fields=['state'])
+            break
+        else:
+            print("meh")
+            justException.state = 'Pending'
+            justException.save(update_fields=['state'])
 
     # necesitareEsto = zip(authorize, approver_detail_pending)
     context = {
         'justException':justException,
-        #'exceptionQuery': exceptionQuery,
-        'patchObjects':patchObjects,
-        'advisories':advisories
+        'patchObjects':patchObjects, #FRONTEND
+        'advisories':advisories, #FRONTEND
+        'takeExceptionHostnames':takeExceptionHostnames, #FRONTEND
+        'takeServersFront':takeServersFront, #FRONTEND
+        'approver_detail':approver_detail,
+        'authorize':authorize,
+        'approver_detail_pending':approver_detail_pending,
     }
 
+    #path = SERVER_USER_RELATION.objects.filter(user_id=request.user.id).filter(server_id__in=client_has_server.id).values_list('user_id', flat=True)
+    #print(path)
+
     return render(request, 'approvers/approvalDetail.html', context)
-
-
-
-
-
-
 
 def authorize(request):
     if request.method == 'POST':
@@ -282,9 +300,12 @@ def authorize(request):
         state = request.POST['state']
         comment = request.POST['comment']
         
-    validate = authorize_Exception(exception_id=exception_id, approver=approver, state=state, comment=comment)
+    validate = VALIDATE_EXCEPTION(exception_id=exception_id, approver=approver, state=state, comment=comment)
     validate.save()
-    return redirect('approvalsList')
+    #return redirect('approvalsList')
+    return redirect('approvalDet', exception_id)
+
+    
 
 
 #NOTAS:

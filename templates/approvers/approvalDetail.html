@@ -1,18 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!-- <script type="text/javascript">
-    /*
-    jQuery(document).ready(function () {
-
-        $(".clickbtn").click(function () {
-            //$("#btnpress").val("{{ exception.id }}");
-            $("#btnpress").val(exclude_patch_ID);
-        });
-    });
-    */
-</script> -->
-
 <!-- Breadcrumb -->
 <section id="bc" class="mt-3">
     <div class="container">
@@ -36,7 +24,6 @@
         {% include 'partials/_alerts.html' %}
 
         <style>
-            
             table, th, td {
                 border: 1px solid black;
                 border-collapse: collapse;
@@ -68,7 +55,17 @@
                 </div>
                 <div style="padding-top: 1.5em;" class="col-md-6">
                     <h4>List of server:</h4>
-                    <p >{{ justException.content }}</p>
+                    {#<p >{{ justException.content }}</p>#}
+                    <style>
+                        .nobr { white-space: nowrap }
+                    </style>
+                    {% for i in takeExceptionHostnames %}
+                        {% if i == takeServersFront %}
+                            <span style="white-space: nowrap"><b>{{ i }}</b></span>
+                        {% else %}
+                            <span style="white-space: nowrap">{{ i }}</span>
+                        {% endif %}
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -93,7 +90,6 @@
         <br>
 
         <table style="width:100%; font-size: 1em;">
-
             <tr class="tere">
               <th >Patch ID</th>
                 {% for alias in patchObjects %}
@@ -125,7 +121,6 @@
                   {% endfor %}
               </tr>
         </table>
-
     </section>
 
     <div>
@@ -142,9 +137,7 @@
     </div>
 
     <br>
-    <!-- <button class="my-4 btn btn-primary btn-lg">Send message to requester</button> -->
-    <!-- <button class="my-4 btn btn-primary btn-lg" data-toggle="modal" data-target="#inquiryModal3">Notification module</button> -->
-
+    
     <hr style="margin: 1rem;">
     <div>
         <br>
@@ -176,16 +169,14 @@
                                     <td>No</td>
                                 {% endif %}
 
-
-                                {#<td> {{ j.comment }} </td>#}
-
                                 <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal2" value={{ j.comment }}>Read</button></td>
                                 
                                 {% if user.id == i.id %}
                                     {% if j.state == 'Approved' %}
-                                        <td><button class="btn btn-success btn-block" data-toggle="modal" data-target="#inquiryModal"> {{ j.state }} </button></td>
+                                        {#<td><button class="btn btn-success btn-block" data-toggle="modal" data-target="#inquiryModal"> {{ j.state }} </button></td>#}
+                                        <td style="color: green"> {{ j.state }} </td>
                                     {% elif j.state == 'Rejected' %}
-                                        <td><button class="btn btn-danger btn-block" data-toggle="modal" data-target="#inquiryModal"> {{ j.state }} </button></td>
+                                        <td style="color: red"> {{ j.state }} </td>
                                     {% else %}
                                         <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal"> {{ j.state }} </button></td>
                                     {% endif %}
@@ -279,7 +270,7 @@
         <div class="modal-body">                
             <form action="{% url 'authorize' %}" method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="exception_id" value={{ exceptionQuery.id }}>
+                <input type="hidden" name="exception_id" value={{ justException.id }}>
                 
                 <div class="form-group">
                     <label for="title" class="col-form-label">Title:</label>
@@ -315,7 +306,7 @@
             <!-- 'EXCLUDE' SE REFIERE AL PRIMER CAMPO DEL PATH DE URL.PY -->
             <form action="{% url 'authorize' %}" method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="exception_id" value={{ exceptionQuery.id }}>
+                <input type="hidden" name="exception_id" value={{ justException.id }}>
                 
                 <div class="form-group">
                     <label for="comment" class="col-form-label">Comment:</label>
@@ -359,7 +350,5 @@
       </div>
     </div>
 </div>
-
-
 
 {% endblock %}

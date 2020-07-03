@@ -51,6 +51,7 @@
                 <th style="text-align:center" scope="col">Customer name</th>
                 <th style="text-align:center" scope="col">Patch ID</th>
                 <th style="text-align:center" scope="col">Content</th>
+                <th style="text-align:center" scope="col">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -69,6 +70,13 @@
                   <td style="text-align:center" > {{ alias.client}} </td>
                   <td style="text-align:center" >{{ alias.patch_id }}</td>
                   <td style="text-align:center" >{{ alias.content }}</td>
+                  {% if alias.state == "Approved" %}
+                    <td style="text-align:center; color:green;" ><b>{{ alias.state }}</b></td>
+                  {% elif alias.state == "Rejected" %}
+                    <td style="text-align:center; color:red;" ><b>{{ alias.state }}</b></td>
+                  {% else %}
+                    <td style="text-align:center;" >{{ alias.state }}</td>
+                  {% endif %}
                   <td style="text-align:center" >
                     <a href="{% url 'approvalDet' alias.id %}" class="btn btn-primary btn-block">More Info</a>
                   </td>

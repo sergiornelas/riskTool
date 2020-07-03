@@ -57,9 +57,13 @@
                     <td>{{ p.title }}</td>
                     <td>{{ p.exclude_date }}</td>
                     <td>{{ p.content }}</td>
-                    {% if p.state == "Pending" %}
+                     {% if p.state == "Pending" %}
                         <td style="font-style: italic;"><b>{{ p.state }}</b></td>
-                    {% else %}
+                     {% elif p.state == "Approved" %}
+                        <td style="color:green;"><b>{{ p.state }}</b></td>
+                     {% elif p.state == "Rejected" %}
+                        <td style="color:red;"><b>{{ p.state }}</b></td>
+                     {% else %}
                         <td>{{ p.state }}</td>
                     {% endif %}
                   </tr>

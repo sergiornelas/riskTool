@@ -28,7 +28,7 @@ class AUTHORIZE_TYPE(models.Model):
     #type = models.CharField(max_length=10)
     kind = models.CharField(max_length=8, choices = state_choices)
 
-    
+
 
 class EXCEPTION(models.Model):
     #kind = models.ForeignKey(EXCEPTION_TYPE, null=True, on_delete=models.CASCADE) #patch, server
@@ -47,22 +47,32 @@ class EXCEPTION(models.Model):
     client = models.ForeignKey(settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE, null=True)
 
+
+
+class VALIDATE_EXCEPTION(models.Model):
+    exception_id = models.IntegerField(null=True)    
+    approver = models.ForeignKey(settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE, null=True, related_name='approverValidate')
+
+    state = models.CharField(max_length=8, choices = state_choices, default = PEND)
+    comment = models.TextField(blank=True, default="Pending")
+
+
+
+
+
+#---------------------TRASH -----------------------------------------------------
+
 class AUTHORIZE_EXCEPTION(models.Model):
     #state = models.ForeignKey(AUTHORIZE_TYPE, null=True, on_delete=models.CASCADE) #approved, rejected, pending
     state = models.CharField(max_length=8, choices = state_choices, default = PEND)
     exception_id = models.IntegerField(null=True) #!
     
     comment = models.TextField(blank=True, default="Pending")
+    
     #state = models.CharField(max_length=8, choices = state_choices, default = PEND)
     approver = models.ForeignKey(settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE, null=True)
-
-
-
-    
-
-
-
 
 #---------------------OLD RISK MANAGEMENT-----------------------------------------------------
 
