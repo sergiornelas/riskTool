@@ -149,13 +149,15 @@ def approvalDetail(request, exclude_patch_ID):
 def approvalDet(request, exclude_patch_ID):
     
     justException = get_object_or_404(EXCEPTION, pk=exclude_patch_ID)
-    print(justException)
+    #EXCEPTION object (94)
 
     exceptionQuery = EXCEPTION.objects.filter(pk=exclude_patch_ID)
+    #<QuerySet [<EXCEPTION: EXCEPTION object (94)>]>
     
-    #-----------servers que el aprobador tiene#-----------
+        #-----------servers que el aprobador tiene#-----------
 
     client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
+    #<QuerySet [<SERVER_USER_RELATION: SERVER_USER_RELATION object (7)>]>
 
         #almacenamos en una lista los id de los servidores del cliente loggeado.        
     servers_ids=[]
@@ -163,54 +165,101 @@ def approvalDet(request, exclude_patch_ID):
         servers_ids.append(server.server_id)
 
     takeServers=SERVER.objects.filter(pk__in=servers_ids)
+    #<QuerySet [<SERVER: wdcgz22050068>]>
 
-    #-----------servers que el aprobador tiene#-----------
+        #-----------takeException Case#-----------
 
     takeExceptionPatchIDS=[]
-
-    #almacenamos un solo string a una lista porque vamos a necesitarla después.
+        #almacenamos un solo string a una lista porque vamos a necesitarla después.
     for x in exceptionQuery:
         #es una lista de un solo string: "1,2,3,4,5"
         takeExceptionPatchIDS.append(x.patch_id)
 
-    #convertir la lista a un string
+        #convertir la lista a un string
     takeExceptionPatchIDS =  ', '.join(takeExceptionPatchIDS)
-    
-    #el string quitar las comas y añadir espacios para convertirlo a lista nuevamente
+        #el string quitar las comas y añadir espacios para convertirlo a lista nuevamente
     takeExceptionPatchIDS = takeExceptionPatchIDS.replace(",", " ")
-    #se convierte a una lista (pero ahora cada id del parche esta en un indice diferente)
+        #se convierte a una lista (pero ahora cada id del parche esta en un indice diferente)
     takeExceptionPatchIDS = takeExceptionPatchIDS.split()
-
-    #convertimos cada elemento string de la lista a entero (siguen siendo strings)
+        #convertimos cada elemento string de la lista a entero (siguen siendo strings)
     for i in range(0, len(takeExceptionPatchIDS)): 
         takeExceptionPatchIDS[i] = int(takeExceptionPatchIDS[i])
-
-    #print(takeExceptionPatchIDS)
+    #[1, 2, 3, 4, 5, 6, 7, 8, 9]
     
-    #patchObjects = PATCHES.objects.filter(pk__in=takeExceptionPatchIDS)
+        #patchObjects = PATCHES.objects.filter(pk__in=takeExceptionPatchIDS) (salia informacion de servidores que no le pertenece)
+        #JUST FRONTEND:
     patchObjects = PATCHES.objects.filter(pk__in=takeExceptionPatchIDS).filter(server_id__in=takeServers)
+    #<QuerySet [<PATCHES: wdcgz22050068 : 'RHSA-2019:3538-01: yun security. bug fix. and enhancement update' , >,
+    #<PATCHES: wdcgz22050068 : 'SUSE-SU-2019:3091-1: important: Securityupdate for ucode-intel' , >,
+    #<PATCHES: wdcgz22050068 : 'Security Bulletin: Vulnerabilities in tcpdumb affect AIX' , >,
+    #<PATCHES: wdcgz22050068 : 'Security Bulletin: Vulnerabilities tcpdumb foo RHEL' , >]>
 
     arrayAdvisories = []
-
     for a in patchObjects:
         arrayAdvisories.append(a.advisory_id)
-
-    print(arrayAdvisories)
+    #[1, 2, 4, 6]
     
-    #bug
+        #bug (no sale el total de los advisories (quita repetidos))
+        # necesitareEsto = zip(authorize, approver_detail_pending)
+        #JUST FRONTEND:
     advisories = ADVISORY.objects.filter(pk__in=arrayAdvisories)
-    print(advisories)
+    #<QuerySet [<ADVISORY: RHSA-2019:3538-01: yun security. bug fix. and enhancement update>,
+    #<ADVISORY: SUSE-SU-2019:3091-1: important: Securityupdate for ucode-intel>,
+    #<ADVISORY: Security Bulletin: Vulnerabilities in tcpdumb affect AIX>,
+    #<ADVISORY: Security Bulletin: Vulnerabilities tcpdumb foo RHEL>]>
 
+    
+    
+    
+    
     #comienza la tabla de aprobadores xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    
-    approver_detail = User.objects.filter(pk__in=SERVER_USER_RELATION.objects.all())
 
-    print("approver_detail")
-    
-    print(approver_detail)
+    #-----------takeException Hostname#-----------
 
-    #approver_detail_pending = approver_detail.exclude(pk__in=authorize.values_list('approver_id'))
+    #takeExceptionPatchIDS -> takeExceptionHostnames
 
+    takeExceptionHostnames=[]
+        #almacenamos un solo string a una lista porque vamos a necesitarla después.
+    for x in exceptionQuery:
+        #es una lista de un solo string: "1,2,3,4,5"
+        takeExceptionHostnames.append(x.content)
+
+        #convertir la lista a un string
+    takeExceptionHostnames =  ', '.join(takeExceptionHostnames)
+        #el string quitar las comas y añadir espacios para convertirlo a lista nuevamente
+    takeExceptionHostnames = takeExceptionHostnames.replace(",", " ")
+        #se convierte a una lista (pero ahora cada id del parche esta en un indice diferente)
+    takeExceptionHostnames = takeExceptionHostnames.split()
+        #convertimos cada elemento string de la lista a entero (siguen siendo strings)
+    #['wdcdmzyz22033245', 'wdcgz22050068']
+
+    usersApprover = Profile.objects.filter(role=2).values_list("user_id")
+    #<QuerySet [(4,), (5,), (6,)]>
+
+    getServerID = SERVER.objects.filter(hostname__in=takeExceptionHostnames).values_list("id")
+    #<QuerySet [(1,), (2,)]>
+
+    serverApprover = SERVER_USER_RELATION.objects.filter(user_id__in=usersApprover).filter(server_id__in=getServerID).values_list('user_id')
+    #<QuerySet [(4,), (6,), (4,), (5,)]>  (+.values_list('user_id'))
+        #<QuerySet [<SERVER_USER_RELATION: SERVER_USER_RELATION object (5)>,
+        #<SERVER_USER_RELATION: SERVER_USER_RELATION object (8)>,
+        #<SERVER_USER_RELATION: SERVER_USER_RELATION object (6)>,
+        #<SERVER_USER_RELATION: SERVER_USER_RELATION object (7)>]>
+
+    approver_detail = User.objects.filter(pk__in=serverApprover)
+    #<QuerySet [<User: approver>, <User: approver2>, <User: approver3>]>
+
+    #authorize = authorize_Exception.objects.filter(exception_id=exceptionQuery.id).filter(approver_id__in =approver_detail)
+    #authorize = AUTHORIZE_EXCEPTION.objects.filter(exception_id=justException.id)
+    #authorize = AUTHORIZE_EXCEPTION.objects.get(exception_id=94)
+    #authorize = AUTHORIZE_EXCEPTION.objects.all()
+    #print(authorize)
+
+    #justException = get_object_or_404(EXCEPTION, pk=exclude_patch_ID)
+    #EXCEPTION object (94)
+
+
+    # necesitareEsto = zip(authorize, approver_detail_pending)
     context = {
         'justException':justException,
         #'exceptionQuery': exceptionQuery,

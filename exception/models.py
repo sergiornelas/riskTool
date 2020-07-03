@@ -28,6 +28,8 @@ class AUTHORIZE_TYPE(models.Model):
     #type = models.CharField(max_length=10)
     kind = models.CharField(max_length=8, choices = state_choices)
 
+    
+
 class EXCEPTION(models.Model):
     #kind = models.ForeignKey(EXCEPTION_TYPE, null=True, on_delete=models.CASCADE) #patch, server
     #state = models.ForeignKey(AUTHORIZE_TYPE, null=True, on_delete=models.CASCADE) #approved, rejected, pending
