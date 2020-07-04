@@ -2,6 +2,8 @@ from django.db import models
 from datetime import datetime
 from django.conf import settings
 
+from pytz import timezone
+
 APP = "Approved"
 REJ = "Rejected"
 PEND = "Pending"
@@ -47,7 +49,7 @@ class EXCEPTION(models.Model):
     client = models.ForeignKey(settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE, null=True)
 
-
+#now = datetime.utcnow().replace(tzinfo=timezone('America/Mexico_City'))
 
 class VALIDATE_EXCEPTION(models.Model):
     exception_id = models.IntegerField(null=True)    
@@ -56,6 +58,8 @@ class VALIDATE_EXCEPTION(models.Model):
 
     state = models.CharField(max_length=8, choices = state_choices, default = PEND)
     comment = models.TextField(blank=True, default="Pending")
+    time = models.DateTimeField(default=datetime.utcnow().replace(tzinfo=timezone('America/Mexico_City')), blank=False)
+    #time = models.DateTimeField(default=datetime.now, blank=False)
 
 
 

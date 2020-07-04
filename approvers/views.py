@@ -185,8 +185,6 @@ def approvalDet(request, exclude_patch_ID):
         takeExceptionPatchIDS[i] = int(takeExceptionPatchIDS[i])
     #[1, 2, 3, 4, 5, 6, 7, 8, 9]
     
-        #patchObjects = PATCHES.objects.filter(pk__in=takeExceptionPatchIDS) (salia informacion de servidores que no le pertenece)
-        #JUST FRONTEND:
     patchObjects = PATCHES.objects.filter(pk__in=takeExceptionPatchIDS).filter(server_id__in=takeServers)
     #<QuerySet [<PATCHES: wdcgz22050068 : 'RHSA-2019:3538-01: yun security. bug fix. and enhancement update' , >,
     #<PATCHES: wdcgz22050068 : 'SUSE-SU-2019:3091-1: important: Securityupdate for ucode-intel' , >,
@@ -199,8 +197,6 @@ def approvalDet(request, exclude_patch_ID):
     #[1, 2, 4, 6]
     
         #bug (no sale el total de los advisories (quita repetidos))
-        # necesitareEsto = zip(authorize, approver_detail_pending)
-        #JUST FRONTEND:
     advisories = ADVISORY.objects.filter(pk__in=arrayAdvisories)
     #<QuerySet [<ADVISORY: RHSA-2019:3538-01: yun security. bug fix. and enhancement update>,
     #<ADVISORY: SUSE-SU-2019:3091-1: important: Securityupdate for ucode-intel>,
@@ -209,9 +205,7 @@ def approvalDet(request, exclude_patch_ID):
 
     #comienza la tabla de aprobadores xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-    #-----------takeException Hostname#-----------
-
-    #takeExceptionPatchIDS -> takeExceptionHostnames
+#<takeException hostname from database>
 
     takeExceptionHostnames=[]
         #almacenamos un solo string a una lista porque vamos a necesitarla después.
@@ -227,6 +221,8 @@ def approvalDet(request, exclude_patch_ID):
     takeExceptionHostnames = takeExceptionHostnames.split()
         #convertimos cada elemento string de la lista a entero (siguen siendo strings)
     #['wdcdmzyz22033245', 'wdcgz22050068']
+
+#</takeException hostname from database>
 
     usersApprover = Profile.objects.filter(role=2).values_list("user_id")
     #<QuerySet [(4,), (5,), (6,)]>
@@ -244,28 +240,19 @@ def approvalDet(request, exclude_patch_ID):
     approver_detail = User.objects.filter(pk__in=serverApprover)
     #<QuerySet [<User: approver>, <User: approver2>, <User: approver3>]>
 
-    #edited
-    #approver_detail = User.objects.filter(pk=request.user.id)
-    #<QuerySet [<User: approver2>]>
-
     authorize = VALIDATE_EXCEPTION.objects.filter(exception_id=justException.id).filter(approver_id__in =approver_detail)
     #<QuerySet [<VALIDATE_EXCEPTION: VALIDATE_EXCEPTION object (1)>,
     #<VALIDATE_EXCEPTION: VALIDATE_EXCEPTION object (2)>,
     #<VALIDATE_EXCEPTION: VALIDATE_EXCEPTION object (3)>]>
 
-    #new
-    #singleAuthorize = VALIDATE_EXCEPTION.objects.filter(exception_id=justException.id).filter(approver_id =request.user.id)
-    
     try:
         singleAuthorize = VALIDATE_EXCEPTION.objects.filter(exception_id=justException.id).get(approver_id =request.user.id)
         #VALIDATE_EXCEPTION object (22)
+        #TIENES QUE USAR GET CUANDO SOLO NECESITAS UN OBJETO, Y AL MOMENTO DE LLAMARLO AL FRONTEND SIN USAR FOR
     except:
         singleAuthorize = ""
         #""
-    print(singleAuthorize)
-    #<QuerySet [<VALIDATE_EXCEPTION: VALIDATE_EXCEPTION object (19)>]>
-    #TIENES QUE USAR GET CUANDO SOLO NECESITAS UN OBJETO, Y AL MOMENTO DE LLAMARLO AL FRONTEND SIN USAR FOR
-
+    
     #approver_detail_pending = approver_detail.exclude(pk__in=authorize.values_list('approver_id'))
     #<QuerySet [<User: approver>, <User: approver2>, <User: approver3>]>
 
@@ -293,7 +280,6 @@ def approvalDet(request, exclude_patch_ID):
             justException.state = 'Pending'
             justException.save(update_fields=['state'])
 
-    # necesitareEsto = zip(authorize, approver_detail_pending)
     context = {
         'justException':justException, #FRONTEND
         'patchObjects':patchObjects, #FRONTEND
@@ -316,6 +302,7 @@ def authorize(request):
         approver = request.user
         state = request.POST['state']
         comment = request.POST['comment']
+        #time = request.POST[time]
         
     validate = VALIDATE_EXCEPTION(exception_id=exception_id, approver=approver, state=state, comment=comment)
     validate.save()

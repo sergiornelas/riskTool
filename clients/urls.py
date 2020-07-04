@@ -23,4 +23,6 @@ urlpatterns = [
     path('getDaysLimit', views.getDaysLimit, name='getDaysLimit'),
 
     path('transform', views.transform, name='transform'),
+
+    path('getValidationDetails', views.getValidationDetails, name='getValidationDetails'),
 ]

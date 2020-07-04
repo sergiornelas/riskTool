@@ -31,6 +31,23 @@
     </div>
  </section>
 
+<script>
+   /*
+   $(document).ready(function () {
+      $.ajax({
+         url: 'getValidationDetails', //AQUI SE EXTRAERÁN LOS DATOS
+         type: 'GET', //OBTENDREMOS DATOS
+         dataType: "text", //"json"  //FORMATO DE LOS DATOS
+         success: function (data) {  //SI TODO SALE BIEN (DATOS EXISTENTES, CONEXIÓN CON EL SERVIDOR)
+            data = JSON.parse(data);
+            console.log(data)
+         }
+      })
+   })
+   */
+</script>
+
+
 <section id="dashboard" class="py-4">
    <div class="container">
       {% include 'partials/_alerts.html' %}
@@ -45,7 +62,7 @@
                   <tr>
                      <th scope="col">Exclude id</th>
                      <th scope="col">Title</th>
-                     <th scope="col">Exclude date</th>
+                     <th scope="col">Limit date for approval</th>
                      <th scope="col">Content</th>
                      <th scope="col">Status</th>
                   </tr>
@@ -58,11 +75,14 @@
                     <td>{{ p.exclude_date }}</td>
                     <td>{{ p.content }}</td>
                      {% if p.state == "Pending" %}
-                        <td style="font-style: italic;"><b>{{ p.state }}</b></td>
+                        {#<td style="font-style: italic;"><b>{{ p.state }}</b></td>#}
+                        <td><button style="font-style: italic;" class="btn btn-block" data-toggle="modal" data-target="#inquiryModal2" >{{ p.state }}</button></td>
                      {% elif p.state == "Approved" %}
-                        <td style="color:green;"><b>{{ p.state }}</b></td>
+                        {#<td style="color:green;"><b>{{ p.state }}</b></td>#}
+                        <td><button value={{ p.id }} class="btn btn-success btn-block validationsQuery" data-toggle="modal" data-target="#inquiryModal2" >{{ p.state }}</button></td>
                      {% elif p.state == "Rejected" %}
-                        <td style="color:red;"><b>{{ p.state }}</b></td>
+                        {#<td style="color:red;"><b>{{ p.state }}</b></td>#}
+                        <td><button value={{ p.id }} class="btn btn-danger btn-block validationsQuery" data-toggle="modal" data-target="#inquiryModal2" >{{ p.state }}</button></td>
                      {% else %}
                         <td>{{ p.state }}</td>
                     {% endif %}
@@ -77,5 +97,73 @@
       </div>
    </div>
 </section>
+
+  <!-- Inquiry Modal Read comentaries-->
+<div class="modal fade" id="inquiryModal2" role="dialog">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="inquiryModalLabel">Approval status</h5>
+            <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            
+            <textarea id="queryContent" readonly rows="7" class="form-control" > </textarea>
+            <div id ="output"></div>
+
+            <script type="text/javascript">
+               $(document).ready(function () {
+                   $(".validationsQuery").click(function () {
+                     //$("#btnpress").val(this.id);
+                     query=this.value
+                     //console.log(query)
+                     query=parseInt(query)
+                     //console.log(typeof(query))
+                     
+                     var textAreaContent;
+                     
+                     $.ajax({
+                        //async: false,
+                        url: 'getValidationDetails',
+                        method: 'POST',
+                        dataType: "text", //"json"
+                        data: {
+                           query: query
+                        },
+                        success: function (data) {
+                           data = JSON.parse(data);
+                           console.log(data)
+
+                           $.each(data,function(key,index){
+                              //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
+                                  //console.log(key);
+                                  //console.log(index);
+                              //imprime solo los campos que necesitamos.
+                                  console.log(data[key].fields.time);
+                                  //console.log(index.fields.scheduled_date);
+                              $("#queryContent").append("<br>"+index.fields.approver);
+                              $("#queryContent").append("<br>"+index.fields.comment);
+                          })
+                           
+                           //$('#queryContent').html(div);
+
+                           $('#queryContent').html(textAreaContent);
+                        }
+                     })
+                     
+                   });
+               });
+           </script>
+
+            <hr>
+            <input type="submit" name="state" value="Close" class="btn btn-block btn-success col-md" data-dismiss="modal">
+         </div>
+                        <!-- name = database field, value = input value to db -->
+      </div>
+   </div>
+</div>
+
 
 {% endblock %}

@@ -105,7 +105,7 @@
                         dataType: "text", //"json"  //FORMATO DE LOS DATOS
                         success: function (data) {  //SI TODO SALE BIEN (DATOS EXISTENTES, CONEXIÓN CON EL SERVIDOR)
                            data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON
-
+                           //console.log(data)
                            $.each(data, function (key, index) {
                               //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
                               //imprime solo los campos que necesitamos.

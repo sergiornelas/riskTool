@@ -9,6 +9,7 @@ from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http import JsonResponse
+from exception.models import VALIDATE_EXCEPTION
 from urllib import parse
 
 #DASHBOARD
@@ -50,8 +51,11 @@ def dashboard(request):
 
 def exceptionsBoard(request):
     client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id)
+    validations=VALIDATE_EXCEPTION.objects.all()
+
     context ={
-        'client_exceptions':client_exceptions
+        'client_exceptions':client_exceptions,
+        'validations':validations
     }
     return render(request, 'clients/exceptionsBoard.html', context)
 
@@ -368,3 +372,17 @@ def transform(request): # << 1:1, 1:3, 2:3
         #} 
 
         return HttpResponse(serializers.serialize("json", patches))
+
+@csrf_exempt
+def getValidationDetails(request):
+    #validations=VALIDATE_EXCEPTION.objects.all()
+    
+    if request.method == "POST":
+
+        query = request.POST.get('query')
+        print(query)
+        
+        validations=VALIDATE_EXCEPTION.objects.filter(exception_id=query)
+        #print(validations)
+        return HttpResponse(serializers.serialize("json", validations))
+        #return HttpResponse(query)
