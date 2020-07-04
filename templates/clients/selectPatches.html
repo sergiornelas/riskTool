@@ -134,19 +134,11 @@
                                 //console.log(selectedServer)
                                 
                                 $.ajax({
-
                                     method: "POST",
-                                    
                                     data: {
                                         //simple string
                                         selectedServer: localStorage.arrayServerPatches
-                                        
-                                        //object
-                                        //selectedServer: serversObjectJSON
-                                        //object
-                                        //selectedServer: selectedServer
                                     },
-                                    
                                     url: 'filterPatches',
                                 })
                                     .done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
@@ -158,9 +150,9 @@
                                         //x = x.replace(/<\[\>']+/g, '')
                                         //x = x.replace(/QuerySet/g, '');
                                         //console.log(x)
-                                        console.log("ENTRAN LOS DATOS: ") //string
-                                        console.log(typeof(data)) //string
-                                        console.log(data)
+                                        //console.log("ENTRAN LOS DATOS: ") //string
+                                        //console.log(typeof(data)) //string
+                                        //console.log(data)
 
                                         var patchesOptions;
 
@@ -168,23 +160,73 @@
 
                                         data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
 
-                                        console.log("DATOS PARSEADOS A JSON: ") //string
-                                        console.log(typeof(data)) //object
+                                        //console.log("DATOS PARSEADOS A JSON: ") //string
+                                        //console.log(typeof(data)) //object
                                         console.log(data)
 
-                                        $.each(data, function (key, index, value) {
+                                        $.each(data, function (key, index) {
                                             //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
-                                            //patchesOptions += "<option value='" + index.pk + "' >" + index.fields.description + "</option>";
-                                            patchesOptions += "<option value='" + index.pk + "' >" + index.fields.server + ": " + index.fields.advisory + "</option>";
-                                            //patchesOptions += "<option>" + index.fields.patch.server + ": " + index.fields.patch.advisory + "</option>";
                                             
-                                            //console.log(index);
+                        //-------------------------------get hostname -------------------------------
+
+                                            var hostname
+                                            var hostnames = []
+                                            
+                                            $.ajax({
+                                                async: false,
+                                                url: 'getHostnames',
+                                                method: 'POST',
+                                                dataType: "text", //"json"
+                                                data: {
+                                                   serverID: index.fields.server
+                                                },
+                                                
+                                                success: function (host_name) {
+                                                   hostname = JSON.parse(host_name);
+                                                   //console.log(hostname)
+                                                   
+                                                    $.each(hostname,function(key,index){
+                                                        hostnames.push(index.fields.hostname);
+                                                   })
+                                                   
+                                                   //console.log(hostnames)
+                                                }
+                                             });
+
+                        //-------------------------------get description -------------------------------
+
+                                            var description
+                                            var descriptions = []
+                                            
+                                            $.ajax({
+                                                async: false,
+                                                url: 'getAdvisoriesDesc',
+                                                method: 'POST',
+                                                dataType: "text", //"json"
+                                                data: {
+                                                    advisoryDescription: index.fields.advisory
+                                                },
+                                                
+                                                success: function (advisory_description) {
+                                                description = JSON.parse(advisory_description);
+                                                //console.log(description)
+                                                
+                                                    $.each(description,function(key,index){
+                                                        descriptions.push(index.fields.description);
+                                                    })
+                                                
+                                                    //console.log(descriptions)
+                                                }
+                                            });
+
+                                            //patchesOptions += "<option>" + hostnames + ": " + descriptions + "</option>";
+                                            patchesOptions += "<option>" + hostnames + ": " + descriptions + "--" + index.fields.advisory + "</option>";
+                                            
                                         });
-                                        console.log("patchesOptions:")
-                                        console.log(patchesOptions)
+                                        //console.log(patchesOptions)
 
                                         // AGREGA LOS PARCHES A LA DROP-DOWN-LIST
-                                        $('#selectPatches_patch').html(patchesOptions);
+                                        $('#selectPatches_patch').html(patchesOptions);                                       
 
                                         //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA PARCHE (AGREGA).
                                         $('#selectPatches_patch').on('select2:select', function (e) {
@@ -207,7 +249,6 @@
                                         });
                                     });
                             });
-
 
                             //MOSTRAR EL PLACE HOLDER
                             $(document).ready(function () {

@@ -342,7 +342,7 @@ def transform(request): # << 1:1, 1:3, 2:3
         serverPatch = serverPatch.replace(":", "")
         serverPatch = serverPatch.replace(",", "")
 
-        print(serverPatch)
+        #print(serverPatch)
 
         array=[]
 
@@ -356,8 +356,8 @@ def transform(request): # << 1:1, 1:3, 2:3
         arrayServers = array[::2]
         arrayAdvisories = array[1::2]
         
-        print(arrayServers)
-        print(arrayAdvisories)
+        #print(arrayServers)
+        #print(arrayAdvisories)
 
         patches = PATCHES.objects.filter(server_id__in=arrayServers).filter(advisory_id__in=arrayAdvisories)
         
@@ -395,6 +395,32 @@ def getApprovalNames(request):
         #print(data)
 
         approverNames = User.objects.filter(pk__in=data)
-        print(approverNames)
+        #print(approverNames)
 
         return HttpResponse(serializers.serialize("json", approverNames))
+
+
+
+
+
+@csrf_exempt
+def getHostnames(request):
+    if request.method == "POST":
+        serverID = request.POST.get("serverID")
+        #print(serverID)
+
+        serverhostnames = SERVER.objects.filter(pk__in=serverID)
+        #print("--------------------------------------------")
+        return HttpResponse(serializers.serialize("json", serverhostnames))
+
+@csrf_exempt
+def getAdvisoriesDesc(request):
+    if request.method == "POST":
+        advisoryDescription = request.POST.get("advisoryDescription")
+        #print(serverID)
+
+        #advDesc = SERVER.objects.filter(pk__in=serverID)
+        advDesc = ADVISORY.objects.filter(pk__in=advisoryDescription)
+
+        #print("--------------------------------------------")
+        return HttpResponse(serializers.serialize("json", advDesc))
