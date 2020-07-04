@@ -58,8 +58,8 @@ class VALIDATE_EXCEPTION(models.Model):
 
     state = models.CharField(max_length=8, choices = state_choices, default = PEND)
     comment = models.TextField(blank=True, default="Pending")
-    time = models.DateTimeField(default=datetime.utcnow().replace(tzinfo=timezone('America/Mexico_City')), blank=False)
-    #time = models.DateTimeField(default=datetime.now, blank=False)
+    #time = models.DateTimeField(default=datetime.utcnow().replace(tzinfo=timezone('America/Mexico_City')), blank=False)
+    time = models.DateTimeField(default=datetime.now, blank=False)
 
 
 

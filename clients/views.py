@@ -11,6 +11,7 @@ import json
 from django.http import JsonResponse
 from exception.models import VALIDATE_EXCEPTION
 from urllib import parse
+from django.contrib.auth.models import User
 
 #DASHBOARD
 def dashboard(request):
@@ -380,9 +381,20 @@ def getValidationDetails(request):
     if request.method == "POST":
 
         query = request.POST.get('query')
-        print(query)
+        #print(query)
         
         validations=VALIDATE_EXCEPTION.objects.filter(exception_id=query)
         #print(validations)
         return HttpResponse(serializers.serialize("json", validations))
         #return HttpResponse(query)
+
+@csrf_exempt
+def getApprovalNames(request):
+    if request.method == "POST":
+        data = request.POST.get("data")
+        #print(data)
+
+        approverNames = User.objects.filter(pk__in=data)
+        print(approverNames)
+
+        return HttpResponse(serializers.serialize("json", approverNames))

@@ -75,8 +75,8 @@
                     <td>{{ p.exclude_date }}</td>
                     <td>{{ p.content }}</td>
                      {% if p.state == "Pending" %}
-                        {#<td style="font-style: italic;"><b>{{ p.state }}</b></td>#}
-                        <td><button style="font-style: italic;" class="btn btn-block" data-toggle="modal" data-target="#inquiryModal2" >{{ p.state }}</button></td>
+                        <td style="font-style: italic; text-align:center">{{ p.state }}</td>
+                        {#<td><button style="font-style: italic;" class="btn btn-block" data-toggle="modal" data-target="#inquiryModal2" >{{ p.state }}</button></td>#}
                      {% elif p.state == "Approved" %}
                         {#<td style="color:green;"><b>{{ p.state }}</b></td>#}
                         <td><button value={{ p.id }} class="btn btn-success btn-block validationsQuery" data-toggle="modal" data-target="#inquiryModal2" >{{ p.state }}</button></td>
@@ -109,21 +109,19 @@
             </button>
          </div>
          <div class="modal-body">
-            
-            <textarea id="queryContent" readonly rows="7" class="form-control" > </textarea>
-            <div id ="output"></div>
-
+            <style>
+               hr {border-top: 1px solid grey; margin-bottom: 1em;}
+            </style>
+            <div id="clean" class="queryContent" rows="7" class="form-control" ></div>
             <script type="text/javascript">
                $(document).ready(function () {
                    $(".validationsQuery").click(function () {
-                     //$("#btnpress").val(this.id);
+
+                     document.getElementById("clean").innerHTML = "";
+
                      query=this.value
-                     //console.log(query)
                      query=parseInt(query)
-                     //console.log(typeof(query))
-                     
-                     var textAreaContent;
-                     
+                                          
                      $.ajax({
                         //async: false,
                         url: 'getValidationDetails',
@@ -135,28 +133,62 @@
                         success: function (data) {
                            data = JSON.parse(data);
                            console.log(data)
-
+                           
                            $.each(data,function(key,index){
                               //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
-                                  //console.log(key);
-                                  //console.log(index);
-                              //imprime solo los campos que necesitamos.
-                                  console.log(data[key].fields.time);
-                                  //console.log(index.fields.scheduled_date);
-                              $("#queryContent").append("<br>"+index.fields.approver);
-                              $("#queryContent").append("<br>"+index.fields.comment);
-                          })
-                           
-                           //$('#queryContent').html(div);
+                              
+                              //new ajax -------------------------------
+                              var name
+                              var names = []
 
-                           $('#queryContent').html(textAreaContent);
+                              $.ajax({
+                                 async: false,
+                                 url: 'getApprovalNames',
+                                 method: 'POST',
+                                 dataType: "text", //"json"
+                                 data: {
+                                    data: index.fields.approver
+                                 },
+                                 
+                                 success: function (approvername) {
+                                    name = JSON.parse(approvername);
+                                    
+                                    $.each(name,function(key,index){
+                                       names.push(index.fields.username);
+                                    })
+                                    console.log(names)
+                                 }
+                              });
+                              //new ajax -------------------------------
+
+                              $(".queryContent").append("<b>"+"Approver name:"+"</b>");
+                              $(".queryContent").append("<p>"+names+"</p>");
+                              $(".queryContent").append("<b>"+"Comment"+"</b>");
+                              $(".queryContent").append("<p>"+index.fields.comment+"</p>");
+                              $(".queryContent").append("<b>"+"Time of response"+"</b>");
+
+                              var exceptionDate = index.fields.time
+
+                              function formatDate(date) {
+                                 var d = new Date(date),
+                                    month = d.getMonth(),
+                                    date = d.getDate(),
+                                    year = d.getFullYear(),
+                                    hours = ('0' + d.getHours()).slice(-2),
+                                    minutes = ('0' + d.getMinutes()).slice(-2);
+
+                                 month++;
+
+                                 return (month + '/' + date +'/' + year + ' ' + hours + ':' + minutes);
+                              }
+                              $(".queryContent").append("<p>"+formatDate(exceptionDate)+"</p>");
+                              $(".queryContent").append("<hr>");
+                           })
                         }
                      })
-                     
                    });
                });
            </script>
-
             <hr>
             <input type="submit" name="state" value="Close" class="btn btn-block btn-success col-md" data-dismiss="modal">
          </div>
@@ -164,6 +196,5 @@
       </div>
    </div>
 </div>
-
 
 {% endblock %}

@@ -25,4 +25,5 @@ urlpatterns = [
     path('transform', views.transform, name='transform'),
 
     path('getValidationDetails', views.getValidationDetails, name='getValidationDetails'),
+    path('getApprovalNames', views.getApprovalNames, name='getApprovalNames'),    
 ]
