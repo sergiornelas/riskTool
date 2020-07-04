@@ -135,7 +135,7 @@ def approvalDetail(request, exclude_patch_ID):
             if request.user.id == path[0]:
                 return render(request, 'approvers/approvalDetail.html', context)
         #else:
-        except:    
+        except:
             messages.error(request, 'Not allowed to enter here')
             return redirect('index')
     else:
@@ -244,12 +244,29 @@ def approvalDet(request, exclude_patch_ID):
     approver_detail = User.objects.filter(pk__in=serverApprover)
     #<QuerySet [<User: approver>, <User: approver2>, <User: approver3>]>
 
+    #edited
+    #approver_detail = User.objects.filter(pk=request.user.id)
+    #<QuerySet [<User: approver2>]>
+
     authorize = VALIDATE_EXCEPTION.objects.filter(exception_id=justException.id).filter(approver_id__in =approver_detail)
     #<QuerySet [<VALIDATE_EXCEPTION: VALIDATE_EXCEPTION object (1)>,
     #<VALIDATE_EXCEPTION: VALIDATE_EXCEPTION object (2)>,
     #<VALIDATE_EXCEPTION: VALIDATE_EXCEPTION object (3)>]>
 
-    approver_detail_pending = approver_detail.exclude(pk__in=authorize.values_list('approver_id'))
+    #new
+    #singleAuthorize = VALIDATE_EXCEPTION.objects.filter(exception_id=justException.id).filter(approver_id =request.user.id)
+    
+    try:
+        singleAuthorize = VALIDATE_EXCEPTION.objects.filter(exception_id=justException.id).get(approver_id =request.user.id)
+        #VALIDATE_EXCEPTION object (22)
+    except:
+        singleAuthorize = ""
+        #""
+    print(singleAuthorize)
+    #<QuerySet [<VALIDATE_EXCEPTION: VALIDATE_EXCEPTION object (19)>]>
+    #TIENES QUE USAR GET CUANDO SOLO NECESITAS UN OBJETO, Y AL MOMENTO DE LLAMARLO AL FRONTEND SIN USAR FOR
+
+    #approver_detail_pending = approver_detail.exclude(pk__in=authorize.values_list('approver_id'))
     #<QuerySet [<User: approver>, <User: approver2>, <User: approver3>]>
 
     countTotal = 0
@@ -278,14 +295,14 @@ def approvalDet(request, exclude_patch_ID):
 
     # necesitareEsto = zip(authorize, approver_detail_pending)
     context = {
-        'justException':justException,
+        'justException':justException, #FRONTEND
         'patchObjects':patchObjects, #FRONTEND
         'advisories':advisories, #FRONTEND
-        'takeExceptionHostnames':takeExceptionHostnames, #FRONTEND
         'takeServersFront':takeServersFront, #FRONTEND
-        'approver_detail':approver_detail,
-        'authorize':authorize,
-        'approver_detail_pending':approver_detail_pending,
+        'approver_detail':approver_detail, #DATABASE
+        'authorize':authorize, #DATABASE
+        'singleAuthorize':singleAuthorize, #FRONTEND
+        #'approver_detail_pending':approver_detail_pending,
     }
 
     #path = SERVER_USER_RELATION.objects.filter(user_id=request.user.id).filter(server_id__in=client_has_server.id).values_list('user_id', flat=True)

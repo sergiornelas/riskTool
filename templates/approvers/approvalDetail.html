@@ -59,13 +59,7 @@
                     <style>
                         .nobr { white-space: nowrap }
                     </style>
-                    {% for i in takeExceptionHostnames %}
-                        {% if i == takeServersFront %}
-                            <span style="white-space: nowrap"><b>{{ i }}</b></span>
-                        {% else %}
-                            <span style="white-space: nowrap">{{ i }}</span>
-                        {% endif %}
-                    {% endfor %}
+                    <span style="white-space: nowrap"><b>{{ takeServersFront }}</b></span>
                 </div>
             </div>
         </div>
@@ -141,119 +135,34 @@
     <hr style="margin: 1rem;">
     <div>
         <br>
-        <h4>Approvers</h4>
+        <h4>Approve exception</h4>
         <table class="table mt-4 table-striped table-bordered">
             <thead class="table-info ">
                 <tr>
                     <!-- <th scope="col">Send notification</th> -->       
-                    <th scope="col">Approver ID</th>
-                    <th scope="col">Approver name</th>
-                    <th scope="col">Approver last login</th>
-                    <th scope="col">Approver is active</th>
                     <th scope="col">Comments</th>
                     <th scope="col">Authorized</th>
                 </tr>
             </thead>
             <tbody>
-                {% for i in approver_detail %}
-                    {% for j in authorize %}
-                        <tr>                        
-                            {% if i.id == j.approver_id %}
-                                <td>{{ i.id }} </td>
-                                <td>{{ i.username }} </td>
-                                <td>{{ i.last_login }} </td>
-
-                                {% if i.is_active %}
-                                    <td>Yes</td>
-                                {% else %}
-                                    <td>No</td>
-                                {% endif %}
-
-                                <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal2" value={{ j.comment }}>Read</button></td>
-                                
-                                {% if user.id == i.id %}
-                                    {% if j.state == 'Approved' %}
-                                        {#<td><button class="btn btn-success btn-block" data-toggle="modal" data-target="#inquiryModal"> {{ j.state }} </button></td>#}
-                                        <td style="color: green"> {{ j.state }} </td>
-                                    {% elif j.state == 'Rejected' %}
-                                        <td style="color: red"> {{ j.state }} </td>
-                                    {% else %}
-                                        <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal"> {{ j.state }} </button></td>
-                                    {% endif %}
-                                {% else %}
-                                    {% if j.state == 'Approved' %}
-                                        <td style="color: green"> {{ j.state }} </td>
-                                    {% elif j.state == 'Rejected' %}
-                                        <td style="color: red"> {{ j.state }} </td>
-                                    {% else %}
-                                        <td> {{ j.state }} </td>
-                                    {% endif %}
-                                {% endif %}
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                {% endfor %}
-
-                {% for i in approver_detail_pending %}
-                    <tr>
-                        <td>{{ i.id }} </td>
-                        <td>{{ i.username }} </td>
-                        <td>{{ i.last_login }} </td>
-
-                        {% if i.is_active %}
-                            <td>Yes</td>
-                        {% else %}
-                            <td>No</td>
+                <tr>
+                    <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal2" value={{ singleAuthorize.comment }}>Read</button></td>
+                    
+                    {% if singleAuthorize.approver_id == user.id %}
+                        {% if singleAuthorize.state == 'Approved' %}
+                            <td style="color: green"> {{ singleAuthorize.state }} </td>
+                        {% elif singleAuthorize.state == 'Rejected' %}
+                            <td style="color: red"> {{ singleAuthorize.state }} </td>
                         {% endif %}
-
-                        <td>Pending</td>
-
-                        {% if user.id == i.id %}
-                            <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal">Pending</button></td>
-                        {% else %}
-                            <td>Pending</td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
+                    {% else %}
+                        <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal"> Pending </button></td>
+                    {% endif %}
+                </tr>
             </tbody>
         </table>
-
-        <!-- <br>
-        <h4>Approvers pending</h4>
-        <table class="table mt-4">
-            <thead>
-                <tr> -->
-                    <!-- <th scope="col">Send notification</th> -->       
-                    <!-- <th scope="col">Approver ID</th>
-                    <th scope="col">Approver name</th>
-                    <th scope="col">Approver last login</th>
-                    <th scope="col">Approver is active</th>
-                    <th scope="col" style="color: orange;">Comments</th>
-                    <th scope="col" style="color: orange;">Authorized</th>
-                </tr>
-            </thead>
-            <tbody> -->
-                {#{% for i in approver_detail_pending %}#}
-                    <!-- <tr> -->
-                        {#<td>{{ i.id }} </td>#}
-                        {#<td>{{ i.username }} </td>#}
-                        {#<td>{{ i.last_login }} </td>#}
-
-                        {#{% if i.is_active %}#}
-                            <!-- <td>Yes</td> -->
-                        {#{% else %}#}
-                            <!-- <td>No</td> -->
-                        {#{% endif %}#}
-                        <!-- <td>Pending</td>
-                        <td>Pending</td>
-                    </tr> -->
-                {#{% endfor %}#}
-            <!-- </tbody>
-        </table> -->
-
-</div>
+    </div>
     <div style="margin-top:3rem;">
-        <button class="mx-4 btn btn-primary btn-lg">Send message to admin</button>
+        <!-- <button class="mx-4 btn btn-primary btn-lg">Send message to admin</button> -->
     </div>
 </div>
 
