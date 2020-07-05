@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 from django.conf import settings
+from servers.models import SERVER
 
 from pytz import timezone
 
@@ -48,6 +49,10 @@ class EXCEPTION(models.Model):
     
     client = models.ForeignKey(settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE, null=True)
+
+    #server = models.ForeignKey(SERVER, on_delete=models.CASCADE, null=True)
+    #TEMPORAL!!!!!
+    server_id = models.TextField(null=True) #!
 
 #now = datetime.utcnow().replace(tzinfo=timezone('America/Mexico_City'))
 

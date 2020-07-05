@@ -15,6 +15,7 @@ from django.contrib import auth
 from patches.models import patch
 from patches.models import PATCHES
 from advisory.models import ADVISORY
+import re
 
 from roles.models import Profile
 from exception.models import exclude_patch
@@ -27,6 +28,7 @@ from django.http import HttpResponse
 from django import forms
 from django.forms import ModelForm
 from django.core import serializers
+from django.views.decorators.csrf import csrf_exempt
 
 from servers.models import SERVER_USER_RELATION
 from servers.models import SERVER
@@ -36,30 +38,91 @@ def approvalsList(request):
     serversApprover = SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
     
     takeServerID = [o.server_id for o in serversApprover]
-    print("----------------------")
-    print("tomamos servers id (tabla server_user_relation) del aprobador loggeado")
-    print(takeServerID)
+    # print("----------------------")
+    # print("tomamos servers id (tabla server_user_relation) del aprobador loggeado")
+    # print(takeServerID)
 
     servers = SERVER.objects.filter(pk__in=takeServerID)
-    print("tomamos objetos (tabla servers) de los id de la tabla servreruserrelation")
-    print(servers)
+    # print("tomamos objetos (tabla servers) de los id de la tabla servreruserrelation")
+    # print(servers)
 
     takeHostnames = [o.hostname for o in servers]
-    print("tomamos los puros hostname de los servidores del aprobador loggeado")
-    print(takeHostnames) #list
+    # print("tomamos los puros hostname de los servidores del aprobador loggeado")
+    # print(takeHostnames) #list
 
     #print(type(takeHostnames[1])) #str
    
     #si un field en la db contiene algun hostname
     for hostname in takeHostnames:
-        exceptionsApprover = EXCEPTION.objects.filter(content__icontains=hostname) #tiene que ser el valor exacto.
+        exceptionsApprover = EXCEPTION.objects.filter(content__contains=hostname) #tiene que ser el valor exacto.
+        #exceptionsID = EXCEPTION.objects.filter(content__icontains=hostname).values_list('id', flat=True) #tiene que ser el valor exacto.
 
-    print("tomamos los rows que contengan esos server names en la tabla EXCEPTIONS")
-    print(exceptionsApprover)
+    # print("tomamos los rows que contengan esos server names en la tabla EXCEPTIONS")
+    # print(exceptionsApprover)
 
+    #ME LIMITA LA IMPRESION DE TODAS LAS EXCEPCIONES.
+    #yourState = VALIDATE_EXCEPTION.objects.filter(approver_id=request.user.id)
+
+    #print("WOOOOOLA")
+
+    """
+    #-------------------patch_id mode
+
+    patches = PATCHES.objects.filter(server_id__in=takeServerID)
+    takePatchID = [o.id for o in patches]
+    
+    #print(takePatchID) #[1, 2, 3, 4, 5, 6, 7, 8, 9]
+    #print(type(takePatchID)) #list
+    #print(type(takePatchID[3])) #int
+
+    patchArray=[]
+
+    for x in takePatchID:
+        patchArray.extend(EXCEPTION.objects.filter(patch_id__contains=x).values_list('id', flat=True))
+
+    print(patchArray)       
+    patchArray=set(patchArray)
+    """
+
+    #-------------------server_id mode (SOLO FUNCIONA SI EXISTEN 1-9 SERVIDORES (EL CONTAINS TOMA 10 COMO 1))
+
+    arreglin=[]
+    
+    #print(takeServerID) #[1, 2]
+    #print(type(takeServerID)) #list
+    #print(type(takeServerID[0])) #int
+
+    for server_id in takeServerID:
+        arreglin.extend(EXCEPTION.objects.filter(server_id__contains=server_id).values_list('id', flat=True))
+    
+    arreglin=set(arreglin)
+    
+    excepciones=EXCEPTION.objects.filter(pk__in=arreglin)
+    #print(excepciones)
+
+    """
+    #-------------------
+    #print(arreglin)
+    #print(patchArray)
+
+    #testing
+    cadena = ('1,2,3,5,10,33')
+    cadena = cadena.split(",") #<--
+    cadena = list(map(int, cadena)) #<--
+    
+    # print(cadena)# [1, 2]
+    # print(cadena[4])# 10
+    # print(type(cadena)) #list
+    # print(type(cadena[0])) #int
+
+    #-------------------
+    """
+
+    #all = zip(excepciones, yourState) #ME LIMITABA LA SALIDA EL YOURSTATE
 
     context = {
-        'exceptions': exceptionsApprover
+        #'all':all
+        'excepciones':excepciones
     }
 
     if request.user.is_authenticated:
@@ -140,6 +203,8 @@ def approvalDetail(request, exclude_patch_ID):
             return redirect('index')
     else:
         return redirect('login')
+
+
 
 def approvalDet(request, exclude_patch_ID):
     justException = get_object_or_404(EXCEPTION, pk=exclude_patch_ID)
@@ -259,24 +324,28 @@ def approvalDet(request, exclude_patch_ID):
     countTotal = 0
     for a in approver_detail:
         countTotal +=1
-    print(countTotal)
+    print("")
+    print("Total approval for this exception:",countTotal)
 
     countApproved = 0
     for p in authorize:
         if p.state == 'Approved':
+            print("Approver approved it:", p)
             countApproved+=1
         if countApproved == countTotal:
+            #print("Approver found it:", p)
             print("Approved")
             justException.state = 'Approved'
             justException.save(update_fields=['state'])
             break
         if p.state == 'Rejected':
+            print("Approver reject exception:", p)
             print("Rejected")
             justException.state = 'Rejected'
             justException.save(update_fields=['state'])
             break
-        else:
-            print("meh")
+        else: #in case is not approved or rejected or pending (avoiding bugs)
+            #print("Approver pending:", p)
             justException.state = 'Pending'
             justException.save(update_fields=['state'])
 
@@ -308,9 +377,6 @@ def authorize(request):
     validate.save()
     #return redirect('approvalsList')
     return redirect('approvalDet', exception_id)
-
-    
-
 
 #NOTAS:
     #get_object_or_404 will only return one object, get_list_or_404 multiple objects. Levanta la excepción Http404 si no existe el objeto.

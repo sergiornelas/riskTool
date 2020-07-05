@@ -221,6 +221,8 @@ def filterPatches(request):
         #return JsonResponse(json.loads(takeAdvisoriesDescription))
         #return HttpResponse(takeAdvisoriesDescription)
 
+#-----------------------------------INQUIRY PARCHES-----------------------------------
+
 @csrf_exempt
 def getDaysLimit(request):
     if request.method == 'POST':
@@ -288,6 +290,22 @@ def getDaysLimit(request):
         return HttpResponse(days)
 
 
+@csrf_exempt
+def getServerIDServer(request):
+    if request.method == 'POST':
+        #toma el servidor seleccionado
+
+        print("SERVEEEEEEER")
+        #string mode
+        selectedServer = request.POST['selectedServer'] #wdcdmzyz22033245,wdcgz22050068
+
+        selectedServer = selectedServer.replace(",", " ")
+        selectedServer = selectedServer.split()
+        print(selectedServer)
+
+        pickServerID = SERVER.objects.filter(hostname__in=selectedServer)
+        print(pickServerID)
+        return HttpResponse(serializers.serialize("json", pickServerID))
 
 #POST REQUEST CREAR EXCEPCIÓN
 def exclude_server(request):
@@ -300,6 +318,7 @@ def exclude_server(request):
         exclude_date = request.POST['exclude_date']
         content = request.POST['content']
         exception_type = request.POST['exception_type']
+        server_id = request.POST['server_id']
 
         #Check if user has made inquiry already
         # if request.user.is_authenticated:
@@ -308,8 +327,7 @@ def exclude_server(request):
         #         messages.error(request, 'You have already made an exception for this patch')
         #         return redirect('dashboard')
                
-        exclude_this_server = EXCEPTION(patch_id=patch_id, action_plan=action_plan, client=client, title=title, justification=justification, exclude_date=exclude_date, content=content, exception_type=exception_type)
-        #exclude_this_server = EXCEPTION(client=client, title=title, justification=justification, exclude_date=exclude_date, content=content, exception_type=exception_type)
+        exclude_this_server = EXCEPTION(patch_id=patch_id, action_plan=action_plan, client=client, title=title, justification=justification, exclude_date=exclude_date, content=content, exception_type=exception_type, server_id=server_id)
         
         exclude_this_server.save()
         
@@ -327,11 +345,10 @@ def transform(request):
         arrayAdvisories = array[1::2]
         """
 
-        fullObject = request.POST['fullObject'] #str
+        fullObject = request.POST['fullObject']
 
-        print("-----------")
-
-        #DONE SERVERS
+        """
+        #DONE SERVERS (quitar el contenido dentro de corchetes)
         # servers = re.sub("[\(\[].*?[\)\]]", "", fullObject)
         # servers = servers.replace(":", "")
         # servers = servers.replace(",", " ")
@@ -339,105 +356,72 @@ def transform(request):
         # serverID = SERVER.objects.filter(hostname__in=servers).values_list('id', flat=True)
         # print(serverID)
         
-        
-        #DONE ADVISORIES
+        #DONE ADVISORIES (seleccionar contenido dentro de corchetes)
         # justAdvisories = re.findall(r'\[(.*?)\]',fullObject)
         # advisoryID = ADVISORY.objects.filter(description__in=justAdvisories).values_list('id', flat=True)
         # print(advisoryID)
-
-        #print(fullObject)
+        """
 
         takeID = re.findall(r'\((.*?)\)',fullObject)
         patches = PATCHES.objects.filter(pk__in=takeID)
-        #print(patches)
-        
         return HttpResponse(serializers.serialize("json", patches))
-        #return HttpResponse(patches)
-
 
 @csrf_exempt
 def clean(request):
     if request.method == 'POST':
         fullObject2 = request.POST['fullObject2']
+        """
+        eliminar contenido dentro de parentesis
+        """
         clean = re.sub(r'\([^)]*\)', '', fullObject2)
         return HttpResponse(clean)
 
 
 @csrf_exempt
-def getValidationDetails(request):
-    #validations=VALIDATE_EXCEPTION.objects.all()
-    
-    if request.method == "POST":
+def getServerIDPatch(request):
+    if request.method == 'POST':
+        print("SERVEEEEEEER")
+        #string mode
+        fullObject = request.POST['fullObject'] #wdcdmzyz22033245:[RHSA-2019:3538-01: yun security. bug fix.
 
-        query = request.POST.get('query')
-        #print(query)
+        #selectedServer = selectedServer.replace(",", " ")
+        #selectedServer = selectedServer.split()
         
+        #DONE SERVERS (quitar el contenido dentro de corchetes)
+        fullObject = re.sub("[\(\[].*?[\)\]]", "", fullObject)
+        fullObject = fullObject.replace(":", "")
+        fullObject = fullObject.replace(",", " ")
+        fullObject = fullObject.split()
+        
+        serverID = SERVER.objects.filter(hostname__in=fullObject)
+        return HttpResponse(serializers.serialize("json", serverID))
+
+#----------------------------------------------------------------------
+
+@csrf_exempt
+def getValidationDetails(request):    
+    if request.method == "POST":
+        query = request.POST.get('query')
         validations=VALIDATE_EXCEPTION.objects.filter(exception_id=query)
-        #print(validations)
         return HttpResponse(serializers.serialize("json", validations))
-        #return HttpResponse(query)
 
 @csrf_exempt
 def getApprovalNames(request):
     if request.method == "POST":
         data = request.POST.get("data")
-        #print(data)
-
         approverNames = User.objects.filter(pk__in=data)
-        #print(approverNames)
-
         return HttpResponse(serializers.serialize("json", approverNames))
-
-# @csrf_exempt
-# def clean(request):
-#     if request.method == "POST":
-#         cleanObject = request.POST['cleanObject'] #str
-        
-#         #print(cleanObject)
-        
-#         #clean = re.findall(r'\((.*?)\)',cleanObject)
-#         #clean = re.sub("[\(\[].*?[\)\]]", "", cleanObject)
-               
-#         #clean = servers.replace(":", "")
-#         #clean = servers.replace(",", " ")
-
-#         #print(clean)
-
-#             #DONE SERVERS
-#         servers = re.sub("[\(\[].*?[\)\]]", "", cleanObject)
-#         servers = servers.replace(":", "")
-#         servers = servers.replace(",", " ")
-#         servers = servers.split()
-#         serverID = SERVER.objects.filter(hostname__in=servers).values_list('id', flat=True)
-#         print(serverID)
-        
-        
-#         #DONE ADVISORIES
-#         justAdvisories = re.findall(r'\[(.*?)\]',cleanObject)
-#         advisoryID = ADVISORY.objects.filter(description__in=justAdvisories).values_list('id', flat=True)
-#         print(advisoryID)
-        
-#         #return HttpResponse(serializers.serialize("json", approverNames))
-
 
 @csrf_exempt
 def getHostnames(request):
     if request.method == "POST":
         serverID = request.POST.get("serverID")
-        #print(serverID)
-
         serverhostnames = SERVER.objects.filter(pk__in=serverID)
-        #print("--------------------------------------------")
         return HttpResponse(serializers.serialize("json", serverhostnames))
 
 @csrf_exempt
 def getAdvisoriesDesc(request):
     if request.method == "POST":
         advisoryDescription = request.POST.get("advisoryDescription")
-        #print(serverID)
-
-        #advDesc = SERVER.objects.filter(pk__in=serverID)
         advDesc = ADVISORY.objects.filter(pk__in=advisoryDescription)
-
-        #print("--------------------------------------------")
         return HttpResponse(serializers.serialize("json", advDesc))

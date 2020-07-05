@@ -55,10 +55,9 @@
       //console.log(data)
       limitdays = data
    });
-</script>
 
-<script>
-   var patchesPk  =[]
+   var patchesPk =[]
+   var servesPK =[]
 
    $.ajax({
       async: false,
@@ -70,7 +69,7 @@
       url: 'filterPatches',
 
    }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
-      console.log(data)
+      //console.log(data)
       
       data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
 
@@ -82,12 +81,34 @@
       
    });
    
+   $.ajax({
+      async: false,
+      method: "POST",
+      data: {
+         //limitDay: localStorage.arrayServerPatches
+         selectedServer: localStorage.arrayFullServers
+      },
+      url: 'getServerIDServer',
+
+   }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
+      console.log(data)
+      
+      data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
+
+      $.each(data, function (key, index) {
+            //console.log(index.fields.server)
+            //console.log(index.pk)
+            servesPK.push(index.pk)
+      });
+   });
 </script>
 
 <script>
    console.log(patchesPk)
+   console.log(servesPK)
    $(document).ready(function () {
-      $("#patch_ide").val(patchesPk);    
+      $("#patch_ide").val(patchesPk);
+      $("#server_ide").val(servesPK);
   });
 </script>
 
@@ -143,6 +164,8 @@
       <input id="exception_type_IDD" type="hidden" name="exception_type">
 
       <input id="patch_ide" type="hidden" name="patch_id">
+
+      <input id="server_ide" type="hidden" name="server_id">
 
       <!-- Estos se introducen del modelo de exception -->
       <div class="form-group">

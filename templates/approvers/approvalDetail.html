@@ -44,7 +44,6 @@
                 <div class="col-md-6">
                     <br>
                     <h4>Type of exception:</h4>
-                    
                     {% if  justException.exception_type == 1 %}
                         <p style="font-size:1.5em;" ><u>Patch</u></p>
                     {% elif  justException.exception_type  == 2 %}
@@ -54,7 +53,7 @@
                     {% endif %}
                 </div>
                 <div style="padding-top: 1.5em;" class="col-md-6">
-                    <h4>List of server:</h4>
+                    <h4>Server:</h4>
                     {#<p >{{ justException.content }}</p>#}
                     <style>
                         .nobr { white-space: nowrap }
@@ -135,31 +134,44 @@
     <hr style="margin: 1rem;">
     <div>
         <br>
-        <h4>Approve exception</h4>
-        <table class="table mt-4 table-striped table-bordered">
-            <thead class="table-info ">
-                <tr>
-                    <!-- <th scope="col">Send notification</th> -->       
-                    <th scope="col">Comments</th>
-                    <th scope="col">Authorized</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal2" value={{ singleAuthorize.comment }}>Read</button></td>
-                    
+        <h4>Your state:</h4>
+
+        <!-- <textarea cols="70" rows="8">hi</textarea> -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3"></div>
+                <!-- <button class="col-md-6 btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#inquiryModal"> Pending </button> -->
                     {% if singleAuthorize.approver_id == user.id %}
                         {% if singleAuthorize.state == 'Approved' %}
-                            <td style="color: green"> {{ singleAuthorize.state }} </td>
+                            <div class="col-md-6" style="font-size:30px; color: green">{{ singleAuthorize.state }} </div> 
                         {% elif singleAuthorize.state == 'Rejected' %}
-                            <td style="color: red"> {{ singleAuthorize.state }} </td>
-                        {% endif %}
+                            <div class="col-md-6" style="font-size:30px; color: red">{{ singleAuthorize.state }} </div> 
+                        {% else %}
+                            <button class="col-md-6 btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#inquiryModal"> Pending </button>
+                        {% endif %}                        
                     {% else %}
-                        <td><button class="btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal"> Pending </button></td>
+                        <button style="margin-top:2em" class="col-md-6 btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#inquiryModal"> Validate </button>
                     {% endif %}
-                </tr>
-            </tbody>
-        </table>
+                <div class="col-md-3"></div>
+            </div>
+            {% if singleAuthorize.state == 'Approved' %}
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <button style="margin-top: 2em;" class="col-md-6 btn btn-block btn-lg" data-toggle="modal" data-target="#inquiryModal2" value={{ singleAuthorize.comment }}>Read comment</button>
+                        <div class="col-md-3"></div>
+                    </div>
+                </div>
+            {% elif singleAuthorize.state == 'Rejected' %}
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <button style="margin-top: 2em;" class="col-md-6 btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal2" value={{ singleAuthorize.comment }}>Read</button>
+                        <div class="col-md-3"></div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
     </div>
     <div style="margin-top:3rem;">
         <!-- <button class="mx-4 btn btn-primary btn-lg">Send message to admin</button> -->
@@ -251,7 +263,7 @@
           </button>
         </div>
         <div class="modal-body">                
-            <textarea readonly rows="7" name="comment" class="form-control" >{{ j.comment }} </textarea>
+            <textarea readonly rows="7" name="comment" class="form-control" >{{ singleAuthorize.comment }} </textarea>
             <hr>
             <input type="submit" name="state" value="Close" class="btn btn-block btn-success col-md" data-dismiss="modal">
         </div>
