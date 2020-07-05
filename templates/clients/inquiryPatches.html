@@ -4,10 +4,6 @@
 
 <script>
     console.log(localStorage.arrayPatchesPatches)
-    $(document).ready(function () {
-        $("#content").val(localStorage.arrayPatchesPatches);
-        $("#exception_type_IDD").val("1");
-    });
 </script>
 
 <section id="showcase-inner" class="py-5 text-white">
@@ -61,36 +57,43 @@
 </script>
 
 <script>
-   //var patchesModel;
    var patchesPk  =[]
-
-   $.ajax({
+   var greyBox
+   jsonsaso = JSON.stringify(localStorage.arrayPatchesPatches); //string
+    $.ajax({
       async: false,
       method: "POST",
       data: {
-         //limitDay: localStorage.arrayServerPatches
-         serverPatch: localStorage.arrayPatchesPatches
+         fullObject: localStorage.arrayPatchesPatches
       },
       url: 'transform',
-
-   }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
-      console.log(data)
-      //patchesModel=data
-
-      data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
-
-      $.each(data, function (key, index) {
-            //console.log(index.fields.server)
-            //console.log(index.pk)
+    }).done(function (data) {
+        //console.log(data)
+      data = JSON.parse(data);
+    $.each(data, function (key, index) {
             patchesPk.push(index.pk)
       });
-   });
-   
+    });
+
+    $.ajax({
+        async: false,
+        method: "POST",
+        data: {
+            fullObject2: localStorage.arrayPatchesPatches
+        },
+        url: 'clean',
+      }).done(function (data) {
+        greyBox= data        
+      });
+
+    $(document).ready(function () {
+        $("#content").val(greyBox);
+        $("#exception_type_IDD").val("1");
+    });
 </script>
 
 <script>
-    //console.log(patchesModel)
-    console.log(patchesPk)
+    //console.log(patchesPk)
 </script>
 
 
@@ -99,7 +102,6 @@
         $("#patch_ide").val(patchesPk);    
     });
 </script>
-
 
 <div class="container">
     <!--  PROGRESS BAR -->
@@ -146,7 +148,7 @@
             style="background-color: lightgrey; padding: 1em; border: 1px solid grey; margin-bottom: 2em; font-style: italic;">
         </div>
         <script>
-            document.getElementById("demo").innerHTML = localStorage.arrayPatchesPatches;
+            document.getElementById("demo").innerHTML = greyBox;
             //document.getElementById("demo").innerHTML = patchesModel;
         </script>
     

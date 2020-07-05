@@ -220,7 +220,7 @@
                                             });
 
                                             //patchesOptions += "<option>" + hostnames + ": " + descriptions + "</option>";
-                                            patchesOptions += "<option>" + hostnames + ": " + descriptions + "--" + index.fields.advisory + "</option>";
+                                            patchesOptions += "<option>" + "(" + index.pk + ")" + hostnames + ":[" + descriptions + "]" + "</option>";
                                             
                                         });
                                         //console.log(patchesOptions)

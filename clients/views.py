@@ -12,6 +12,7 @@ from django.http import JsonResponse
 from exception.models import VALIDATE_EXCEPTION
 from urllib import parse
 from django.contrib.auth.models import User
+import re
 
 #DASHBOARD
 def dashboard(request):
@@ -185,14 +186,6 @@ def filterPatches(request):
         return HttpResponse(serializers.serialize("json", patch_advisory))
         #return HttpResponse(patch_advisory)
         
-        
-        
-        
-        
-        
-        
-        
-        
         #----------------------------------------------------------------
 
         #tomamos los id de los advisories de los parches que estan involucrados
@@ -318,61 +311,57 @@ def exclude_server(request):
         exclude_this_server = EXCEPTION(patch_id=patch_id, action_plan=action_plan, client=client, title=title, justification=justification, exclude_date=exclude_date, content=content, exception_type=exception_type)
         #exclude_this_server = EXCEPTION(client=client, title=title, justification=justification, exclude_date=exclude_date, content=content, exception_type=exception_type)
         
+        exclude_this_server.save()
         
-        for x in exclude_this_server:
-            x.save()
-        
-        #exclude_this_server.save()
-        
-
-        
-
         messages.success(request, "Your request has been submitted, an approver will get back to you soon")
 
         return redirect('exceptionsBoard')
 
 
 @csrf_exempt
-def transform(request): # << 1:1, 1:3, 2:3
+def transform(request):
     if request.method == 'POST':
 
-        serverPatch = request.POST['serverPatch']
-
-        serverPatch = serverPatch.replace(" ", "")
-        serverPatch = serverPatch.replace(":", "")
-        serverPatch = serverPatch.replace(",", "")
-
-        #print(serverPatch)
-
-        array=[]
-
-        arrayAdvisories=[]
-        arrayServers=[]
-
-        for x in serverPatch:
-            #print(x)
-            array.append(x)
-
-        arrayServers = array[::2]
+        """
+        arrayServers = array[::2] #par impar
         arrayAdvisories = array[1::2]
+        """
+
+        fullObject = request.POST['fullObject'] #str
+
+        print("-----------")
+
+        #DONE SERVERS
+        # servers = re.sub("[\(\[].*?[\)\]]", "", fullObject)
+        # servers = servers.replace(":", "")
+        # servers = servers.replace(",", " ")
+        # servers = servers.split()
+        # serverID = SERVER.objects.filter(hostname__in=servers).values_list('id', flat=True)
+        # print(serverID)
         
-        #print(arrayServers)
-        #print(arrayAdvisories)
-
-        patches = PATCHES.objects.filter(server_id__in=arrayServers).filter(advisory_id__in=arrayAdvisories)
         
-        #1: 2,1: 1,2: 4,1: 4:
+        #DONE ADVISORIES
+        # justAdvisories = re.findall(r'\[(.*?)\]',fullObject)
+        # advisoryID = ADVISORY.objects.filter(description__in=justAdvisories).values_list('id', flat=True)
+        # print(advisoryID)
 
-            #serverArrays:    patchArrays:
-            #[1, 1, 1]   ->  [2, 1, 4]
-            #[2]         ->  [4]       
+        #print(fullObject)
 
-        #context = {
-            #'patches':patches,
-            #'servers':servers,
-        #} 
-
+        takeID = re.findall(r'\((.*?)\)',fullObject)
+        patches = PATCHES.objects.filter(pk__in=takeID)
+        #print(patches)
+        
         return HttpResponse(serializers.serialize("json", patches))
+        #return HttpResponse(patches)
+
+
+@csrf_exempt
+def clean(request):
+    if request.method == 'POST':
+        fullObject2 = request.POST['fullObject2']
+        clean = re.sub(r'\([^)]*\)', '', fullObject2)
+        return HttpResponse(clean)
+
 
 @csrf_exempt
 def getValidationDetails(request):
@@ -399,8 +388,36 @@ def getApprovalNames(request):
 
         return HttpResponse(serializers.serialize("json", approverNames))
 
+# @csrf_exempt
+# def clean(request):
+#     if request.method == "POST":
+#         cleanObject = request.POST['cleanObject'] #str
+        
+#         #print(cleanObject)
+        
+#         #clean = re.findall(r'\((.*?)\)',cleanObject)
+#         #clean = re.sub("[\(\[].*?[\)\]]", "", cleanObject)
+               
+#         #clean = servers.replace(":", "")
+#         #clean = servers.replace(",", " ")
 
+#         #print(clean)
 
+#             #DONE SERVERS
+#         servers = re.sub("[\(\[].*?[\)\]]", "", cleanObject)
+#         servers = servers.replace(":", "")
+#         servers = servers.replace(",", " ")
+#         servers = servers.split()
+#         serverID = SERVER.objects.filter(hostname__in=servers).values_list('id', flat=True)
+#         print(serverID)
+        
+        
+#         #DONE ADVISORIES
+#         justAdvisories = re.findall(r'\[(.*?)\]',cleanObject)
+#         advisoryID = ADVISORY.objects.filter(description__in=justAdvisories).values_list('id', flat=True)
+#         print(advisoryID)
+        
+#         #return HttpResponse(serializers.serialize("json", approverNames))
 
 
 @csrf_exempt
