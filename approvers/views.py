@@ -271,7 +271,7 @@ def approvalDet(request, exclude_patch_ID):
     #comienza la tabla de aprobadores xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 #<takeException hostname from database>
-
+    """
     takeExceptionHostnames=[]
         #almacenamos un solo string a una lista porque vamos a necesitarla después.
     for x in exceptionQuery:
@@ -286,16 +286,41 @@ def approvalDet(request, exclude_patch_ID):
     takeExceptionHostnames = takeExceptionHostnames.split()
         #convertimos cada elemento string de la lista a entero (siguen siendo strings)
     #['wdcdmzyz22033245', 'wdcgz22050068']
+    """
+
+    """
+    CONVERTIR UNA LISTA A UN STRING, PARA HACER SPLIT, Y CREAR UNA LISTA DE ENTEROS!!
+    """
+
+    takeExceptionServerID= [o.server_id for o in exceptionQuery]
+    #['1']
+
+    #print(takeExceptionServerID) #['1,2']
+    #print(type(takeExceptionServerID)) #list
+
+    takeExceptionServerID=', '.join(takeExceptionServerID)
+    #print(takeExceptionServerID) #1,2
+    #print(type(takeExceptionServerID)) #str
+
+    takeExceptionServerID = takeExceptionServerID.split(",")
+    #print(takeExceptionServerID)
+    takeExceptionServerID = list(map(int, takeExceptionServerID))
+    #print(takeExceptionServerID)
 
 #</takeException hostname from database>
 
     usersApprover = Profile.objects.filter(role=2).values_list("user_id")
     #<QuerySet [(4,), (5,), (6,)]>
 
-    getServerID = SERVER.objects.filter(hostname__in=takeExceptionHostnames).values_list("id")
+    getServerID = SERVER.objects.filter(pk__in=takeExceptionServerID).values_list("id")
+    #print(getServerID)
     #<QuerySet [(1,), (2,)]>
-
+    
+    #CHANGE
     serverApprover = SERVER_USER_RELATION.objects.filter(user_id__in=usersApprover).filter(server_id__in=getServerID).values_list('user_id')
+    #print(serverApprover)
+    
+    
     #<QuerySet [(4,), (6,), (4,), (5,)]>  (+.values_list('user_id'))
         #<QuerySet [<SERVER_USER_RELATION: SERVER_USER_RELATION object (5)>,
         #<SERVER_USER_RELATION: SERVER_USER_RELATION object (8)>,
