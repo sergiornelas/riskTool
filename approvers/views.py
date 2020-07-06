@@ -228,9 +228,7 @@ def approvalDet(request, exclude_patch_ID):
 
     takeServersFront= [o.hostname for o in takeServers] #FRONTEND
     #['wdcgz22050068']
-    takeServersFront =  ''.join(takeServersFront) #FRONTEND
-    #wdcgz22050068
-    
+        
         #-----------takeException Case#-----------
 
     takeExceptionPatchIDS=[]

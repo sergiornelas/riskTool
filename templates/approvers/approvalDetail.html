@@ -41,25 +41,26 @@
 
         <div class="container">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <br>
                     <h4>Type of exception:</h4>
                     {% if  justException.exception_type == 1 %}
                         <p style="font-size:1.5em;" ><u>Patch</u></p>
                     {% elif  justException.exception_type  == 2 %}
                         <p style="font-size:1.5em;"  ><u>Full server</u></p>
+                        <b> This action will prevent also future coming patches in the servers.</b>
                     {% else %}
                         <p style="font-size:1.5em;"><u>Unknown</u></p>
                     {% endif %}
                 </div>
-                <div style="padding-top: 1.5em;" class="col-md-6">
-                    <h4>Server:</h4>
+                <!-- <div style="padding-top: 1.5em;" class="col-md-6">
+                    <h4>Server:</h4> -->
                     {#<p >{{ justException.content }}</p>#}
-                    <style>
+                    <!-- <style>
                         .nobr { white-space: nowrap }
-                    </style>
-                    <span style="white-space: nowrap"><b>{{ takeServersFront }}</b></span>
-                </div>
+                    </style> -->
+                        {#<span style="white-space: nowrap"><b>{{ takeServersFront }}</b></span>#}
+                <!-- </div> -->
             </div>
         </div>
 
@@ -82,7 +83,7 @@
 
         <br>
 
-        <table style="width:100%; font-size: 1em;">
+        <table style="width:100%; font-size: 19px;">
             <tr class="tere">
               <th >Patch ID</th>
                 {% for alias in patchObjects %}
@@ -90,23 +91,23 @@
                 {% endfor %}
             </tr>
             <tr class="tere">
-              <th>Server ID</th>
+              <th>Server</th>
                 {% for alias in patchObjects %}
-                    <td class="tede">{{ alias.server_id }}</td>
+                    <td class="tede">{{ alias.server }}</td>
                 {% endfor %}
             </tr>
             <tr class="tere">
               <th>Content</th>
-                {% for alias in advisories %}
-                    <td class="tede">{{ alias.description }}</td>
+                {% for alias in patchObjects %}
+                    <td class="tede">{{ alias.advisory }}</td>
                 {% endfor %}
             </tr>
-            <tr class="tere">
-                <th>Criticality</th>
-                  {% for alias in advisories %}
-                      <td class="tede">{{ alias.criticality }}</td>
-                  {% endfor %}
-              </tr>
+            <!-- <tr class="tere"> -->
+                <!-- <th>Criticality</th> -->
+                  {#{% for alias in advisories %}#}
+                      {#<td class="tede">{{ alias.criticality }}</td>#}
+                  {#{% endfor %}#}
+              <!-- </tr> -->
               <tr class="tere">
                 <th>Scheduled date</th>
                   {% for alias in patchObjects %}
@@ -137,6 +138,7 @@
         <h4>Your state:</h4>
 
         <!-- <textarea cols="70" rows="8">hi</textarea> -->
+        
         <div class="container">
             <div class="row">
                 <div class="col-md-3"></div>
@@ -148,9 +150,32 @@
                             <div class="col-md-6" style="font-size:30px; color: red">{{ singleAuthorize.state }} </div> 
                         {% else %}
                             <button class="col-md-6 btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#inquiryModal"> Pending </button>
-                        {% endif %}                        
+                        {% endif %}
                     {% else %}
-                        <button style="margin-top:2em" class="col-md-6 btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#inquiryModal"> Validate </button>
+
+                        <div class="col-md-6"id="rejectedText"></div>
+
+                        {% for a in authorize %}
+                            {% if a.state == 'Rejected' %}
+                                <script>
+                                    $("#rejectedText").append("<i>"+"This exception has been rejected for another approver."+"</i>");
+                                </script>
+                                <style>
+                                    .onof{
+                                        display: none;
+                                    }
+                                </style>
+                            {% endif %}
+                        {% endfor %}
+                    
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-3"></div>
+                                <button style="margin-top:2em" class="col-md-6 btn btn-primary btn-block btn-lg onof" data-toggle="modal" data-target="#inquiryModal"> Validate </button>
+                                <div class="col-md-3"></div>
+                            </div>
+                        </div>
+
                     {% endif %}
                 <div class="col-md-3"></div>
             </div>
@@ -173,45 +198,7 @@
             {% endif %}
         </div>
     </div>
-    <div style="margin-top:3rem;">
-        <!-- <button class="mx-4 btn btn-primary btn-lg">Send message to admin</button> -->
-    </div>
 </div>
-
-<!-- Inquiry Modal notification module-->
-  <div class="modal fade" id="inquiryModal3" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="inquiryModalLabel">Notification module</h5>
-          <button type="button" class="close" data-dismiss="modal">
-            <span>&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">                
-            <form action="{% url 'authorize' %}" method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="exception_id" value={{ justException.id }}>
-                
-                <div class="form-group">
-                    <label for="title" class="col-form-label">Title:</label>
-                    <input type="text" name="title" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="comment" class="col-form-label">Comment:</label>
-                    <textarea rows="7" name="comment" class="form-control" required></textarea>
-                </div>
-
-                <hr>
-                
-                <input type="submit" name="state" class="btn btn-block btn-success col-md">
-            </form>
-        </div>
-      </div>
-    </div>
-</div>
-
 
 <!-- Inquiry Modal authorize exception-->
 <div class="modal fade" id="inquiryModal" role="dialog">
