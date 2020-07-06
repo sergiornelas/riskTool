@@ -76,7 +76,7 @@
                     <td>{{ p.content }}</td>
                      {% if p.state == "Pending" %}
                         {#<td style="font-style: italic; text-align:center">{{ p.state }}</td>#}
-                        <td><button value={{ p.id }} style="font-style: italic;" class="btn btn-block validationsQuery" data-toggle="modal" data-target="#inquiryModal2" >{{ p.state }}</button></td>
+                        <td><button value={{ p.id }} style="font-style: italic;" class="btn btn-block validationsQuery" data-toggle="modal" data-target="#inquiryModal3" >{{ p.state }}</button></td>
                      {% elif p.state == "Approved" %}
                         {#<td style="color:green;"><b>{{ p.state }}</b></td>#}
                         <td><button value={{ p.id }} class="btn btn-success btn-block validationsQuery" data-toggle="modal" data-target="#inquiryModal2" >{{ p.state }}</button></td>
@@ -199,6 +199,27 @@
             <input type="submit" name="state" value="Close" class="btn btn-block btn-success col-md" data-dismiss="modal">
          </div>
                         <!-- name = database field, value = input value to db -->
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="inquiryModal3" role="dialog">
+   <div class="modal-dialog ">
+      <div class="modal-content">
+         <div class="modal-header">
+            <script>
+               document.getElementById("clean2").innerHTML = "";
+            </script>
+            
+            <h5 class="modal-title" id="inquiryModalLabel">Approval status</h5>
+            <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div id="clean2" style="margin-bottom:2em; margin-top:1em;"  ><i>No approver action yet</i></div>
+            <input type="submit" value="Close" class="btn btn-block btn-success col-md" data-dismiss="modal">
+         </div>
       </div>
    </div>
 </div>
