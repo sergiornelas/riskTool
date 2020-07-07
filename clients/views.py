@@ -154,6 +154,15 @@ def updateException(request, exclude_patch_ID):
 
     return redirect('exceptionsBoard')
 
+
+def deleteException(request, deleteRow):
+    
+    #if request.method == 'POST':
+        print (deleteRow)
+        getException = EXCEPTION.objects.get(pk=deleteRow).delete()
+        return redirect('dashboard')
+    
+
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 

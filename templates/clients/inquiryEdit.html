@@ -33,27 +33,27 @@
 </section>
 
 <script>
-    /*
-   var limitdays;
-   $.ajax({
-      async: false,
-      method: "POST",
-      data: {
-         //limitDay: localStorage.arrayServerPatches
-         limitDay: localStorage.arrayFullServers
-      },
-      url: 'getDaysLimit',
+   /*
+  var limitdays;
+  $.ajax({
+     async: false,
+     method: "POST",
+     data: {
+        //limitDay: localStorage.arrayServerPatches
+        limitDay: localStorage.arrayFullServers
+     },
+     url: 'getDaysLimit',
 
-   }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
-      //console.log(data)
-      limitdays = data
-   });
-   */
+  }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
+     //console.log(data)
+     limitdays = data
+  });
+  */
 </script>
 
 <div class="container">
 
-   <div style="padding-left:5em; padding-right:5em; padding-bottom:3em; margin-top:3em;"class="container">
+   <div style="padding-left:5em; padding-right:5em; padding-bottom:3em; margin-top:3em;" class="container">
       <div class="row"></div>
       <p>Content:</p>
       <div id="demo"
@@ -62,77 +62,79 @@
       <script>
          document.getElementById("demo").innerHTML = localStorage.arrayFullServers;
       </script>
-   <!-- </div> -->
+      <!-- </div> -->
 
-   {#<form action="{% url 'exclude_server' %}" method="POST">#}
-    <form action="{% url 'updateException' getException.id %}" method="POST">
+      {#<form action="{% url 'exclude_server' %}" method="POST">#}
+      <form action="{% url 'updateException' getException.id %}" method="POST">
 
-      {% csrf_token %}
+         {% csrf_token %}
 
-      <input id="content" type="hidden" name="content">
+         <input id="content" type="hidden" name="content">
 
-      <input id="exception_type_IDD" type="hidden" name="exception_type">
+         <input id="exception_type_IDD" type="hidden" name="exception_type">
 
-      <input id="patch_ide" type="hidden" name="patch_id">
+         <input id="patch_ide" type="hidden" name="patch_id">
 
-      <input id="server_ide" type="hidden" name="server_id">
+         <input id="server_ide" type="hidden" name="server_id">
 
-      <!-- Estos se introducen del modelo de exception -->
-      <div class="form-group">
-         <label for="title" class="col-form-label"><b>Title:</b><i> (set the title that approvers can use as
-               reference)</i></label>
-         <input value={{ getException.title }} style="border: 1px solid grey;" type="text" name="title" class="form-control" required>
-      </div>
-      <div class="form-group">
-         <label for="justification" class="col-form-label"><b>Justification:</b><i> (Reasons you want to make an exception)</i></label>
-         <textarea style="border: 1px solid grey;" rows="7" name="justification" class="form-control"
-             required>{{ getException.justification }}</textarea>
-     </div>
-     
-     <div class="form-group">
-         <label for="action_plan" class="col-form-label"><b>Action plan:</b><i> (define steps you will execute for
-                 implement the updates)</i></label>
-         <textarea style="border: 1px solid grey;" rows="7" name="action_plan" class="form-control"
-             required>{{ getException.action_plan }}</textarea>
-     </div>
-
-      <div class="container">
-         <div class="row">
-            <div class="col-md-4"></div>
-            <label for="excludeDate" class="col-form-label col-md-4""><b>Exclude date:</b> <i>(this is defined by major patch criticality)</i></label>
-            <div class=" col-md-4"></div>
+         <!-- Estos se introducen del modelo de exception -->
+         <div class="form-group">
+            <label for="title" class="col-form-label"><b>Title:</b><i> (set the title that approvers can use as
+                  reference)</i></label>
+            <input value={{ getException.title }} style="border: 1px solid grey;" type="text" name="title"
+               class="form-control" required>
          </div>
-      </div>
-
-      <!--     CALENDAR      -->
-      <div class="container">
-         <div class="row">
-            <div class="col-md-4"></div>
-            <input type="datetime" readonly="readonly" name="exclude_date" class="tail-datetime-field form-control col-md-4"
-               autocomplete="off" required>
-            <div class="col-md-4"></div>
+         <div class="form-group">
+            <label for="justification" class="col-form-label"><b>Justification:</b><i> (Reasons you want to make an
+                  exception)</i></label>
+            <textarea style="border: 1px solid grey;" rows="7" name="justification" class="form-control"
+               required>{{ getException.justification }}</textarea>
          </div>
+
+         <div class="form-group">
+            <label for="action_plan" class="col-form-label"><b>Action plan:</b><i> (define steps you will execute for
+                  implement the updates)</i></label>
+            <textarea style="border: 1px solid grey;" rows="7" name="action_plan" class="form-control"
+               required>{{ getException.action_plan }}</textarea>
+         </div>
+
+         <div class="container">
+            <div class="row">
+               <div class="col-md-4"></div>
+               <label for="excludeDate" class="col-form-label col-md-4""><b>Exclude date:</b> <i>(this is defined by major patch criticality)</i></label>
+               <div class=" col-md-4"></div>
+            </div>
+         </div>
+
+   <!--     CALENDAR      -->
+   <div class="container">
+      <div class="row">
+         <div class="col-md-4"></div>
+         <input type="datetime" readonly="readonly" name="exclude_date"
+            class="tail-datetime-field form-control col-md-4" autocomplete="off" required>
+         <div class="col-md-4"></div>
       </div>
    </div>
+</div>
 
 <script>
-    var dias=0
+   var dias = 0
 </script>
-    <!-- probablemente truene por el "elif" -->
-   {% if days == 30 %}
-        <script>
-            dias = 30
-        </script>
-    {% elif days == 90 %}
-        <script>
-            dias = 90
-        </script>
-    
-    {% elif days == 180 %}
-        <script>
-            dias =180
-        </script>
-    {% endif %}
+<!-- probablemente truene por el "elif" -->
+{% if days == 30 %}
+<script>
+   dias = 30
+</script>
+{% elif days == 90 %}
+<script>
+   dias = 90
+</script>
+
+{% elif days == 180 %}
+<script>
+   dias = 180
+</script>
+{% endif %}
 
 <script type="text/javascript">
    /*
