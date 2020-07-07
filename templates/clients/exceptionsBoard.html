@@ -15,21 +15,21 @@
 
 <!-- Breadcrumb -->
 <section id="bc" class="mt-3">
-    <div class="container">
-       <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-             <li class="breadcrumb-item">
-                <a href="{% url 'dashboard' %}">
-                   <i class="fas fa-home"></i> Dashboard </a>
-             </li>
-             <li class="breadcrumb-item">
-                <a href="{% url 'exceptionsBoard' %}">
-                   <i class="fas fa-calendar-check"></i> Requests </a>
-             </li>
-          </ol>
-       </nav>
-    </div>
- </section>
+   <div class="container">
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+               <a href="{% url 'dashboard' %}">
+                  <i class="fas fa-home"></i> Dashboard </a>
+            </li>
+            <li class="breadcrumb-item">
+               <a href="{% url 'exceptionsBoard' %}">
+                  <i class="fas fa-calendar-check"></i> Requests </a>
+            </li>
+         </ol>
+      </nav>
+   </div>
+</section>
 
 <script>
    /*
@@ -56,36 +56,51 @@
             <h2>Welcome {{ user.username }}</h2>
             {% if client_exceptions %}
             <p>Here are your exceptions status</p>
-            
+
             <table class="table table-striped table-bordered">
                <thead class="table-info ">
                   <tr>
-                     <th scope="col">Exception id</th>
-                     <th scope="col">Title</th>
-                     <th scope="col">Limit date for approval</th>
-                     <th scope="col">Content</th>
-                     <th scope="col">Status</th>
+                     <th style="border-color: dimgray; border-width: 1px; text-align:center" scope="col">Exception id
+                     </th>
+                     <th style="border-color: dimgray; border-width: 1px; text-align:center" scope="col">Title</th>
+                     <th style="border-color: dimgray; border-width: 1px; text-align:center" scope="col">Limit date for
+                        approval</th>
+                     <th style="border-color: dimgray; border-width: 1px; text-align:center" scope="col">Content</th>
+                     <th style="border-color: dimgray; border-width: 1px; text-align:center" scope="col">Change</th>
+                     <th style="border-color: dimgray; border-width: 1px; text-align:center" scope="col">Status</th>
                   </tr>
                </thead>
                <tbody>
                   {% for p in client_exceptions %}
                   <tr>
-                    <td>{{ p.id }}</td>
-                    <td>{{ p.title }}</td>
-                    <td>{{ p.exclude_date }}</td>
-                    <td>{{ p.content }}</td>
+                     <td>{{ p.id }}</td>
+                     <td>{{ p.title }}</td>
+                     <td>{{ p.exclude_date }}</td>
+                     <td>{{ p.content }}</td>
+                     <td>
+                        {% if p.state == "Approved" or p.state == "Rejected" %}
+                           <p style="font-size: .9em; color:dimgray">Has a status already</p>
+                        {% else %}
+                           <a href="{% url 'inquiryEdit' p.id %}"><i class="fa fa-pencil-square-o"></i>Edit</a>
+                        {% endif %}
+                        <!-- <a href="{% url 'exceptionsBoard' %}"><i style="font-size: 1em;"class="fa fa-trash-o "></i>Delete</a> -->
+                     </td>
+
                      {% if p.state == "Pending" %}
-                        {#<td style="font-style: italic; text-align:center">{{ p.state }}</td>#}
-                        <td><button value={{ p.id }} style="font-style: italic;" class="btn btn-block validationsQuery" data-toggle="modal" data-target="#inquiryModal3" >{{ p.state }}</button></td>
+                     {#<td style="font-style: italic; text-align:center">{{ p.state }}</td>#}
+                        {#<td><button value={{ p.id }} style="font-style: italic;" class="btn btn-block validationsQuery"data-toggle="modal" data-target="#inquiryModal2">{{ p.state }}</button></td>#}
+                        <td><button value={{ p.id }} style="font-style: italic;" class="btn btn-block validationsQuery"data-toggle="modal" data-target="#inquiryModal2">{{ p.state }}</button></td>
                      {% elif p.state == "Approved" %}
-                        {#<td style="color:green;"><b>{{ p.state }}</b></td>#}
-                        <td><button value={{ p.id }} class="btn btn-success btn-block validationsQuery" data-toggle="modal" data-target="#inquiryModal2" >{{ p.state }}</button></td>
+                     {#<td style="color:green;"><b>{{ p.state }}</b></td>#}
+                     <td><button value={{ p.id }} class="btn btn-success btn-block validationsQuery" data-toggle="modal"
+                           data-target="#inquiryModal2">{{ p.state }}</button></td>
                      {% elif p.state == "Rejected" %}
-                        {#<td style="color:red;"><b>{{ p.state }}</b></td>#}
-                        <td><button value={{ p.id }} class="btn btn-danger btn-block validationsQuery" data-toggle="modal" data-target="#inquiryModal2" >{{ p.state }}</button></td>
+                     {#<td style="color:red;"><b>{{ p.state }}</b></td>#}
+                     <td><button value={{ p.id }} class="btn btn-danger btn-block validationsQuery" data-toggle="modal"
+                           data-target="#inquiryModal2">{{ p.state }}</button></td>
                      {% else %}
-                        <td>{{ p.state }}</td>
-                    {% endif %}
+                     <td>{{ p.state }}</td>
+                     {% endif %}
                   </tr>
                   {% endfor %}
                </tbody>
@@ -98,29 +113,32 @@
    </div>
 </section>
 
-  <!-- Inquiry Modal Read comentaries-->
+<!-- Inquiry Modal Read comentaries-->
 <div class="modal fade" id="inquiryModal2" role="dialog">
    <div class="modal-dialog modal-lg">
       <div class="modal-content">
          <div class="modal-header">
             <h5 class="modal-title" id="inquiryModalLabel">Approval status</h5>
             <button type="button" class="close" data-dismiss="modal">
-            <span>&times;</span>
+               <span>&times;</span>
             </button>
          </div>
          <div class="modal-body">
             <style>
-               hr {border-top: 1px solid grey; margin-bottom: 1em;}
+               hr {
+                  border-top: 1px solid grey;
+                  margin-bottom: 1em;
+               }
             </style>
-            <div id="clean" class="queryContent" rows="7" class="form-control" ></div>
+            <div id="clean" class="queryContent" rows="7" class="form-control"></div>
             <script type="text/javascript">
                $(document).ready(function () {
-                   $(".validationsQuery").click(function () {
+                  $(".validationsQuery").click(function () {
 
                      document.getElementById("clean").innerHTML = "";
 
-                     query=this.value
-                     query=parseInt(query)
+                     query = this.value
+                     query = parseInt(query)
 
                      $.ajax({
                         //async: false,
@@ -133,13 +151,13 @@
                         success: function (data) {
                            data = JSON.parse(data);
                            console.log(data)
-                           
-                           
-                           $.each(data,function(key,index){
+
+
+                           $.each(data, function (key, index) {
                               //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
-                              
-         //-------------------------------new ajax -------------------------------
-         
+
+                              //-------------------------------new ajax -------------------------------
+
                               var name
                               var names = []
 
@@ -151,25 +169,25 @@
                                  data: {
                                     data: index.fields.approver
                                  },
-                                 
+
                                  success: function (approvername) {
                                     name = JSON.parse(approvername);
-                                    
-                                    $.each(name,function(key,index){
+
+                                    $.each(name, function (key, index) {
                                        names.push(index.fields.username);
                                     })
                                     console.log(names)
                                  }
                               });
 
-         //-------------------------------new ajax -------------------------------
+                              //-------------------------------new ajax -------------------------------
 
-                              $(".queryContent").append("<b>"+"Approver name:"+"</b>");
-                              $(".queryContent").append("<p>"+names+"</p>");
-                              $(".queryContent").append("<b>"+"Comment:"+"</b>");
-                              $(".queryContent").append("<p>"+index.fields.comment+"</p>");
-                              $(".queryContent").append("<b>"+"Time of response:"+"</b>");
-                              
+                              $(".queryContent").append("<b>" + "Approver name:" + "</b>");
+                              $(".queryContent").append("<p>" + names + "</p>");
+                              $(".queryContent").append("<b>" + "Comment:" + "</b>");
+                              $(".queryContent").append("<p>" + index.fields.comment + "</p>");
+                              $(".queryContent").append("<b>" + "Time of response:" + "</b>");
+
 
                               var exceptionDate = index.fields.time
 
@@ -183,22 +201,23 @@
 
                                  month++;
 
-                                 return (month + '/' + date +'/' + year + ' ' + hours + ':' + minutes);
+                                 return (month + '/' + date + '/' + year + ' ' + hours + ':' + minutes);
                               }
-                              $(".queryContent").append("<p>"+formatDate(exceptionDate)+"</p>");
-                              $(".queryContent").append("<b>"+"Response:"+"</b>");
-                              $(".queryContent").append("<p>"+index.fields.state+"</p>");
+                              $(".queryContent").append("<p>" + formatDate(exceptionDate) + "</p>");
+                              $(".queryContent").append("<b>" + "Response:" + "</b>");
+                              $(".queryContent").append("<p>" + index.fields.state + "</p>");
                               $(".queryContent").append("<hr>");
                            })
                         }
                      })
-                   });
+                  });
                });
-           </script>
+            </script>
             <hr>
-            <input type="submit" name="state" value="Close" class="btn btn-block btn-success col-md" data-dismiss="modal">
+            <input type="submit" name="state" value="Close" class="btn btn-block btn-success col-md"
+               data-dismiss="modal">
          </div>
-                        <!-- name = database field, value = input value to db -->
+         <!-- name = database field, value = input value to db -->
       </div>
    </div>
 </div>
@@ -210,14 +229,14 @@
             <script>
                document.getElementById("clean2").innerHTML = "";
             </script>
-            
+
             <h5 class="modal-title" id="inquiryModalLabel">Approval status</h5>
             <button type="button" class="close" data-dismiss="modal">
-            <span>&times;</span>
+               <span>&times;</span>
             </button>
          </div>
          <div class="modal-body">
-            <div id="clean2" style="margin-bottom:2em; margin-top:1em;"  ><i>No approver action yet</i></div>
+            <div id="clean2" style="margin-bottom:2em; margin-top:1em;"><i>No approver action yet</i></div>
             <input type="submit" value="Close" class="btn btn-block btn-success col-md" data-dismiss="modal">
          </div>
       </div>

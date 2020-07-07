@@ -79,6 +79,70 @@ def inquiryPatches(request):
 def inquiryServers(request):
     return render(request, 'clients/inquiryServers.html')
 
+
+def inquiryEdit(request, exclude_patch_ID):
+    getException = EXCEPTION.objects.get(pk=exclude_patch_ID)
+    
+    """
+        patch_id: "10,11,12,13" (simple string) -> [10, 11, 12, 13] (list of integers)
+    """
+    getPatches = EXCEPTION.objects.filter(pk=exclude_patch_ID)
+    getPatches = [o.patch_id for o in getPatches]
+    getPatches =  ', '.join(getPatches)
+    getPatches = getPatches.split(",")
+    getPatches = list(map(int, getPatches))
+    
+    getPatches = PATCHES.objects.filter(pk__in=getPatches).values_list('advisory_id', flat=True)
+    getPatches = ADVISORY.objects.filter(pk__in=getPatches).values_list('criticality', flat=True)
+    
+    days=0
+
+    for critical in getPatches:
+        if critical == "High":
+            #print(critical," es alto")
+            days = 30
+            break
+        elif critical == "Medium":
+            #print(critical," es medio")
+            days = 90
+            break
+        elif critical == "Low":
+            #print(critical," es bajo")
+            days = 180
+
+    #print(days)
+    context = {
+        'getException':getException,
+        'days':days
+    }
+    return render(request, 'clients/inquiryEdit.html', context)
+
+#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+def updateException(request, exclude_patch_ID):
+    print (exclude_patch_ID)
+    getException = EXCEPTION.objects.get(pk=exclude_patch_ID)
+    if request.method == 'POST':   
+        getException.title = request.POST['title']
+        getException.save(update_fields=['title'])
+
+        getException.justification = request.POST['justification']
+        getException.save(update_fields=['justification'])
+
+        getException.action_plan = request.POST['action_plan']
+        getException.save(update_fields=['action_plan'])
+
+        getException.exclude_date = request.POST['exclude_date']
+        getException.save(update_fields=['exclude_date'])
+
+    messages.success(request, "Your request has been submitted, an approver will get back to you soon")
+
+    return redirect('exceptionsBoard')
+
+#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+
 #AJAX LISTA DE SERVIDORES DEL CLIENTE INGRESADO
 def server_user_list(request):
     client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)

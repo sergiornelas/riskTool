@@ -2,19 +2,11 @@
 
 {% block content %}
 
-<script>
-   console.log(localStorage.arrayFullServers)
-   $(document).ready(function () {
-      $("#content").val(localStorage.arrayFullServers);
-      $("#exception_type_IDD").val("2");
-   });
-</script>
-
 <section id="showcase-inner" class="py-5 text-white">
    <div class="container">
       <div class="row text-center">
          <div class="col-md-12">
-            <h1 class="display-4">Exception form</h1>
+            <h1 class="display-4">Edit exception</h1>
             <i class="fa fa-clipboard fa-5x" aria-hidden="true"></i>
             <p class="lead">Manage your patches if you have struggles</p>
          </div>
@@ -41,6 +33,7 @@
 </section>
 
 <script>
+    /*
    var limitdays;
    $.ajax({
       async: false,
@@ -55,98 +48,14 @@
       //console.log(data)
       limitdays = data
    });
-
-   var patchesPk =[]
-   var servesPK =[]
-
-   $.ajax({
-      async: false,
-      method: "POST",
-      data: {
-         //limitDay: localStorage.arrayServerPatches
-         selectedServer: localStorage.arrayFullServers
-      },
-      url: 'filterPatches',
-
-   }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
-      //console.log(data)
-      
-      data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
-
-      $.each(data, function (key, index) {
-            //console.log(index.fields.server)
-            //console.log(index.pk)
-            patchesPk.push(index.pk)
-      });
-      
-   });
-   
-   $.ajax({
-      async: false,
-      method: "POST",
-      data: {
-         //limitDay: localStorage.arrayServerPatches
-         selectedServer: localStorage.arrayFullServers
-      },
-      url: 'getServerIDServer',
-
-   }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
-      console.log(data)
-      
-      data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
-
-      $.each(data, function (key, index) {
-            //console.log(index.fields.server)
-            //console.log(index.pk)
-            servesPK.push(index.pk)
-      });
-   });
-</script>
-
-<script>
-   console.log(patchesPk)
-   console.log(servesPK)
-   $(document).ready(function () {
-      $("#patch_ide").val(patchesPk);
-      $("#server_ide").val(servesPK);
-  });
+   */
 </script>
 
 <div class="container">
 
-   <!--  PROGRESS BAR -->
-         <div class="container">
-            <div class="steps">
-               <ul class="steps-container">
-                  <li style="width:33%;" class="activated">
-                     <div class="step">
-                        <div class="step-image"><span></span></div>
-                        <div class="step-current">Type of exception</div>
-                        <div class="step-description">Server or patch</div>
-                     </div>
-                  </li>
-                  <li style="width:33%;"class="activated">
-                     <div class="step">
-                        <div class="step-image"><span></span></div>
-                        <div class="step-current">Choose server</div>
-                        <div class="step-description">Select server</div>
-                     </div>
-                  </li>
-                  <li style="width:33%;"class="activated">
-                     <div class="step">
-                        <div class="step-image"><span></span></div>
-                        <div class="step-current">Inquiry</div>
-                        <div class="step-description">Form</div>
-                     </div>
-                  </li>
-               </ul>
-               <div class="step-bar" style="width: 100%;"></div>
-            </div>
-         </div>
-
-   <div style="padding:5em;"class="container">
+   <div style="padding-left:5em; padding-right:5em; padding-bottom:3em; margin-top:3em;"class="container">
       <div class="row"></div>
-      <p>List of servers selected:</p>
+      <p>Content:</p>
       <div id="demo"
          style="background-color: lightgrey; padding: 1em; border: 1px solid grey; margin-bottom: 2em; font-style: italic;">
       </div>
@@ -155,7 +64,8 @@
       </script>
    <!-- </div> -->
 
-   <form action="{% url 'exclude_server' %}" method="POST">
+   {#<form action="{% url 'exclude_server' %}" method="POST">#}
+    <form action="{% url 'updateException' getException.id %}" method="POST">
 
       {% csrf_token %}
 
@@ -171,19 +81,19 @@
       <div class="form-group">
          <label for="title" class="col-form-label"><b>Title:</b><i> (set the title that approvers can use as
                reference)</i></label>
-         <input style="border: 1px solid grey;" type="text" name="title" class="form-control" required>
+         <input value={{ getException.title }} style="border: 1px solid grey;" type="text" name="title" class="form-control" required>
       </div>
       <div class="form-group">
          <label for="justification" class="col-form-label"><b>Justification:</b><i> (Reasons you want to make an exception)</i></label>
          <textarea style="border: 1px solid grey;" rows="7" name="justification" class="form-control"
-             required></textarea>
+             required>{{ getException.justification }}</textarea>
      </div>
      
      <div class="form-group">
          <label for="action_plan" class="col-form-label"><b>Action plan:</b><i> (define steps you will execute for
                  implement the updates)</i></label>
          <textarea style="border: 1px solid grey;" rows="7" name="action_plan" class="form-control"
-             required></textarea>
+             required>{{ getException.action_plan }}</textarea>
      </div>
 
       <div class="container">
@@ -204,6 +114,25 @@
          </div>
       </div>
    </div>
+
+<script>
+    var dias=0
+</script>
+    <!-- probablemente truene por el "elif" -->
+   {% if days == 30 %}
+        <script>
+            dias = 30
+        </script>
+    {% elif days == 90 %}
+        <script>
+            dias = 90
+        </script>
+    
+    {% elif days == 180 %}
+        <script>
+            dias =180
+        </script>
+    {% endif %}
 
 <script type="text/javascript">
    /*
@@ -234,8 +163,6 @@
 
    var data = new Date();
 
-   console.log(limitdays)
-
    document.addEventListener("DOMContentLoaded", function () {
 
       tail.DateTime(".tail-datetime-field", {
@@ -246,7 +173,7 @@
                start: data,
                //end: new Date(2020, 6, 30),
                //end: data.addDays(50)
-               end: data.addDays(parseInt(limitdays))
+               end: data.addDays(parseInt(dias))
                // days: true                 // This is the default
             }],
          dateStart: new Date(2018, 0, 5),
@@ -262,17 +189,16 @@
 
 </script>
 
-<!-- FALTA AGREGAR EL ACTION PLAN -->
 <div style="margin-bottom: 16em;"></div>
 
 <div class="container">
    <div class="row">
       <div class="col-md-3"> </div>
       <div style="padding-top: 2em;" class="col-md-3">
-         <a style="background-color:#D0D0D5" href="{% url 'selectServers' %}" class="btn btn-block">Back</a>
+         <a style="background-color:#D0D0D5" href="{% url 'exceptionsBoard' %}" class="btn btn-block">Back</a>
       </div>
       <div style="padding-top: 2em;" class="col-md-3">
-         <input style="margin-bottom: 1rem;" type="submit" value="Send" class="btn btn-block btn-secondary" />
+         <input style="margin-bottom: 1rem;" type="submit" value="Update" class="btn btn-block btn-secondary" />
       </div>
 
    </div>
