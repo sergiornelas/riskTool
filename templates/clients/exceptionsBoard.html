@@ -47,7 +47,6 @@
    */
 </script>
 
-
 <section id="dashboard" class="py-4">
    <div class="container">
       {% include 'partials/_alerts.html' %}
@@ -71,6 +70,7 @@
                   </tr>
                </thead>
                <tbody>
+
                   {% for p in client_exceptions %}
                   <tr>
                      <td>{{ p.id }}</td>
@@ -81,7 +81,13 @@
                         {% if p.state == "Approved" or p.state == "Rejected" %}
                            <p style="font-size: .9em; color:dimgray">Has a status already</p>
                         {% else %}
-                           <a href="{% url 'inquiryEdit' p.id %}"><i class="fa fa-pencil-square-o"></i>Edit</a>
+                           {% for r in remaining %}
+                              {% if p.id == r.id %}
+                                 <a href="{% url 'inquiryEdit' p.id %}"><i class="fa fa-pencil-square-o"></i>Edit</a>
+                              {% else %}
+                                 <p style="font-size: .9em; color:dimgray">Has a status already</p>
+                              {% endif %}
+                           {% endfor %}
                         {% endif %}
                         <!-- <a href="{% url 'exceptionsBoard' %}"><i style="font-size: 1em;"class="fa fa-trash-o "></i>Delete</a> -->
                      </td>
@@ -111,6 +117,10 @@
          </div>
       </div>
    </div>
+</section>
+
+<section>
+
 </section>
 
 <!-- Inquiry Modal Read comentaries-->

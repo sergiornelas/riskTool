@@ -21,7 +21,6 @@ urlpatterns = [
     path('inquiryPatches', views.inquiryPatches, name='inquiryPatches'),
     
     path('inquiryEdit/<int:exclude_patch_ID>', views.inquiryEdit, name='inquiryEdit'),
-    #path('updateException', views.updateException, name='updateException'),
     path('updateException/<int:exclude_patch_ID>', views.updateException, name='updateException'),
     
 

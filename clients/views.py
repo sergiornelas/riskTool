@@ -55,9 +55,24 @@ def exceptionsBoard(request):
     client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id)
     validations=VALIDATE_EXCEPTION.objects.all()
 
+    excepciones= EXCEPTION.objects.filter(client_id=request.user.id).values_list('pk', flat=True)
+    validaciones=VALIDATE_EXCEPTION.objects.filter(exception_id__in=excepciones).values_list('exception_id', flat=True)
+
+    arreglo=[]
+    
+    for x in excepciones:
+        for y in validaciones:
+            if x == y:
+                arreglo.append(x)
+                break
+                
+    remaining = EXCEPTION.objects.filter(client_id=request.user.id).exclude(pk__in=arreglo)
+    print(remaining)
+
     context ={
         'client_exceptions':client_exceptions,
-        'validations':validations
+        'validations':validations,
+        'remaining':remaining
     }
     return render(request, 'clients/exceptionsBoard.html', context)
 
@@ -216,17 +231,6 @@ def filterPatches(request):
         #value_of_name = sample_instance.hostname
             #print(value_of_name)
         
-        #list=["manzana", "banana", "pera"]
-
-        thisdict = {
-            "brand": "Ford",
-            "model": "Mustang",
-            "year": 1964
-        }
-        
-        
-
-        #result = json.dumps(thisdict)
         
         print(patch_advisory)
 
@@ -240,12 +244,6 @@ def filterPatches(request):
         # takeduedate = [o.due_date for o in patch_advisory]
         # print("takeadvisories: ",takeduedate)
 
-        # thisdict = {
-        #     "takeAdvisoriesid": takeAdvisoriesid,
-        #     "takeduedate": takeduedate,
-        # }
-
-        #print("thisdict: ", thisdict)
                 
         return HttpResponse(serializers.serialize("json", patch_advisory))
         #return HttpResponse(patch_advisory)
