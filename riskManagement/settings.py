@@ -30,22 +30,26 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    #
-    'pages.apps.PagesConfig',
-    'approvers.apps.ApproversConfig',
-    'patches.apps.PatchesConfig',
-    'exception.apps.ExceptionConfig',
-    'roles.apps.RolesConfig',
-    'clients.apps.ClientsConfig',
-    'servers.apps.ServersConfig',
-    'advisory.apps.AdvisoryConfig',
-    #
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    #
+    'roles.apps.RolesConfig',
+    'servers.apps.ServersConfig',
+    'advisory.apps.AdvisoryConfig',
+    'patches.apps.PatchesConfig',
+    'exception.apps.ExceptionConfig',
+    'pages.apps.PagesConfig',
+    'approvers.apps.ApproversConfig',
+    'clients.apps.ClientsConfig',
+    
+    
+    #
 ]
 
 # MIDDLEWARE = [

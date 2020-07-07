@@ -13,7 +13,6 @@ class PATCHES(models.Model):
 
     server=models.ForeignKey(SERVER, on_delete=models.CASCADE, null=True)
     advisory=models.ForeignKey(ADVISORY, on_delete=models.CASCADE, null=True)
-    #falta agregar el id de exception (?)
 
     #estos solo funcionan en python (server side):
     #def __str__(self):
@@ -21,27 +20,6 @@ class PATCHES(models.Model):
 
     def __str__(self):
         return (self.server.hostname + " : " + "'" + self.advisory.description + "'" +" , ")
-        
-        # return ("["+
-        #     "patch"+":" +"{"+
-        #         #"id":"1",
-        #         "server"+":"+self.server.hostname+","+
-        #         "advisory"+":"+self.advisory.description+","+
-        #     "}"+","+
-        # "]")
-
-
-#---------------------OLD RISK MANAGEMENT-----------------------------------------------------
-
-class patch(models.Model):
-    client = models.ForeignKey(settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE, null=True, related_name='users')
-    server_package = models.CharField(max_length=30)
-    time = models.DateTimeField(default=datetime.now, blank=False)
-    criticality = models.CharField(max_length=30, null=True)
-
-    def __str__(self):
-	    return str(self.id)
 
 
 

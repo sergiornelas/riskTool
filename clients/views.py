@@ -53,10 +53,13 @@ def dashboard(request):
 
 def exceptionsBoard(request):
     client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id)
-    validations=VALIDATE_EXCEPTION.objects.all()
+    print("CLIENT_EXCEPCIONS",client_exceptions)
 
     excepciones= EXCEPTION.objects.filter(client_id=request.user.id).values_list('pk', flat=True)
+    print("EXCEPCIONES",excepciones)
     validaciones=VALIDATE_EXCEPTION.objects.filter(exception_id__in=excepciones).values_list('exception_id', flat=True)
+    #validaciones=VALIDATE_EXCEPTION.objects.filter(exception_id__in=excepciones).values_list('exception_id', flat=True)
+    print("VALIDACIONES", validaciones)
 
     arreglo=[]
     
@@ -67,11 +70,10 @@ def exceptionsBoard(request):
                 break
                 
     remaining = EXCEPTION.objects.filter(client_id=request.user.id).exclude(pk__in=arreglo)
-    print(remaining)
+    print("REMAINING",remaining)
 
     context ={
         'client_exceptions':client_exceptions,
-        'validations':validations,
         'remaining':remaining
     }
     return render(request, 'clients/exceptionsBoard.html', context)
@@ -473,7 +475,7 @@ def getServerIDPatch(request):
 def getValidationDetails(request):    
     if request.method == "POST":
         query = request.POST.get('query')
-        validations=VALIDATE_EXCEPTION.objects.filter(exception_id=query)
+        validations=VALIDATE_EXCEPTION.objects.filter(exception=query)
         return HttpResponse(serializers.serialize("json", validations))
 
 @csrf_exempt

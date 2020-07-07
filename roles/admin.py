@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 from .models import Profile
 #from .models import approvers
-from approvers.models import patchApproverRelationship
+#from approvers.models import patchApproverRelationship
 
 class ProfileInline(admin.StackedInline):
     model = Profile

@@ -79,15 +79,16 @@
                      <td>{{ p.content }}</td>
                      <td>
                         {% if p.state == "Approved" or p.state == "Rejected" %}
-                           <p style="font-size: .9em; color:dimgray">Has a status already</p>
+                           <!-- <p style="font-size: .9em; color:dimgray">Has a status already</p> -->
                         {% else %}
                            {% for r in remaining %}
                               {% if p.id == r.id %}
-                                 <a href="{% url 'inquiryEdit' p.id %}"><i class="fa fa-pencil-square-o"></i>Edit</a>
+                                 <a href="{% url 'inquiryEdit' p.id %}">Edit</a>
                               {% else %}
-                                 <p style="font-size: .9em; color:dimgray">Has a status already</p>
+                                 <!-- <p style="font-size: .9em; color:dimgray">Has a status already</p> -->
                               {% endif %}
                            {% endfor %}
+                           
                         {% endif %}
 
 

@@ -12,18 +12,13 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 
 #*
-from patches.models import patch
 from patches.models import PATCHES
 from advisory.models import ADVISORY
 import re
 
 from roles.models import Profile
-from exception.models import exclude_patch
 from exception.models import EXCEPTION
-#from exception.models import AUTHORIZE_EXCEPTION
 from exception.models import VALIDATE_EXCEPTION
-from .models import patchApproverRelationship
-from .models import authorize_Exception
 from django.http import HttpResponse
 from django import forms
 from django.forms import ModelForm
@@ -133,77 +128,6 @@ def approvalsList(request):
             return redirect('index')
     else:
         return render(request, 'pages/index.html')
-
-
-
-def approvalDetail(request, exclude_patch_ID):
-    #FRONTEND SIMPLE QUERIES
-        # exclude_patch_ID = 8
-
-    exceptionQuery = get_object_or_404(exclude_patch, pk=exclude_patch_ID)
-        #Selecciona el objeto que contiene el {id 8 en exclude_patch model}:
-            #<id=8, title=elID2, just=awef, patch_id=2>
-    patch_exc = get_object_or_404(patch, pk=exceptionQuery.patch_id)
-        #Selecciona el objeto que contiene en el id, dentro del patch model, el {valor de patch_id en el objeto exception}:
-            #<id=2, server=Linux, crit=Medium, client_id=3>
-
-#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    
-    approver_detail = User.objects.filter(pk__in=patchApproverRelationship.objects.filter(patch=exceptionQuery.patch_id).values_list('approver_id'))
-                                                                                                                        #con values_list le damos a entender que queremos los valores de approver_id
-                                                                                                                        # y no los del id directo de pachapproverrelationship
-    
-    authorize = authorize_Exception.objects.filter(exception_id=exceptionQuery.id).filter(approver_id__in =approver_detail)
-
-    approver_detail_pending = approver_detail.exclude(pk__in=authorize.values_list('approver_id'))
-
-    # TESTING
-    # print("exclude_patch_ID = ", exclude_patch_ID, "\n")
-    # print("excepcion = " , exception, "\n")
-    # print("patch_exc = " , patch_exc, "\n")
-    # print("approver_detail ",approver_detail)
-    # print("")
-    # print("authorize ",authorize)
-    # print("")
-    # print("approver_detail_pending ",approver_detail_pending)
-    
-    # for i in approver_detail:
-    #     for j in authorize:
-    #         if i.id == j.approver_id:
-    #             print(i," y ",j," tienen el mismo id")
-    #         else:
-    #             print(i," y ",j," NO tienen el mismo id")
-      
-
-    # approveObjects = zip(authorize, approver_detail_pending)
-    
-    # if authorize:
-    #     print ("\nExisten autorizaciones de los aprobadores responsables en la excepcion dentro de la tabla\n")
-    # else:
-    #     print ("\nNo existen autorizaciones de los aprobadores responsables en la excepcion dentro de la tabla\n")
-
-    context = {
-        'exceptionQuery': exceptionQuery,
-        'patch_exc':patch_exc,
-        'approver_detail':approver_detail,
-        'authorize':authorize,
-        'approver_detail_pending':approver_detail_pending,
-    }
-
-    path = patchApproverRelationship.objects.filter(approver_id=request.user.id).filter(patch_id=patch_exc.id).values_list('approver_id', flat=True)
-    
-    if request.user.is_authenticated:
-        try:
-            #if request.user.profile.role == 2:
-            if request.user.id == path[0]:
-                return render(request, 'approvers/approvalDetail.html', context)
-        #else:
-        except:
-            messages.error(request, 'Not allowed to enter here')
-            return redirect('index')
-    else:
-        return redirect('login')
-
 
 
 def approvalDet(request, exclude_patch_ID):
@@ -328,13 +252,13 @@ def approvalDet(request, exclude_patch_ID):
     approver_detail = User.objects.filter(pk__in=serverApprover)
     #<QuerySet [<User: approver>, <User: approver2>, <User: approver3>]>
 
-    authorize = VALIDATE_EXCEPTION.objects.filter(exception_id=justException.id).filter(approver_id__in =approver_detail)
+    authorize = VALIDATE_EXCEPTION.objects.filter(exception=justException.id).filter(approver_id__in =approver_detail)
     #<QuerySet [<VALIDATE_EXCEPTION: VALIDATE_EXCEPTION object (1)>,
     #<VALIDATE_EXCEPTION: VALIDATE_EXCEPTION object (2)>,
     #<VALIDATE_EXCEPTION: VALIDATE_EXCEPTION object (3)>]>
 
     try:
-        singleAuthorize = VALIDATE_EXCEPTION.objects.filter(exception_id=justException.id).get(approver_id =request.user.id)
+        singleAuthorize = VALIDATE_EXCEPTION.objects.filter(exception=justException.id).get(approver_id =request.user.id)
         #VALIDATE_EXCEPTION object (22)
         #TIENES QUE USAR GET CUANDO SOLO NECESITAS UN OBJETO, Y AL MOMENTO DE LLAMARLO AL FRONTEND SIN USAR FOR
     except:
