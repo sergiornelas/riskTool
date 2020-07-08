@@ -4,13 +4,14 @@ from .models import EXCEPTION
 from .models import VALIDATE_EXCEPTION
 
 class ExcludePatchesAdmin(admin.ModelAdmin):
-    list_display = ('id', 'client', 'title', 'justification', 'exclude_date')
-    list_display_links = ('id', 'title')
-    search_fields = ('title',)
+    list_display = ('risk_id', 'client', 'title', 'patch_id', 'exclude_date', 'state')
+    list_display_links = ('risk_id', 'title')
+    search_fields = ('risk_id',)
     list_per_page = 25
 
 class ExcludeValidationsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'state', 'comment', 'approver', 'time', 'exception')
+
+    list_display = ('id', 'state', 'approver', 'time')
     list_display_links = ('id', 'state')
     search_fields = ('state',)
     list_per_page = 25
