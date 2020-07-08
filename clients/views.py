@@ -13,6 +13,8 @@ from exception.models import VALIDATE_EXCEPTION
 from urllib import parse
 from django.contrib.auth.models import User
 import re
+import random
+import string
 
 #DASHBOARD
 def dashboard(request):
@@ -178,9 +180,10 @@ def killException(request):
 
 #AJAX LISTA DE SERVIDORES DEL CLIENTE INGRESADO
 def server_user_list(request):
-    client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
+    client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id).values_list('server_id', flat=True)
+    #print(client_has_server)
     serversPoll = SERVER.objects.filter(pk__in=client_has_server)
-
+    #print(serversPoll)
     """
     context={
         'serversPoll':serversPoll
@@ -400,6 +403,12 @@ def exclude_server(request):
         exception_type = request.POST['exception_type']
         server_id = request.POST['server_id']
 
+        def randomString(stringLength=8):
+            letters = string.ascii_lowercase
+            return ''.join(random.choice(letters) for i in range(stringLength))
+
+        risk_id = ('RISK'+randomString(8))
+
         #Check if user has made inquiry already
         # if request.user.is_authenticated:
         #     has_contacted = exclude_patch.objects.all().filter(patch_id=patch_id, client=client)
@@ -407,7 +416,8 @@ def exclude_server(request):
         #         messages.error(request, 'You have already made an exception for this patch')
         #         return redirect('dashboard')
                
-        exclude_this_server = EXCEPTION(patch_id=patch_id, action_plan=action_plan, client=client, title=title, justification=justification, exclude_date=exclude_date, content=content, exception_type=exception_type, server_id=server_id)
+        #exclude_this_server = EXCEPTION(patch_id=patch_id, action_plan=action_plan, client=client, title=title, justification=justification, exclude_date=exclude_date, content=content, exception_type=exception_type, server_id=server_id)
+        exclude_this_server = EXCEPTION(patch_id=patch_id, action_plan=action_plan, client=client, title=title, justification=justification, exclude_date=exclude_date, content=content, exception_type=exception_type, server_id=server_id,risk_id=risk_id)
         
         exclude_this_server.save()
         

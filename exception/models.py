@@ -31,8 +31,6 @@ class AUTHORIZE_TYPE(models.Model):
     #type = models.CharField(max_length=10)
     kind = models.CharField(max_length=8, choices = state_choices)
 
-
-
 class EXCEPTION(models.Model):
     #kind = models.ForeignKey(EXCEPTION_TYPE, null=True, on_delete=models.CASCADE) #patch, server
     #state = models.ForeignKey(AUTHORIZE_TYPE, null=True, on_delete=models.CASCADE) #approved, rejected, pending
@@ -53,6 +51,7 @@ class EXCEPTION(models.Model):
     #server = models.ForeignKey(SERVER, on_delete=models.CASCADE, null=True)
     #TEMPORAL!!!!!
     server_id = models.TextField(null=True) #!
+    risk_id = models.CharField(max_length=15, null=True)
 
 #now = datetime.utcnow().replace(tzinfo=timezone('America/Mexico_City'))
 

@@ -74,7 +74,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td style="text-align:center; font-size:.5em;"> {{ justException.id }}</td>
+                    <td style="text-align:center; font-size:.5em;"> {{ justException.risk_id }}</td>
                     <td style="text-align:center; font-size:.5em;">{{ justException.client }}</td>
                     <td style="text-align:center; font-size:.5em;">{{ justException.exclude_date }}</td>
                 </tr>
@@ -127,7 +127,7 @@
     <div>
         <br>
         <h4>Customer action plan</h4>
-        <textarea style="padding:15px;" readonly class="form-control border border-primary" rows=5">{{ justException.action_plan }}</textarea>
+        <textarea style="padding:15px;" readonly class="form-control border border-primary" rows=8">{{ justException.action_plan }}</textarea>
     </div>
 
     <br>
