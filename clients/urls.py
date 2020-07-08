@@ -23,6 +23,8 @@ urlpatterns = [
     path('inquiryEdit/<int:exclude_patch_ID>', views.inquiryEdit, name='inquiryEdit'),
     path('updateException/<int:exclude_patch_ID>', views.updateException, name='updateException'),
     path('deleteException/<int:deleteRow>', views.deleteException, name='deleteException'),
+    path('killException', views.killException, name='killException'),
+    
         
 
     path('getDaysLimit', views.getDaysLimit, name='getDaysLimit'),

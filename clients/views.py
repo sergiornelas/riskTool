@@ -53,13 +53,13 @@ def dashboard(request):
 
 def exceptionsBoard(request):
     client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id)
-    print("CLIENT_EXCEPCIONS",client_exceptions)
+    #print("CLIENT_EXCEPCIONS",client_exceptions)
 
     excepciones= EXCEPTION.objects.filter(client_id=request.user.id).values_list('pk', flat=True)
-    print("EXCEPCIONES",excepciones)
+    #print("EXCEPCIONES",excepciones)
     validaciones=VALIDATE_EXCEPTION.objects.filter(exception_id__in=excepciones).values_list('exception_id', flat=True)
     #validaciones=VALIDATE_EXCEPTION.objects.filter(exception_id__in=excepciones).values_list('exception_id', flat=True)
-    print("VALIDACIONES", validaciones)
+    #print("VALIDACIONES", validaciones)
 
     arreglo=[]
     
@@ -70,11 +70,11 @@ def exceptionsBoard(request):
                 break
                 
     remaining = EXCEPTION.objects.filter(client_id=request.user.id).exclude(pk__in=arreglo)
-    print("REMAINING",remaining)
+    #print("REMAINING",remaining)
 
     context ={
         'client_exceptions':client_exceptions,
-        'remaining':remaining
+        'remaining':remaining,
     }
     return render(request, 'clients/exceptionsBoard.html', context)
 
@@ -158,12 +158,19 @@ def updateException(request, exclude_patch_ID):
 
 
 def deleteException(request, deleteRow):
-    
     #if request.method == 'POST':
         print (deleteRow)
         getException = EXCEPTION.objects.get(pk=deleteRow).delete()
         return redirect('dashboard')
     
+
+@csrf_exempt
+def killException(request):
+    if request.method == "POST":
+        query = request.POST.get('query')
+        print (query)        
+        #return redirect('dashboard')
+        
 
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 

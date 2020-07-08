@@ -72,50 +72,40 @@
                <tbody>
 
                   {% for p in client_exceptions %}
-                  <tr>
-                     <td>{{ p.id }}</td>
-                     <td>{{ p.title }}</td>
-                     <td>{{ p.exclude_date }}</td>
-                     <td>{{ p.content }}</td>
-                     <td>
-                        {% if p.state == "Approved" or p.state == "Rejected" %}
-                           <!-- <p style="font-size: .9em; color:dimgray">Has a status already</p> -->
+                     <tr>
+                        <td>{{ p.id }}</td>
+                        <td>{{ p.title }}</td>
+                        <td>{{ p.exclude_date }}</td>
+                        <td>{{ p.content }}</td>
+                        <td>
+                           {% if p.state == "Approved" or p.state == "Rejected" %}
+                              <!-- <p style="font-size: .9em; color:dimgray">Has a status already</p> -->
+                           {% else %}
+                              {% for r in remaining %}
+                                 {% if p.id == r.id %}
+                                    <a href="{% url 'inquiryEdit' p.id %}">Edit</a>
+                                 {% else %}
+                                    <!-- <p style="font-size: .9em; color:dimgray">Has a status already</p> -->
+                                 {% endif %}
+                              {% endfor %}
+                           {% endif %}
+
+                           <a id="{{p.id}}" class="clickbtn"style="color:red;" href="{% url 'deleteException' p.id %}"><i class="fa fa-pencil-square-o" ></i>Delete</a>
+                           {#<p value={{ p.id }} style="font-style: italic;" class="validationsQuery2 btn btn-block"data-toggle="modal" data-target="#deletemodal">Delete</p>#}
+                        </td>
+
+                        {% if p.state == "Pending" %}
+                           <td><button value={{ p.id }} style="font-style: italic;" class="btn btn-block validationsQuery"data-toggle="modal" data-target="#inquiryModal2">{{ p.state }}</button>
+                              
+                           </td>
+                        {% elif p.state == "Approved" %}
+                           <td><button value={{ p.id }} class="btn btn-success btn-block validationsQuery" data-toggle="modal"data-target="#inquiryModal2">{{ p.state }}</button></td>
+                        {% elif p.state == "Rejected" %}
+                           <td><button value={{ p.id }} class="btn btn-danger btn-block validationsQuery" data-toggle="modal"data-target="#inquiryModal2">{{ p.state }}</button></td>
                         {% else %}
-                           {% for r in remaining %}
-                              {% if p.id == r.id %}
-                                 <a href="{% url 'inquiryEdit' p.id %}">Edit</a>
-                              {% else %}
-                                 <!-- <p style="font-size: .9em; color:dimgray">Has a status already</p> -->
-                              {% endif %}
-                           {% endfor %}
-                           
+                           <td>{{ p.state }}</td> <!-- bugs-->
                         {% endif %}
-
-
-
-                        <a style="color:red;" href="{% url 'deleteException' p.id %}"><i class="fa fa-pencil-square-o" ></i>Delete</a>
-                        {#<button value={{ p.id }} class="btn btn-block btn-danger validationsQuery" data-toggle="modal" data-target="#deletemodal">Delete</button>}#}
-
-
-
-                     </td>
-
-                     {% if p.state == "Pending" %}
-                     {#<td style="font-style: italic; text-align:center">{{ p.state }}</td>#}
-                        {#<td><button value={{ p.id }} style="font-style: italic;" class="btn btn-block validationsQuery"data-toggle="modal" data-target="#inquiryModal2">{{ p.state }}</button></td>#}
-                        <td><button value={{ p.id }} style="font-style: italic;" class="btn btn-block validationsQuery"data-toggle="modal" data-target="#inquiryModal2">{{ p.state }}</button></td>
-                     {% elif p.state == "Approved" %}
-                     {#<td style="color:green;"><b>{{ p.state }}</b></td>#}
-                     <td><button value={{ p.id }} class="btn btn-success btn-block validationsQuery" data-toggle="modal"
-                           data-target="#inquiryModal2">{{ p.state }}</button></td>
-                     {% elif p.state == "Rejected" %}
-                     {#<td style="color:red;"><b>{{ p.state }}</b></td>#}
-                     <td><button value={{ p.id }} class="btn btn-danger btn-block validationsQuery" data-toggle="modal"
-                           data-target="#inquiryModal2">{{ p.state }}</button></td>
-                     {% else %}
-                     <td>{{ p.state }}</td>
-                     {% endif %}
-                  </tr>
+                     </tr>
                   {% endfor %}
                </tbody>
             </table>
@@ -127,10 +117,7 @@
    </div>
 </section>
 
-<section>
-
-</section>
-
+<!-- read approver comments  -->
 <!-- Inquiry Modal Read comentaries-->
 <div class="modal fade" id="inquiryModal2" role="dialog">
    <div class="modal-dialog modal-lg">
@@ -150,13 +137,15 @@
             </style>
             <div id="clean" class="queryContent" rows="7" class="form-control"></div>
             <script type="text/javascript">
-               $(document).ready(function () {
-                  $(".validationsQuery").click(function () {
+               $(document).ready(function (){
+                  $(".validationsQuery").click(function(){
 
                      document.getElementById("clean").innerHTML = "";
 
                      query = this.value
                      query = parseInt(query)
+
+                     console.log(query)
 
                      $.ajax({
                         //async: false,
@@ -240,12 +229,13 @@
    </div>
 </div>
 
+<!-- No aproval status yet -->
 <div class="modal fade" id="inquiryModal3" role="dialog">
    <div class="modal-dialog ">
       <div class="modal-content">
          <div class="modal-header">
             <script>
-               document.getElementById("clean2").innerHTML = "";
+               document.getElementsByClassName("clean2").innerHTML = "";
             </script>
 
             <h5 class="modal-title" id="inquiryModalLabel">Approval status</h5>
@@ -254,48 +244,68 @@
             </button>
          </div>
          <div class="modal-body">
-            <div id="clean2" style="margin-bottom:2em; margin-top:1em;"><i>No approver action yet</i></div>
+            <div class="clean2" style="margin-bottom:2em; margin-top:1em;"><i>No approver action yet</i></div>
             <input type="submit" value="Close" class="btn btn-block btn-success col-md" data-dismiss="modal">
          </div>
       </div>
    </div>
 </div>
 
+
+<!-- Inquiry Modal delete comment comentaries-->
+<!--
 <div class="modal fade" id="deletemodal" role="dialog">
-   <div class="modal-dialog ">
+   <div class="modal-dialog modal-lg">
       <div class="modal-content">
          <div class="modal-header">
-            <script>
-               document.getElementById("clean2").innerHTML = "";
-            </script>
-
-            <h5 class="modal-title" id="inquiryModalLabel">Delete</h5>
-
-
+            <h5 class="modal-title" id="inquiryModalLabel">BORRAR</h5>
             <button type="button" class="close" data-dismiss="modal">
                <span>&times;</span>
             </button>
          </div>
-
          <div class="modal-body">
-            <div class="container">
-               <div id="clean2" style="margin-bottom:2em; margin-top:1em;">Are you sure you want to delete this exception?</div>
-               {#<form action="{% url 'deleteException' 106 %}" method="POST">#}
+            <style>
+               hr {
+                  border-top: 1px solid grey;
+                  margin-bottom: 1em;
+               }
+            </style>
+            <div class="clean2" rows="7" class="form-control"></div>
+            <script type="text/javascript">
+               /*
+               $(document).ready(function (){
+                  $(".validationsQuery2").click(function(){
 
-                  <div class="row">
-                     <div class="col-md-1"></div>
-                     <input type="submit" value="Yes" type="submit class="btn btn-block btn-primary col-md-4" data-dismiss="modal">
-                     
-                     <div class="col-md-2"></div>
-                     <input value="No" class="btn btn-block btn-primary col-md-4" data-dismiss="modal">
-                     <!-- <input type="submit" name="state" value="Close" class="btn btn-block btn-success col-md"> -->
-                  </div>
-               {#</form>#}
-            </div>
-            <!-- <input type="submit" value="Close" class="btn btn-block btn-success col-md" data-dismiss="modal"> -->
+                        document.getElementsByClassName("clean2").innerHTML = "";
+
+                     query = this.value
+                     query = parseInt(query)
+
+                     //console.log(query)
+
+                     $.ajax({
+                        //async: false,
+                        url: 'killException',
+                        method: 'POST',
+                        dataType: "text", //"json"
+                        data: {
+                           query: query
+                        },
+                        //success: function (data) {
+                           //data = JSON.parse(data);
+                           //console.log(data)
+                        //}
+                     })
+                  });
+               });
+               */            
+               </script>
+               <hr>
+               <input name="state" value="Close" class="btn btn-block btn-success col-md ">
+               <input value=5 type="submit" name="state" class="btn btn-block btn-success col-md validationsQuery2">
          </div>
       </div>
    </div>
 </div>
-
+-->
 {% endblock %}
