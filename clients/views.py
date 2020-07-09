@@ -164,7 +164,6 @@ def deleteException(request, deleteRow):
         print (deleteRow)
         getException = EXCEPTION.objects.get(pk=deleteRow).delete()
         return redirect('dashboard')
-    
 
 @csrf_exempt
 def killException(request):
