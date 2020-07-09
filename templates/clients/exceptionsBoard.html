@@ -31,22 +31,6 @@
    </div>
 </section>
 
-<script>
-   /*
-   $(document).ready(function () {
-      $.ajax({
-         url: 'getValidationDetails', //AQUI SE EXTRAERÁN LOS DATOS
-         type: 'GET', //OBTENDREMOS DATOS
-         dataType: "text", //"json"  //FORMATO DE LOS DATOS
-         success: function (data) {  //SI TODO SALE BIEN (DATOS EXISTENTES, CONEXIÓN CON EL SERVIDOR)
-            data = JSON.parse(data);
-            console.log(data)
-         }
-      })
-   })
-   */
-</script>
-
 <section id="dashboard" class="py-4">
    <div class="container">
       {% include 'partials/_alerts.html' %}
@@ -72,7 +56,8 @@
 
                   {% for p in client_exceptions %}
                      <tr>
-                        <td><i>{{ p.risk_id }}</i></td>
+                        {#<td><i>{{ p.risk_id }}</i></td>#}
+                        <td><i>{{ p.id }}</i></td>
                         <td>{{ p.title }}</td>
                         <td>{{ p.exclude_date }}</td>
                         <td>{{ p.content }}</td>
@@ -88,8 +73,12 @@
                                  {% endif %}
                               {% endfor %}
                            {% endif %}
-
-                           <a id="{{p.id}}" class="clickbtn"style="color:red;" href="{% url 'deleteException' p.id %}"><i class="fa fa-pencil-square-o" ></i>Delete</a>
+                           {% if p.state == "Pending" %}
+                              <a id="{{p.id}}" class="clickbtn"style="color:red;" href="{% url 'deleteException' p.id %}"><i class="fa fa-pencil-square-o" ></i>Cancel</a>
+                           {% else %}   
+                              <a id="{{p.id}}" class="clickbtn"style="color:grey;"><i class="fa fa-pencil-square-o" ></i>Cancel</a>
+                           {% endif %}
+                           
                            {#<p value={{ p.id }} style="font-style: italic;" class="validationsQuery2 btn btn-block"data-toggle="modal" data-target="#deletemodal">Delete</p>#}
                         </td>
 
@@ -156,14 +145,15 @@
                         },
                         success: function (data) {
                            data = JSON.parse(data);
+                           //console.log("imhere")
                            console.log(data)
-
+                           // me imprime los objetos aprobadores
 
                            $.each(data, function (key, index) {
                               //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
 
                               //-------------------------------new ajax -------------------------------
-
+                              //-------------------------conseguir los nombres nada mas----------------
                               var name
                               var names = []
 
@@ -177,6 +167,7 @@
                                  },
 
                                  success: function (approvername) {
+                                    console.log("estoy aqui")
                                     name = JSON.parse(approvername);
 
                                     $.each(name, function (key, index) {
@@ -216,6 +207,29 @@
                            })
                         }
                      })
+
+                     $.ajax({
+                        //async: false,
+                        url: 'getValidationsRemaining',
+                        method: 'POST',
+                        dataType: "text", //"json"
+                        data: {
+                           query: query
+                        },
+                        success: function (data) {
+                           data = JSON.parse(data);
+                           console.log("REMAINING")
+                           console.log(data)
+
+                           var missingnames = []
+
+                           $.each(data, function (key, index) {
+                              missingnames.push(index.fields.username);
+                           })
+                           $(".queryContent").append("<b>" + "Remaining approver name:" + "</b>");
+                           $(".queryContent").append("<p>" + missingnames + "</p>");
+                        }
+                     });
                   });
                });
             </script>

@@ -240,7 +240,8 @@ def approvalDet(request, exclude_patch_ID):
     
     #CHANGE
     serverApprover = SERVER_USER_RELATION.objects.filter(user_id__in=usersApprover).filter(server_id__in=getServerID).values_list('user_id')
-    #print(serverApprover)
+    print("AWUIIIIIIIIII")
+    print(serverApprover)
     
     
     #<QuerySet [(4,), (6,), (4,), (5,)]>  (+.values_list('user_id'))
@@ -265,7 +266,9 @@ def approvalDet(request, exclude_patch_ID):
         singleAuthorize = ""
         #""
     
-    #approver_detail_pending = approver_detail.exclude(pk__in=authorize.values_list('approver_id'))
+    approver_detail_pending = approver_detail.exclude(pk__in=authorize.values_list('approver_id'))
+    print("PENDING!")
+    print(approver_detail_pending)
     #<QuerySet [<User: approver>, <User: approver2>, <User: approver3>]>
 
     countTotal = 0

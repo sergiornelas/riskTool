@@ -15,6 +15,8 @@ from django.contrib.auth.models import User
 import re
 import random
 import string
+from roles.models import Profile
+from django.shortcuts import get_object_or_404
 
 #DASHBOARD
 def dashboard(request):
@@ -162,16 +164,19 @@ def updateException(request, exclude_patch_ID):
 def deleteException(request, deleteRow):
     #if request.method == 'POST':
         print (deleteRow)
-        getException = EXCEPTION.objects.get(pk=deleteRow).delete()
+        getException = EXCEPTION.objects.get(pk=deleteRow)
+        getException.state = 'Canceled'
+        getException.save()
+
         return redirect('dashboard')
 
-@csrf_exempt
-def killException(request):
-    if request.method == "POST":
-        query = request.POST.get('query')
-        print (query)        
-        #return redirect('dashboard')
-        
+# def deleteException(request, deleteRow):
+#     #if request.method == 'POST':
+#         print (deleteRow)
+#         getException = EXCEPTION.objects.get(pk=deleteRow).delete()
+#         return redirect('dashboard')
+
+       
 
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -514,3 +519,66 @@ def getAdvisoriesDesc(request):
         advisoryDescription = request.POST.get("advisoryDescription")
         advDesc = ADVISORY.objects.filter(pk__in=advisoryDescription)
         return HttpResponse(serializers.serialize("json", advDesc))
+
+@csrf_exempt
+def getValidationsRemaining(request):    
+    if request.method == "POST":
+        #id de la excepcion seleccionada:
+        query = request.POST.get('query')
+        
+        justException = get_object_or_404(EXCEPTION, pk=query)
+        #print(justException)
+        #EXCEPTION object (94)
+
+        exceptionQuery = EXCEPTION.objects.filter(pk=query)
+        print(exceptionQuery)
+        #<QuerySet [<EXCEPTION: EXCEPTION object (94)>]>
+        
+    #<takeException hostname from database>
+
+        takeExceptionServerID= [o.server_id for o in exceptionQuery]
+        takeExceptionServerID=', '.join(takeExceptionServerID)
+        takeExceptionServerID = takeExceptionServerID.split(",")
+        takeExceptionServerID = list(map(int, takeExceptionServerID))
+
+    #</takeException hostname from database>
+        #print(takeExceptionServerID)
+
+        usersApprover = Profile.objects.filter(role=2).values_list("user_id")
+        #<QuerySet [(4,), (5,), (6,)]>
+
+        getServerID = SERVER.objects.filter(pk__in=takeExceptionServerID).values_list("id")
+        #print(getServerID)
+        #<QuerySet [(1,), (2,)]>
+        
+        #CHANGE
+        serverApprover = SERVER_USER_RELATION.objects.filter(user_id__in=usersApprover).filter(server_id__in=getServerID).values_list('user_id')
+        #print(serverApprover)
+        
+        
+        #<QuerySet [(4,), (6,), (4,), (5,)]>  (+.values_list('user_id'))
+            #<QuerySet [<SERVER_USER_RELATION: SERVER_USER_RELATION object (5)>,
+            #<SERVER_USER_RELATION: SERVER_USER_RELATION object (8)>,
+            #<SERVER_USER_RELATION: SERVER_USER_RELATION object (6)>,
+            #<SERVER_USER_RELATION: SERVER_USER_RELATION object (7)>]>
+
+        approver_detail = User.objects.filter(pk__in=serverApprover)
+        #<QuerySet [<User: approver>, <User: approver2>, <User: approver3>]>
+        #print(approver_detail)
+
+        
+        #this:
+        #authorize = VALIDATE_EXCEPTION.objects.filter(exception=justException.id).filter(approver_id__in =approver_detail)
+        authorize = VALIDATE_EXCEPTION.objects.filter(exception=justException.id).filter(approver_id__in =approver_detail)
+        print(authorize)
+        #<QuerySet [<VALIDATE_EXCEPTION: VALIDATE_EXCEPTION object (1)>,
+        #<VALIDATE_EXCEPTION: VALIDATE_EXCEPTION object (2)>,      
+    
+        #approver_detail_pending = approver_detail.exclude(pk__in=authorize)
+        approver_detail_pending = approver_detail.exclude(pk__in=authorize.values_list('approver_id'))
+        #<QuerySet [<User: approver>, <User: approver2>, <User: approver3>]>
+
+        print("estos:")
+        print(approver_detail_pending)
+
+        return HttpResponse(serializers.serialize("json", approver_detail_pending))

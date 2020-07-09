@@ -23,7 +23,6 @@ urlpatterns = [
     path('inquiryEdit/<int:exclude_patch_ID>', views.inquiryEdit, name='inquiryEdit'),
     path('updateException/<int:exclude_patch_ID>', views.updateException, name='updateException'),
     path('deleteException/<int:deleteRow>', views.deleteException, name='deleteException'),
-    path('killException', views.killException, name='killException'),
     
         
 
@@ -33,6 +32,7 @@ urlpatterns = [
 
     path('getValidationDetails', views.getValidationDetails, name='getValidationDetails'),
     path('getApprovalNames', views.getApprovalNames, name='getApprovalNames'),
+    path('getValidationsRemaining', views.getValidationsRemaining, name='getValidationsRemaining'),
 
     path('getHostnames', views.getHostnames, name='getHostnames'),
     path('getAdvisoriesDesc', views.getAdvisoriesDesc, name='getAdvisoriesDesc'),
