@@ -226,8 +226,11 @@
                            $.each(data, function (key, index) {
                               missingnames.push(index.fields.username);
                            })
-                           $(".queryContent").append("<b>" + "Remaining approver name:" + "</b>");
-                           $(".queryContent").append("<p>" + missingnames + "</p>");
+
+                           if (typeof missingnames !== 'undefined' && missingnames.length > 0) {
+                              $(".queryContent").append("<b>" + "Remaining approver name:" + "</b>");
+                              $(".queryContent").append("<p>" + missingnames + "</p>");
+                           }
                         }
                      });
                   });
@@ -241,29 +244,6 @@
       </div>
    </div>
 </div>
-
-<!-- No aproval status yet -->
-<div class="modal fade" id="inquiryModal3" role="dialog">
-   <div class="modal-dialog ">
-      <div class="modal-content">
-         <div class="modal-header">
-            <script>
-               document.getElementsByClassName("clean2").innerHTML = "";
-            </script>
-
-            <h5 class="modal-title" id="inquiryModalLabel">Approval status</h5>
-            <button type="button" class="close" data-dismiss="modal">
-               <span>&times;</span>
-            </button>
-         </div>
-         <div class="modal-body">
-            <div class="clean2" style="margin-bottom:2em; margin-top:1em;"><i>No approver action yet</i></div>
-            <input type="submit" value="Close" class="btn btn-block btn-success col-md" data-dismiss="modal">
-         </div>
-      </div>
-   </div>
-</div>
-
 
 <!-- Inquiry Modal delete comment comentaries-->
 <!--
