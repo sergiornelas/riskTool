@@ -9,6 +9,7 @@ db.sqlite3-journal
 #added
 venv
 /static
+/.vscode
 /media
 mapa riskTool.xml
 sqlScript.sql

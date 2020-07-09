@@ -56,8 +56,8 @@
 
                   {% for p in client_exceptions %}
                      <tr>
-                        {#<td><i>{{ p.risk_id }}</i></td>#}
-                        <td><i>{{ p.id }}</i></td>
+                        <td><i>{{ p.risk_id }}</i></td>
+                        {#<td><i>{{ p.id }}</i></td>#}
                         <td>{{ p.title }}</td>
                         <td>{{ p.exclude_date }}</td>
                         <td>{{ p.content }}</td>
@@ -66,7 +66,8 @@
                               <!-- <p style="font-size: .9em; color:dimgray">Has a status already</p> -->
                            {% else %}
                               {% for r in remaining %}
-                                 {% if p.id == r.id %}
+                                 {#{% if p.id == r.id %}#}
+                                 {% if p.id == r.id and p.state != "Canceled" %}
                                     <a href="{% url 'inquiryEdit' p.id %}">Edit</a>
                                  {% else %}
                                     <!-- <p style="font-size: .9em; color:dimgray">Has a status already</p> -->
@@ -75,7 +76,7 @@
                            {% endif %}
                            {% if p.state == "Pending" %}
                               <a id="{{p.id}}" class="clickbtn"style="color:red;" href="{% url 'deleteException' p.id %}"><i class="fa fa-pencil-square-o" ></i>Cancel</a>
-                           {% else %}   
+                           {% else %}
                               <a id="{{p.id}}" class="clickbtn"style="color:grey;"><i class="fa fa-pencil-square-o" ></i>Cancel</a>
                            {% endif %}
                            

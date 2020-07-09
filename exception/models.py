@@ -4,6 +4,7 @@ from django.conf import settings
 from servers.models import SERVER
 
 from pytz import timezone
+from django.db.models import Max
 
 APP = "Approved"
 REJ = "Rejected"
@@ -52,6 +53,17 @@ class EXCEPTION(models.Model):
     #TEMPORAL!!!!!
     server_id = models.TextField(null=True) #!
     risk_id = models.CharField(max_length=15, null=True)
+
+    # def save(self, **kwargs):
+    #     if not self.id:
+    #         max == EXCEPTION.objects.aggregate(id_max=Max('risk_id'))['id_max']
+    #         #self.id = "{}{:05d}".format('RISK', max if max is not None else 1)
+    #         self.id == "{}{:05s}".format('RISK', max if max is not None else 1)
+    #     super().save(*kwargs)
+
+    # @property
+    # def sid(self):
+    #     return "A%05d" % self.risk_id
 
 #now = datetime.utcnow().replace(tzinfo=timezone('America/Mexico_City'))
 

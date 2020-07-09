@@ -80,6 +80,7 @@ def exceptionsBoard(request):
         'client_exceptions':client_exceptions,
         'remaining':remaining,
     }
+
     return render(request, 'clients/exceptionsBoard.html', context)
 
 def serverOrPatch(request):
@@ -407,11 +408,11 @@ def exclude_server(request):
         exception_type = request.POST['exception_type']
         server_id = request.POST['server_id']
 
-        def randomString(stringLength=8):
-            letters = string.ascii_lowercase
-            return ''.join(random.choice(letters) for i in range(stringLength))
+        # def randomString(stringLength=8):
+        #     letters = string.ascii_lowercase
+        #     return ''.join(random.choice(letters) for i in range(stringLength))
 
-        risk_id = ('RISK'+randomString(8))
+        #risk_id = ('RISK'+randomString(8))
 
         #Check if user has made inquiry already
         # if request.user.is_authenticated:
@@ -419,7 +420,41 @@ def exclude_server(request):
         #     if has_contacted:
         #         messages.error(request, 'You have already made an exception for this patch')
         #         return redirect('dashboard')
-               
+
+        #print(EXCEPTION.objects.latest('risk_id'))
+
+        var = EXCEPTION.objects.latest('risk_id')
+
+        if(EXCEPTION.objects.exists()):
+            var = re.sub('RISK', '', var.risk_id)
+            var=int(var)
+            var+=1
+            print(var)#8
+            print(type(var))#int
+            if (var < 10):
+                var=str(var)
+                var="RISK0000"+var
+            elif (var > 9):
+                var=str(var)
+                var="RISK000"+var
+            elif (var > 99):
+                var=str(var)
+                var="RISK00"+var
+            elif (var > 999):
+                var=str(var)
+                var="RISK0"+var
+            elif (var > 9999):
+                var=str(var)
+                var="RISK"+var
+
+        else:
+            var = "RISK00001"
+
+        print(var)
+        print(type(var))
+
+        risk_id=var
+              
         #exclude_this_server = EXCEPTION(patch_id=patch_id, action_plan=action_plan, client=client, title=title, justification=justification, exclude_date=exclude_date, content=content, exception_type=exception_type, server_id=server_id)
         exclude_this_server = EXCEPTION(patch_id=patch_id, action_plan=action_plan, client=client, title=title, justification=justification, exclude_date=exclude_date, content=content, exception_type=exception_type, server_id=server_id,risk_id=risk_id)
         
