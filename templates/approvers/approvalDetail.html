@@ -201,8 +201,6 @@
     </div>
 </div>
 
-
-
 <!-- Inquiry Modal authorize exception-->
 <div class="modal fade" id="inquiryModal" role="dialog">
     <div class="modal-dialog">
@@ -218,6 +216,8 @@
             <form action="{% url 'authorize' %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="exception_id" value={{ justException.id }}>
+
+                <input type="hidden" name="risk_id" value={{ justException.risk_id }}>
                 
                 <div class="form-group">
                     <label for="comment" class="col-form-label">Comment:</label>

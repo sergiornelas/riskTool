@@ -9,11 +9,13 @@ from django.db.models import Max
 APP = "Approved"
 REJ = "Rejected"
 PEND = "Pending"
+CANC = "Canceled"
 
 state_choices = (
     (APP, "Approved"),
     (REJ, "Rejected"),
     (PEND, "Pending"),
+    (CANC, "Canceled"),
 )
 
 Patch = "Patch"
@@ -79,3 +81,5 @@ class VALIDATE_EXCEPTION(models.Model):
     comment = models.TextField(blank=True, default="Pending")
     #time = models.DateTimeField(default=datetime.utcnow().replace(tzinfo=timezone('America/Mexico_City')), blank=False)
     time = models.DateTimeField(default=datetime.now, blank=False)
+
+    risk_id = models.CharField(max_length=15, null=True)

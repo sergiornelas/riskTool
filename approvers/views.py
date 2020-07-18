@@ -321,9 +321,10 @@ def authorize(request):
         approver = request.user
         state = request.POST['state']
         comment = request.POST['comment']
+        risk_id = request.POST['risk_id']
         #time = request.POST[time]
         
-    validate = VALIDATE_EXCEPTION(exception_id=exception_id, approver=approver, state=state, comment=comment)
+    validate = VALIDATE_EXCEPTION(exception_id=exception_id, approver=approver, state=state, comment=comment, risk_id=risk_id)
     validate.save()
     #return redirect('approvalsList')
     return redirect('approvalDet', exception_id)
