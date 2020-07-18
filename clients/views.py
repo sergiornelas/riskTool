@@ -423,9 +423,9 @@ def exclude_server(request):
 
         #print(EXCEPTION.objects.latest('risk_id'))
 
-        var = EXCEPTION.objects.latest('risk_id')
-
         if(EXCEPTION.objects.exists()):
+            var = EXCEPTION.objects.latest('risk_id')
+
             var = re.sub('RISK', '', var.risk_id)
             var=int(var)
             var+=1

@@ -55,30 +55,32 @@
             <tbody>
               {#{% for alias, alias2 in all %}#}
               {% for alias in excepciones %}
-                <tr>
-                  <td style="text-align:center" >{{ alias.risk_id}}</td>
-                  <td style="text-align:center" >{{ alias.title}}</td>
-                  <td style="text-align:center" >{{ alias.exclude_date}}</td>
+                {% if alias.state != "Canceled" %}
+                  <tr>
+                    <td style="text-align:center" >{{ alias.risk_id}}</td>
+                    <td style="text-align:center" >{{ alias.title}}</td>
+                    <td style="text-align:center" >{{ alias.exclude_date}}</td>
 
-                  {% if alias.exception_type == 1 %}
-                    <td style="text-align:center" >Patch</td>
-                  {% elif alias.exception_type == 2 %}
-                    <td style="text-align:center" >Full server</td>
-                  {% else %}
-                    <td style="text-align:center" >Unknown</td>
-                  {% endif %}
-                  <td style="text-align:center" > {{ alias.client}} </td>
-                  {#<td style="text-align:center" >{{ alias2.state}}</td>#}
-                  {% if alias.state == "Approved" %}
-                    <td style="text-align:center; color:green;" ><b>{{ alias.state }}</b></td>
-                  {% elif alias.state == "Rejected" %}
-                    <td style="text-align:center; color:red;" ><b>{{ alias.state }}</b></td>
-                  {% else %}
-                    <td style="text-align:center;" ><b>{{ alias.state }}</b></td>
-                  {% endif %}
-                  <td style="text-align:center" >
-                    <a href="{% url 'approvalDet' alias.id %}" class="btn btn-primary btn-block">More Info</a>
+                    {% if alias.exception_type == 1 %}
+                      <td style="text-align:center" >Patch</td>
+                    {% elif alias.exception_type == 2 %}
+                      <td style="text-align:center" >Full server</td>
+                    {% else %}
+                      <td style="text-align:center" >Unknown</td>
+                    {% endif %}
+                    <td style="text-align:center" > {{ alias.client}} </td>
+                    {#<td style="text-align:center" >{{ alias2.state}}</td>#}
+                    {% if alias.state == "Approved" %}
+                      <td style="text-align:center; color:green;" ><b>{{ alias.state }}</b></td>
+                    {% elif alias.state == "Rejected" %}
+                      <td style="text-align:center; color:red;" ><b>{{ alias.state }}</b></td>
+                    {% else %}
+                      <td style="text-align:center;" ><b>{{ alias.state }}</b></td>
+                    {% endif %}
+                    <td style="text-align:center" >
+                      <a href="{% url 'approvalDet' alias.id %}" class="btn btn-primary btn-block">More Info</a>
                   </td>
+                {% endif %}
               {% endfor %}
             </tbody>
           </table>

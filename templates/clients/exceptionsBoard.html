@@ -55,51 +55,53 @@
                <tbody>
 
                   {% for p in client_exceptions %}
-                     <tr>
-                        <td><i>{{ p.risk_id }}</i></td>
-                        {#<td><i>{{ p.id }}</i></td>#}
-                        <td>{{ p.title }}</td>
-                        <td>{{ p.exclude_date }}</td>
-                        <td>{{ p.content }}</td>
-                        <td>
-                           {% if p.state == "Approved" or p.state == "Rejected" %}
-                              <!-- <p style="font-size: .9em; color:dimgray">Has a status already</p> -->
-                           {% else %}
-                              {% for r in remaining %}
-                                 {#{% if p.id == r.id %}#}
-                                 {% if p.id == r.id and p.state != "Canceled" %}
-                                    <a href="{% url 'inquiryEdit' p.id %}">Edit</a>
-                                 {% else %}
-                                    <!-- <p style="font-size: .9em; color:dimgray">Has a status already</p> -->
-                                 {% endif %}
-                              {% endfor %}
-                           {% endif %}
-                           {% if p.state == "Pending" %}
-                              <a id="{{p.id}}" class="clickbtn"style="color:red;" href="{% url 'deleteException' p.id %}"><i class="fa fa-pencil-square-o" ></i>Cancel</a>
-                           {% else %}
-                              <a id="{{p.id}}" class="clickbtn"style="color:grey;"><i class="fa fa-pencil-square-o" ></i>Cancel</a>
-                           {% endif %}
-                           
-                           {#<p value={{ p.id }} style="font-style: italic;" class="validationsQuery2 btn btn-block"data-toggle="modal" data-target="#deletemodal">Delete</p>#}
-                        </td>
-
-                        {% if p.state == "Pending" %}
-                           <td><button value={{ p.id }} style="font-style: italic;" class="btn btn-block validationsQuery"data-toggle="modal" data-target="#inquiryModal2">{{ p.state }}</button>
+                     {% if p.state != "Canceled" %}
+                        <tr>
+                           <td><i>{{ p.risk_id }}</i></td>
+                           {#<td><i>{{ p.id }}</i></td>#}
+                           <td>{{ p.title }}</td>
+                           <td>{{ p.exclude_date }}</td>
+                           <td>{{ p.content }}</td>
+                           <td>
+                              {% if p.state == "Approved" or p.state == "Rejected" %}
+                                 <!-- <p style="font-size: .9em; color:dimgray">Has a status already</p> -->
+                              {% else %}
+                                 {% for r in remaining %}
+                                    {#{% if p.id == r.id %}#}
+                                    {% if p.id == r.id and p.state != "Canceled" %}
+                                       <a href="{% url 'inquiryEdit' p.id %}">Edit</a>
+                                    {% else %}
+                                       <!-- <p style="font-size: .9em; color:dimgray">Has a status already</p> -->
+                                    {% endif %}
+                                 {% endfor %}
+                              {% endif %}
+                              {% if p.state == "Pending" %}
+                                 <a id="{{p.id}}" class="clickbtn"style="color:red;" href="{% url 'deleteException' p.id %}"><i class="fa fa-pencil-square-o" ></i>Cancel</a>
+                              {% else %}
+                                 <a id="{{p.id}}" class="clickbtn"style="color:grey;"><i class="fa fa-pencil-square-o" ></i>Cancel</a>
+                              {% endif %}
                               
+                              {#<p value={{ p.id }} style="font-style: italic;" class="validationsQuery2 btn btn-block"data-toggle="modal" data-target="#deletemodal">Delete</p>#}
                            </td>
-                        {% elif p.state == "Approved" %}
-                           <td><button value={{ p.id }} class="btn btn-success btn-block validationsQuery" data-toggle="modal"data-target="#inquiryModal2">{{ p.state }}</button></td>
-                        {% elif p.state == "Rejected" %}
-                           <td><button value={{ p.id }} class="btn btn-danger btn-block validationsQuery" data-toggle="modal"data-target="#inquiryModal2">{{ p.state }}</button></td>
-                        {% else %}
-                           <td>{{ p.state }}</td> <!-- bugs-->
-                        {% endif %}
-                     </tr>
+
+                           {% if p.state == "Pending" %}
+                              <td><button value={{ p.id }} style="font-style: italic;" class="btn btn-block validationsQuery"data-toggle="modal" data-target="#inquiryModal2">{{ p.state }}</button>
+                                 
+                              </td>
+                           {% elif p.state == "Approved" %}
+                              <td><button value={{ p.id }} class="btn btn-success btn-block validationsQuery" data-toggle="modal"data-target="#inquiryModal2">{{ p.state }}</button></td>
+                           {% elif p.state == "Rejected" %}
+                              <td><button value={{ p.id }} class="btn btn-danger btn-block validationsQuery" data-toggle="modal"data-target="#inquiryModal2">{{ p.state }}</button></td>
+                           {% else %}
+                              <td>{{ p.state }}</td> <!-- bugs-->
+                           {% endif %}
+                        </tr>
+                     {% endif %}
                   {% endfor %}
                </tbody>
             </table>
             {% else %}
-            <p>You have not exceptions</p>
+               <p>You have not exceptions</p>
             {% endif %}
          </div>
       </div>
