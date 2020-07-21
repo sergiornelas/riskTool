@@ -92,6 +92,7 @@
 
    }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
       console.log(data)
+      //console.log(typeof(data))
       
       data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
 
@@ -104,11 +105,19 @@
 </script>
 
 <script>
+   var serverString=""
    console.log(patchesPk)
    console.log(servesPK)
    $(document).ready(function () {
       $("#patch_ide").val(patchesPk);
       $("#server_ide").val(servesPK);
+
+      /*
+      console.log("xxxxxxxxxxxxxx")
+      serverString = servesPK.toString()
+      console.log(serverString)
+      console.log(typeof(serverString))
+      */
   });
 </script>
 

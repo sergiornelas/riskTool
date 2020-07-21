@@ -397,6 +397,8 @@ def getServerIDServer(request):
 
 #POST REQUEST CREAR EXCEPCIÓN
 def exclude_server(request):
+#def exclude_server(request, serverString):
+    #print(serverString)
     if request.method == 'POST':
         patch_id = request.POST['patch_id']
         action_plan = request.POST['action_plan']

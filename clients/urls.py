@@ -8,6 +8,9 @@ urlpatterns = [
     path('exceptionsBoard', views.exceptionsBoard, name='exceptionsBoard'),
     
     path('exclude_server', views.exclude_server, name='exclude_server'),
+    #path('exclude_server/<slug:serverString>', views.exclude_server, name='exclude_server'),
+    
+
     path('server_user_list', views.server_user_list, name='server_user_list'),
     
     path('filterPatches', views.filterPatches, name='filterPatches'),
