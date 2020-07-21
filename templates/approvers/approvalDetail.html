@@ -201,6 +201,28 @@
     </div>
 </div>
 
+<script>
+    var lastArray = {{ lastArray|safe }}
+
+
+    console.log(typeof(lastArray))
+    console.log(lastArray)
+
+    if(lastArray==""){
+        jQuery(document).ready(function () {
+            $("#abc").val("All approvers have taken action");
+        });
+        console.log("All approvers have taken action")
+    }
+    else{
+        jQuery(document).ready(function () {
+            $("#abc").val(lastArray);
+        });
+        console.log("hay algo")
+    }
+
+</script>
+
 <!-- Inquiry Modal authorize exception-->
 <div class="modal fade" id="inquiryModal" role="dialog">
     <div class="modal-dialog">
@@ -218,6 +240,9 @@
                 <input type="hidden" name="exception_id" value={{ justException.id }}>
 
                 <input type="hidden" name="risk_id" value={{ justException.risk_id }}>
+                                
+                {#<input type="hidden" name="approver_pending" value={{ takeApproverNames }}>#}
+                <input id="abc" type="hidden" name="approver_pending" >
                 
                 <div class="form-group">
                     <label for="comment" class="col-form-label">Comment:</label>
@@ -241,6 +266,15 @@
       </div>
     </div>
   </div>
+
+<div>
+    {#{{ pendingApprover.username }}#}
+    {#{{ justException.justification }}#}
+    {#{{takeApproverNames}}#}
+    {#{{lastArray}}#}
+</div>
+
+
 
   <!-- Inquiry Modal Read comentaries-->
 <div class="modal fade" id="inquiryModal2" role="dialog">

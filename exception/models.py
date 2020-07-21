@@ -83,3 +83,9 @@ class VALIDATE_EXCEPTION(models.Model):
     time = models.DateTimeField(default=datetime.now, blank=False)
 
     risk_id = models.CharField(max_length=15, null=True)
+    
+    #approver_pending = models.CharField(max_length=100, null=True)
+    approver_pending = models.TextField(blank=True, null=True)
+
+    
+

@@ -267,8 +267,41 @@ def approvalDet(request, exclude_patch_ID):
         #""
     
     approver_detail_pending = approver_detail.exclude(pk__in=authorize.values_list('approver_id'))
+    
+
+    #pendingApprover2 = User.objects.filter(pk__in=approver_detail_pending).values_list('username', flat=True)
+    print("AWFAWEOFIAJWEFOIAWEN")
+    #print(pendingApprover2)
+    pendingApprover = User.objects.filter(pk__in=approver_detail_pending).exclude(pk=request.user.id)
+
+    #user_id=request.user.id)
+
+    
+    takeApproverNames= [o.username for o in pendingApprover]
+    print("HEREEEEE")
+
+    takeApproverNames = ', '.join(takeApproverNames)
+    takeApproverNames = takeApproverNames.replace(",", "")
+    print(type(takeApproverNames))
+    print(takeApproverNames)
+  
+
+    lastArray = []
+    for a in pendingApprover:
+        lastArray.append(a.username)
+    #lastArray = ', '.join(lastArray)
+    #lastArray = lastArray.replace(",", "+")
+
+    #if not lastArray:
+    #    lastArray = "All approvers have taken action"
+
+    print("LASTARRAY")
+    print(lastArray)
+    
+
     print("PENDING!")
     print(approver_detail_pending)
+    print(pendingApprover)
     #<QuerySet [<User: approver>, <User: approver2>, <User: approver3>]>
 
     countTotal = 0
@@ -307,7 +340,10 @@ def approvalDet(request, exclude_patch_ID):
         'approver_detail':approver_detail, #DATABASE
         'authorize':authorize, #DATABASE
         'singleAuthorize':singleAuthorize, #FRONTEND
-        #'approver_detail_pending':approver_detail_pending,
+        'pendingApprover':pendingApprover,
+        'lastArray':lastArray,
+        'takeApproverNames':takeApproverNames,
+        #'pendingApprover2':pendingApprover2
     }
 
     #path = SERVER_USER_RELATION.objects.filter(user_id=request.user.id).filter(server_id__in=client_has_server.id).values_list('user_id', flat=True)
@@ -322,9 +358,11 @@ def authorize(request):
         state = request.POST['state']
         comment = request.POST['comment']
         risk_id = request.POST['risk_id']
+        approver_pending = request.POST['approver_pending']
         #time = request.POST[time]
         
-    validate = VALIDATE_EXCEPTION(exception_id=exception_id, approver=approver, state=state, comment=comment, risk_id=risk_id)
+    #validate = VALIDATE_EXCEPTION(exception_id=exception_id, approver=approver, state=state, comment=comment, risk_id=risk_id)
+    validate = VALIDATE_EXCEPTION(exception_id=exception_id, approver=approver, state=state, comment=comment, approver_pending=approver_pending, risk_id=risk_id)
     validate.save()
     #return redirect('approvalsList')
     return redirect('approvalDet', exception_id)
