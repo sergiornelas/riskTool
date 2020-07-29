@@ -8,4 +8,5 @@ urlpatterns = [
 
     path('approvalsList/<int:exclude_patch_ID>', views.approvalDet, name='approvalDet'),
 
+    path('search', views.search, name='search'),
 ]

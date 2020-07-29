@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.shortcuts import get_object_or_404
 
+from exception.choices import state_choices
+
 #message alerts
 from django.contrib import messages
 
@@ -126,7 +128,8 @@ def approvalsList(request):
     context = {
         
         #'excepciones':excepciones
-        'excepciones': paged_listings
+        'excepciones': paged_listings,
+        'state_choices':state_choices
     }
 
     if request.user.is_authenticated:
@@ -376,6 +379,41 @@ def authorize(request):
     #return redirect('approvalsList')
     return redirect('approvalDet', exception_id)
 
+
+#NUEVO!
+def search(request):
+    serversApprover = SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
+    takeServerID = [o.server_id for o in serversApprover]
+    servers = SERVER.objects.filter(pk__in=takeServerID)
+    takeHostnames = [o.hostname for o in servers]
+    for hostname in takeHostnames:
+        exceptionsApprover = EXCEPTION.objects.filter(content__contains=hostname) #tiene que ser el valor exacto.
+    arreglin=[]
+    for server_id in takeServerID:
+        arreglin.extend(EXCEPTION.objects.filter(server_id__contains=server_id).values_list('id', flat=True))
+    arreglin=set(arreglin)
+    
+    queryset_list=EXCEPTION.objects.filter(pk__in=arreglin)
+
+    if 'keywords' in request.GET:
+        keywords = request.GET['keywords'] #"KEYWORDS" ES EL NAME EN HTML
+        if keywords:
+            #queryset_list = queryset_list.filter(risk_id__icontains=keywords) #contiene
+            #SI ES POSIBLE FILTRAR NUEVAMENTE UN QUERYSET!!!
+            queryset_list = queryset_list.filter(risk_id__iexact=keywords)
+
+    if 'state' in request.GET:
+        state = request.GET['state']
+        if state:
+            queryset_list = queryset_list.filter(state__iexact=state)
+
+    context = {
+        'state_choices':state_choices,
+        'excepciones': queryset_list,
+        'values': request.GET
+    }
+    return render(request, 'approvers/search.html', context)
+
 #NOTAS:
     #get_object_or_404 will only return one object, get_list_or_404 multiple objects. Levanta la excepción Http404 si no existe el objeto.
         #get_object_or_404 uses get(), get_list_or_404 uses filter()
@@ -393,3 +431,4 @@ def authorize(request):
     #If you are using values_list() with a single field, you can use flat=True to return a QuerySet of single values instead of 1-tuples:
     #flat=True will remove the tuples and return the list
         #<QuerySet [1, 2]>
+
