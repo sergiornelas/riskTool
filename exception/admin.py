@@ -15,9 +15,9 @@ class ExcludePatchesAdmin(admin.ModelAdmin):
 
 class ExcludeValidationsAdmin(admin.ModelAdmin):
     
-    list_display = ('id', 'risk_id', 'state', 'approver', 'approver_pending')
+    list_display = ('id', 'risk_id', 'approver', 'approver_pending', 'state')
     #readonly_fields = ('exception', 'comment', 'time', 'risk_id', 'approver')
-    readonly_fields = ('exception', 'comment', 'time', 'approver', 'approver_pending', 'risk_id')
+    readonly_fields = ('id', 'exception', 'comment', 'time', 'approver', 'approver_pending', 'risk_id')
 
 
     list_display_links = ('id', 'state')
