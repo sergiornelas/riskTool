@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.shortcuts import get_object_or_404
 
 #message alerts
@@ -93,6 +93,14 @@ def approvalsList(request):
     arreglin=set(arreglin)
     
     excepciones=EXCEPTION.objects.filter(pk__in=arreglin)
+
+    paginator = Paginator(excepciones, 10)
+    page = request.GET.get('page')
+    paged_listings = paginator.get_page(page)
+
+    #para ordenarlo por fecha de creacion:
+    #listings = Listing.objects.order_by('-list_date')
+
     #print(excepciones)
 
     """
@@ -116,13 +124,14 @@ def approvalsList(request):
     #all = zip(excepciones, yourState) #ME LIMITABA LA SALIDA EL YOURSTATE
 
     context = {
-        #'all':all
-        'excepciones':excepciones
+        
+        #'excepciones':excepciones
+        'excepciones': paged_listings
     }
 
     if request.user.is_authenticated:
         if request.user.profile.role == 2:
-            return render(request, 'approvers/approvalsList.html', context)            
+            return render(request, 'approvers/approvalsList.html', context)
         else:
             messages.error(request, 'Not allowed to enter here')
             return redirect('index')
