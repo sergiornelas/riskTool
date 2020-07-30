@@ -18,7 +18,7 @@
 
 <div class="p-5 container text-center">
     <h1 style="margin-bottom:.5rem" class="display-4">
-        Approval detail
+        Risk detail
     </h1>
     <section class="py-4">
         {% include 'partials/_alerts.html' %}
@@ -48,7 +48,7 @@
                         <p style="font-size:1.5em;" ><u>Patch</u></p>
                     {% elif  justException.exception_type  == 2 %}
                         <p style="font-size:1.5em;"  ><u>Full server</u></p>
-                        <b> This action will prevent also future coming patches in the servers.</b>
+                        <!-- <b> This action will prevent also future coming patches in the servers.</b> -->
                     {% else %}
                         <p style="font-size:1.5em;"><u>Unknown</u></p>
                     {% endif %}
@@ -67,9 +67,9 @@
         <table style="font-size:2em;" class="table mt-4 table-bordered">
             <thead class="thead-dark">
                 <tr>
-                    <th style="text-align:center; font-size:.5em;" scope="col">Exception ID</th>
-                    <th style="text-align:center; font-size:.5em;" scope="col">Exception client</th>
-                    <th style="text-align:center; font-size:.5em;" scope="col">Limit date</th>
+                    <th style="text-align:center; font-size:.5em;" scope="col">Risk ID</th>
+                    <th style="text-align:center; font-size:.5em;" scope="col">Requestor name</th>
+                    <th style="text-align:center; font-size:.5em;" scope="col">Maximum Target Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -83,7 +83,7 @@
 
         <br>
 
-        <table style="width:100%; font-size: 19px;">
+        <table style="width:100%; font-size: 14px;">
             <tr class="tere">
               <th >Patch ID</th>
                 {% for alias in patchObjects %}
@@ -97,7 +97,7 @@
                 {% endfor %}
             </tr>
             <tr class="tere">
-              <th>Content</th>
+              <th>Patch description</th>
                 {% for alias in patchObjects %}
                     <td class="tede">{{ alias.advisory }}</td>
                 {% endfor %}
@@ -109,7 +109,7 @@
                   {#{% endfor %}#}
               <!-- </tr> -->
               <tr class="tere">
-                <th>Scheduled date</th>
+                <th>Target implementation date</th>
                   {% for alias in patchObjects %}
                       <td class="tede">{{ alias.scheduled_date }}</td>
                   {% endfor %}
@@ -120,13 +120,13 @@
     <div>
         <br>
         <h2>{{ justException.title }}</h2>
-        <h4>Customer justification</h4>
+        <h4>Requestor justification</h4>
         <textarea style="padding:15px;" readonly class="form-control border border-primary" rows="3">{{ justException.justification }}</textarea>
     </div>
 
     <div>
         <br>
-        <h4>Customer action plan</h4>
+        <h4>Requestor action plan</h4>
         <textarea style="padding:15px;" readonly class="form-control border border-primary" rows=8">{{ justException.action_plan }}</textarea>
     </div>
 
@@ -148,7 +148,7 @@
                         {% if singleAuthorize.state == 'Approved' %}
                             <div class="col-md-6" style="font-size:30px; color: green">{{ singleAuthorize.state }} </div> 
                         {% elif singleAuthorize.state == 'Rejected' %}
-                            <div class="col-md-6" style="font-size:30px; color: red">{{ singleAuthorize.state }} </div> 
+                            <div class="col-md-6" style="font-size:30px; color: red">{{ singleAuthorize.state }} </div>
                         {% else %}
                             <button class="col-md-6 btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#inquiryModal"> Pending </button>
                         {% endif %}
@@ -286,8 +286,11 @@
             <span>&times;</span>
           </button>
         </div>
-        <div class="modal-body">                
+        <div class="modal-body">
+            
             <textarea readonly rows="7" name="comment" class="form-control" >{{ singleAuthorize.comment }} </textarea>
+
+            <div style="font-size:15px; margin-top:1em;">Action time: {{ singleAuthorize.time }} </div>
             <hr>
             <input type="submit" name="state" value="Close" class="btn btn-block btn-success col-md" data-dismiss="modal">
         </div>

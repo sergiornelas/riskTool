@@ -184,32 +184,34 @@
       </div>
       <div class="form-group">
          <label for="justification" class="col-form-label"><b>Justification:</b><i> (Reasons you want to make an exception)</i></label>
-         <textarea style="border: 1px solid grey;" rows="7" name="justification" class="form-control"
-             required></textarea>
+         <textarea style="border: 1px solid grey;" rows="7" name="justification" class="form-control" required></textarea>
      </div>
      
      <div class="form-group">
          <label for="action_plan" class="col-form-label"><b>Action plan:</b><i> (Define steps you will execute for
                  implement the updates)</i></label>
-         <textarea style="border: 1px solid grey;" rows="7" name="action_plan" class="form-control"
-             required></textarea>
+         <textarea style="border: 1px solid grey;" rows="7" name="action_plan" class="form-control" required></textarea>
      </div>
 
       <div class="container">
          <div class="row">
             <div class="col-md-4"></div>
-            <label for="excludeDate" class="col-form-label col-md-4""><b>Exclude date:</b> <i>(This is defined by major patch criticality)</i></label>
+            <!-- <label for="excludeDate" class="col-form-label col-md-4""><b>Maximum target date:</b> <i>(This is defined by major patch criticality)</i></label> -->
+            <label for="excludeDate" class="col-form-label col-md-4""><b>Maximum target date</b> </br> <i>Choose risk expiration date </br> (this is defined by major patch criticality)</i></label>
             <div class=" col-md-4"></div>
          </div>
       </div>
 
       <!--     CALENDAR      -->
-      <div class="container">
-         <div class="row">
-            <div class="col-md-4"></div>
-            <input type="datetime" readonly="readonly" name="exclude_date" class="tail-datetime-field form-control col-md-4"
-               autocomplete="off" required>
-            <div class="col-md-4"></div>
+      
+      <div class="form-group">
+         <label for="exclude_date" class="col-form-label"></label>
+         <div class="container">
+            <div class="row">
+               <div class="col-md-4"></div>
+               <input type="datetime" name="exclude_date" class="tail-datetime-field form-control col-md-4 " autocomplete="off" onkeydown="return false;" style="caret-color: transparent !important;" required>
+               <div class="col-md-4"></div>
+            </div>
          </div>
       </div>
    </div>

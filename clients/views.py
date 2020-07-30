@@ -324,7 +324,7 @@ def getDaysLimit(request):
         #los servidores que posee el cliente logeado.
         client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
 
-        #almacenamos en una lista los id de los servidores del cliente loggeado.        
+        #almacenamos en una lista los id de los servidores del cliente loggeado.
         servers_ids=[]
         for server in client_has_server:
             servers_ids.append(server.server_id)
@@ -501,10 +501,33 @@ def transform(request):
 def clean(request):
     if request.method == 'POST':
         fullObject2 = request.POST['fullObject2']
+        
+        #print("fullObject2")
+        #print(type(fullObject2)) #str
+        #print(fullObject2)
+
         """
-        eliminar contenido dentro de parentesis
+        eliminar contenido dentro de parentesis (2), (8)
         """
+
         clean = re.sub(r'\([^)]*\)', '', fullObject2)
+        
+        clean2 = re.findall('\(([^)]+)', fullObject2)
+        array=[]
+        
+        for i in range(0, len(clean2)):
+            clean2[i] = int(clean2[i])
+            array.append(clean2[i])
+        
+        patches = PATCHES.objects.filter(pk__in=array).values_list('advisory_id', flat=True) #faltaría filtrar aqui con el status_id=2
+        advisories = ADVISORY.objects.filter(pk__in=patches).values_list('criticality', flat=True)
+        print(advisories) #['Low', 'High', 'Low']
+
+        context = {
+            'clean':clean,
+            'advisories':advisories,
+        }
+
         return HttpResponse(clean)
 
 
@@ -556,6 +579,16 @@ def getAdvisoriesDesc(request):
         advisoryDescription = request.POST.get("advisoryDescription")
         advDesc = ADVISORY.objects.filter(pk__in=advisoryDescription)
         return HttpResponse(serializers.serialize("json", advDesc))
+
+"""
+@csrf_exempt
+def getCriticality(request):
+    if request.method == "POST":
+        criticality = request.POST.get("criticality")
+
+        criticalidad = ADVISORY.objects.filter(pk__in=criticality)
+        return HttpResponse(serializers.serialize("json", criticalidad))
+"""
 
 @csrf_exempt
 def getValidationsRemaining(request):    

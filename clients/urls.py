@@ -39,6 +39,7 @@ urlpatterns = [
 
     path('getHostnames', views.getHostnames, name='getHostnames'),
     path('getAdvisoriesDesc', views.getAdvisoriesDesc, name='getAdvisoriesDesc'),
+    #path('getCriticality', views.getCriticality, name='getCriticality'),
     path('getServerIDServer', views.getServerIDServer, name='getServerIDServer'),
     path('getServerIDPatch', views.getServerIDPatch, name='getServerIDPatch'),
 

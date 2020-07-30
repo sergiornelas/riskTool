@@ -162,7 +162,9 @@
 
                                         //console.log("DATOS PARSEADOS A JSON: ") //string
                                         //console.log(typeof(data)) //object
-                                        console.log(data)
+                                        
+                                        
+                                        console.warn(data)
 
                                         $.each(data, function (key, index) {
                                             //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
@@ -197,6 +199,7 @@
 
                                             var description
                                             var descriptions = []
+                                            var crits = []
                                             
                                             $.ajax({
                                                 async: false,
@@ -213,14 +216,16 @@
                                                 
                                                     $.each(description,function(key,index){
                                                         descriptions.push(index.fields.description);
+                                                        crits.push(index.fields.criticality);
                                                     })
                                                 
                                                     //console.log(descriptions)
                                                 }
                                             });
-
-                                            //patchesOptions += "<option>" + hostnames + ": " + descriptions + "</option>";
-                                            patchesOptions += "<option>" + "(" + index.pk + ")" + hostnames + ":[" + descriptions + "]" + "</option>";
+                                           
+                                            //patchesOptions += "<option>" + "(" + index.pk + ")" + hostnames + ":[" + descriptions + "]" + "</option>";
+                                            //patchesOptions += "<option>" + "(" + index.pk + ")" + hostnames + ":[" + descriptions + "]" + "~" + crits + "</option>";
+                                            patchesOptions += "<option>" + "(" + index.pk + ")" + hostnames + ":[" + descriptions + "]" + " criticality: " + crits + "</option>";
                                             
                                         });
                                         //console.log(patchesOptions)
