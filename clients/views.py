@@ -17,6 +17,7 @@ import random
 import string
 from roles.models import Profile
 from django.shortcuts import get_object_or_404
+from exception.choices import state_choices
 
 #DASHBOARD
 def dashboard(request):
@@ -79,6 +80,8 @@ def exceptionsBoard(request):
     context ={
         'client_exceptions':client_exceptions,
         'remaining':remaining,
+
+        'state_choices':state_choices
     }
 
     return render(request, 'clients/exceptionsBoard.html', context)
@@ -622,3 +625,40 @@ def getValidationsRemaining(request):
         print(approver_detail_pending)
 
         return HttpResponse(serializers.serialize("json", approver_detail_pending))
+
+def searchClient(request):
+    client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id)
+    excepciones= EXCEPTION.objects.filter(client_id=request.user.id).values_list('pk', flat=True)
+    validaciones=VALIDATE_EXCEPTION.objects.filter(exception_id__in=excepciones).values_list('exception_id', flat=True)
+    arreglo=[]
+    for x in excepciones:
+        for y in validaciones:
+            if x == y:
+                arreglo.append(x)
+                break
+    remaining = EXCEPTION.objects.filter(client_id=request.user.id).exclude(pk__in=arreglo)
+
+    #queryset_list=EXCEPTION.objects.filter(pk__in=arreglin)
+
+    if 'keywords' in request.GET:
+        keywords = request.GET['keywords'] #"KEYWORDS" ES EL NAME EN HTML
+        if keywords:
+            #queryset_list = queryset_list.filter(risk_id__icontains=keywords) #contiene
+            #SI ES POSIBLE FILTRAR NUEVAMENTE UN QUERYSET!!!
+            client_exceptions = client_exceptions.filter(risk_id__iexact=keywords)
+            #remaining = remaining.filter(risk_id__iexact=keywords)
+
+    if 'state' in request.GET:
+        state = request.GET['state']
+        if state:
+            client_exceptions = client_exceptions.filter(state__iexact=state)
+            #remaining = remaining.filter(state__iexact=state)
+
+    context ={
+        'state_choices':state_choices,
+        'client_exceptions':client_exceptions,
+        'remaining':remaining,
+        'values': request.GET
+    }
+
+    return render(request, 'clients/searchClient.html', context)

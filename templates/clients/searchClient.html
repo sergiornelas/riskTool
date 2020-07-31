@@ -38,7 +38,7 @@
          <div class="col-md-12">
             <h2>Welcome {{ user.username }}</h2>
             </br>
-
+            
             <form action="{% url 'searchClient' %}">
                <div class="container" style="margin-bottom: 45px;">
                  <div class="row">
@@ -47,9 +47,13 @@
                      <select name="state" class="form-control">
                        <option selected="true" disabled="disabled">State (All)</option>
      
-                       {% for key,value in state_choices.items %}
-                         <option value="{{ key }}">{{ value }}</option>
-                       {% endfor %}
+                        {% for key,value in state_choices.items %}
+                            <option value="{{ key }}"
+                            {% if key == values.state %}
+                                selected
+                            {% endif %}
+                                >{{ value }}</option>
+                        {% endfor %}
      
                      </select>
                    </div>

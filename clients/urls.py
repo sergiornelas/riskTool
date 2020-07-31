@@ -9,6 +9,8 @@ urlpatterns = [
     
     path('exclude_server', views.exclude_server, name='exclude_server'),
     #path('exclude_server/<slug:serverString>', views.exclude_server, name='exclude_server'),
+
+    path('searchClient', views.searchClient, name='searchClient'),
     
 
     path('server_user_list', views.server_user_list, name='server_user_list'),
