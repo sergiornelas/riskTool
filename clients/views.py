@@ -18,6 +18,7 @@ import string
 from roles.models import Profile
 from django.shortcuts import get_object_or_404
 from exception.choices import state_choices
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 #DASHBOARD
 def dashboard(request):
@@ -77,8 +78,13 @@ def exceptionsBoard(request):
     remaining = EXCEPTION.objects.filter(client_id=request.user.id).exclude(pk__in=arreglo)
     #print("REMAINING",remaining)
 
+    paginator = Paginator(client_exceptions, 8)
+    page = request.GET.get('page')
+    paged_listings = paginator.get_page(page)
+
     context ={
-        'client_exceptions':client_exceptions,
+        #'client_exceptions':client_exceptions,
+        'client_exceptions':paged_listings,
         'remaining':remaining,
 
         'state_choices':state_choices

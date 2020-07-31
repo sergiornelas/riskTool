@@ -96,7 +96,7 @@ def approvalsList(request):
     
     excepciones=EXCEPTION.objects.filter(pk__in=arreglin)
 
-    paginator = Paginator(excepciones, 10)
+    paginator = Paginator(excepciones, 8)
     page = request.GET.get('page')
     paged_listings = paginator.get_page(page)
 
@@ -395,6 +395,10 @@ def search(request):
     
     queryset_list=EXCEPTION.objects.filter(pk__in=arreglin)
 
+    # paginator2 = Paginator(queryset_list, 3)
+    # page2 = request.GET.get('page2')
+    # paged_listings2 = paginator2.get_page(page2)
+
     if 'keywords' in request.GET:
         keywords = request.GET['keywords'] #"KEYWORDS" ES EL NAME EN HTML
         if keywords:
@@ -407,11 +411,30 @@ def search(request):
         if state:
             queryset_list = queryset_list.filter(state__iexact=state)
 
+    # paginator2 = Paginator(queryset_list, 3)
+    # page2 = request.GET.get('page2')
+    # paged_listings2 = paginator2.get_page(page2)
+
     context = {
         'state_choices':state_choices,
         'excepciones': queryset_list,
+        #'excepciones2': paged_listings2,
         'values': request.GET
     }
+
+    # excepciones=EXCEPTION.objects.filter(pk__in=arreglin)
+
+    # paginator = Paginator(excepciones, 3)
+    # page = request.GET.get('page')
+    # paged_listings = paginator.get_page(page)
+
+    # context = {
+        
+    #     #'excepciones':excepciones
+    #     'excepciones': paged_listings,
+    #     'state_choices':state_choices
+    # }
+
     return render(request, 'approvers/search.html', context)
 
 #NOTAS:
