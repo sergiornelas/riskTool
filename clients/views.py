@@ -58,7 +58,13 @@ def dashboard(request):
         #return HttpResponse(serializers.serialize("json", patches))
 
 def exceptionsBoard(request):
-    client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id)
+    
+    #client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id)
+    
+    client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id).exclude(state="Canceled")
+
+    # print("AMOR")
+    # print(client_exceptions)
     #print("CLIENT_EXCEPCIONS",client_exceptions)
 
     excepciones= EXCEPTION.objects.filter(client_id=request.user.id).values_list('pk', flat=True)

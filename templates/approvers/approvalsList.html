@@ -81,7 +81,7 @@
             <tbody>
               {#{% for alias, alias2 in all %}#}
               {% for alias in excepciones %}
-                {% if alias.state != "Canceled" %}
+                {#{% if alias.state != "Canceled" %}#}
                   <tr>
                     <td style="text-align:center" >{{ alias.risk_id}}</td>
                     <td style="text-align:center" >{{ alias.title}}</td>
@@ -106,7 +106,7 @@
                     <td style="text-align:center" >
                       <a href="{% url 'approvalDet' alias.id %}" class="btn btn-primary btn-block">More Info</a>
                   </td>
-                {% endif %}
+                {#{% endif %}#}
               {% endfor %}
             </tbody>
           </table>

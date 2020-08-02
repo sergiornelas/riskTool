@@ -94,8 +94,9 @@ def approvalsList(request):
     
     arreglin=set(arreglin)
     
-    excepciones=EXCEPTION.objects.filter(pk__in=arreglin)
-
+    #excepciones=EXCEPTION.objects.filter(pk__in=arreglin)
+    excepciones=EXCEPTION.objects.filter(pk__in=arreglin).exclude(state="Canceled")
+    
     paginator = Paginator(excepciones, 8)
     page = request.GET.get('page')
     paged_listings = paginator.get_page(page)

@@ -73,7 +73,7 @@
                      <th class="bg-primary" style="text-align:center; color:white" scope="col">Exception ID
                      </th>
                      <th class="bg-primary" style="text-align:center; color:white;" scope="col">Title</th>
-                     <th class="bg-primary" style="text-align:center; color:white" scope="col">Limit date for approval</th>
+                     <th class="bg-primary" style="text-align:center; color:white" scope="col">Patch application date</th>
                      <th class="bg-primary" style="text-align:center; color:white;" scope="col">Content</th>
                      <th class="bg-primary" style="text-align:center; color:white;" scope="col">Change</th>
                      <th class="bg-primary" style="text-align:center; color:white;" scope="col">Final status</th>
@@ -82,7 +82,7 @@
                <tbody>
 
                   {% for p in client_exceptions %}
-                     {% if p.state != "Canceled" %}
+                     {#{% if p.state != "Canceled" %}#}
                         <tr>
                            <td><i>{{ p.risk_id }}</i></td>
                            {#<td><i>{{ p.id }}</i></td>#}
@@ -112,9 +112,7 @@
                            </td>
 
                            {% if p.state == "Pending" %}
-                              <td><button value={{ p.id }} style="font-style: italic;" class="btn btn-block validationsQuery"data-toggle="modal" data-target="#inquiryModal2">{{ p.state }}</button>
-                                 
-                              </td>
+                              <td><button value={{ p.id }} style="font-style: italic;" class="btn btn-block validationsQuery"data-toggle="modal" data-target="#inquiryModal2">{{ p.state }}</button></td>
                            {% elif p.state == "Approved" %}
                               <td><button value={{ p.id }} class="btn btn-success btn-block validationsQuery" data-toggle="modal"data-target="#inquiryModal2">{{ p.state }}</button></td>
                            {% elif p.state == "Rejected" %}
@@ -123,7 +121,7 @@
                               <td>{{ p.state }}</td> <!-- bugs-->
                            {% endif %}
                         </tr>
-                     {% endif %}
+                     {#{% endif %}#}
                   {% endfor %}
                </tbody>
             </table>
