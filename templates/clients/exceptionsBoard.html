@@ -191,6 +191,7 @@
                }
             </style>
             <div id="clean" class="queryContent" rows="7" class="form-control"></div>
+            
             <script type="text/javascript">
                $(document).ready(function (){
                   $(".validationsQuery").click(function(){
@@ -250,7 +251,7 @@
                               $(".queryContent").append("<p>" + names + "</p>");
                               $(".queryContent").append("<b>" + "Comment:" + "</b>");
                               $(".queryContent").append("<p>" + index.fields.comment + "</p>");
-                              $(".queryContent").append("<b>" + "Time of response:" + "</b>");
+                              $(".queryContent").append("<b>" + "Approval date:" + "</b>");
 
 
                               var exceptionDate = index.fields.time
@@ -268,7 +269,7 @@
                                  return (month + '/' + date + '/' + year + ' ' + hours + ':' + minutes);
                               }
                               $(".queryContent").append("<p>" + formatDate(exceptionDate) + "</p>");
-                              $(".queryContent").append("<b>" + "Response:" + "</b>");
+                              $(".queryContent").append("<b>" + "Status:" + "</b>");
                               $(".queryContent").append("<p>" + index.fields.state + "</p>");
                               $(".queryContent").append("<hr>");
                            })

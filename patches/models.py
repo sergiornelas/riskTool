@@ -18,6 +18,16 @@ class PATCHES(models.Model):
     #def __str__(self):
     #    return (self.server.hostname + " : " + self.advisory.description)
 
+    
+    patch_id=models.CharField(max_length=50, null=True)
+    status_id = models.IntegerField(null=True)
+    exception_id = models.IntegerField(null=True)
+    created_date=models.DateTimeField(null=True)
+    last_update_date=models.DateTimeField(null=True)
+    patched_date=models.CharField(max_length=50, null=True)
+
+    
+
     def __str__(self):
         return (self.server.hostname + " : " + "'" + self.advisory.description + "'" +" , ")
 

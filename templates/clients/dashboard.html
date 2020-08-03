@@ -53,20 +53,21 @@
             <table class="table table-striped table-bordered">
                <thead class="table-info ">
                   <tr>
-                     <th scope="col">patch id</th>
-                     <th scope="col">Server Name</th>
+                     <th scope="col">Patch ID</th>
+                     <th scope="col">Server name</th>
                      <th scope="col">Advisory</th>
                      <!-- <th scope="col">Criticality</th> -->
-                     <th scope="col">Scheduled Date</th>
+                     <th scope="col">Scheduled date</th>
                   </tr>
                </thead>
                <tbody>
                   {% for p in patches %}
                   <tr>
-                     <td>{{ p.id }}</td>
+                     {#<td style="font-size: 17px;">{{ p.patch_id }}</td>#}
+                     <td>{{ p.advisory.id }}</td>
                      <td>{{ p.server }}</td>
                      <td>{{ p.advisory }}</td>
-                     <td>{{ p.scheduled_date }}</td>
+                     <td >{{ p.scheduled_date }}</td>
                   </tr>
                   {% endfor %}
                </tbody>
