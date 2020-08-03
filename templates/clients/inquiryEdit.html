@@ -8,7 +8,6 @@
          <div class="col-md-12">
             <h1 class="display-4">Edit exception</h1>
             <i class="fa fa-clipboard fa-5x" aria-hidden="true"></i>
-            <p class="lead">Manage your patches if you have struggles</p>
          </div>
       </div>
    </div>
@@ -107,12 +106,23 @@
          </div>
 
    <!--     CALENDAR      -->
-   <div class="container">
+   <!-- <div class="container">
       <div class="row">
          <div class="col-md-4"></div>
          <input type="datetime" readonly="readonly" name="exclude_date"
             class="tail-datetime-field form-control col-md-4" autocomplete="off" required>
          <div class="col-md-4"></div>
+      </div>
+   </div> -->
+
+   <div class="form-group">
+      <label for="exclude_date" class="col-form-label"></label>
+      <div class="container">
+         <div class="row">
+            <div class="col-md-4"></div>
+            <input type="datetime" name="exclude_date" class="tail-datetime-field form-control col-md-4 " autocomplete="off" onkeydown="return false;" style="caret-color: transparent !important;" required>
+            <div class="col-md-4"></div>
+         </div>
       </div>
    </div>
 </div>
@@ -206,7 +216,6 @@
       <div style="padding-top: 2em;" class="col-md-3">
          <input style="margin-bottom: 1rem;" type="submit" value="Update" class="btn btn-block btn-secondary" />
       </div>
-
    </div>
 </div>
 

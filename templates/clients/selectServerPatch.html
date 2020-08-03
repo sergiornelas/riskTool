@@ -8,7 +8,6 @@
          <div class="col-md-12">
             <h1 class="display-4">Select patch server</h1>
             <i class="fa fa-server fa-5x" aria-hidden="true"></i>
-            <p class="lead">Manage your patches if you have struggles</p>
          </div>
       </div>
    </div>
@@ -34,8 +33,8 @@
 
 <section id="dashboard" class="py-4">
    <div class="container">
-      <form role="form" action="" method="post" class="registration-form">
-         <fieldset style="display: block;">
+      <!-- <form role="form" action="" method="post" class="registration-form"> -->
+         <!-- <fieldset style="display: block;"> -->
 
                <!--  PROGRESS BAR -->
          <div class="container">
@@ -74,22 +73,25 @@
             </div>
          </div>
 
-         <div style="margin-bottom: 4em;">
+         <div style="margin-bottom: 4em;"></div>
             <!-- <p style="margin-top:30px;"><i><br>If more than one server is incorporated in the same exception, 
                <br> the approval of each one of those servers will be required
                <br>to validate the entire exception patches.</i></p> -->
 
 
-         </div>
+         
             <div>Choose patch servers: 
 
-               {#<form action="{% url 'exclude_server' %}" method="POST">#}
-               <form>
-                  <select data-placeholder="Select server/servers" style="width:27em;" id="serverServer"
-                     multiple="multiple" required></select>
+               <form action="{% url 'selectPatches' %}">
+                  {% csrf_token %}
+                  <div>
+                     <select data-placeholder="Select server/servers" style="width:27em;" id="serverServer2" multiple="multiple" required></select>
+                     <br>
+                     <i style="font-size: 17px;">If doesn't appear servers, means that all servers have been requested for risk exceptions.</i>
+                  </div>
                   <div style="margin-bottom: 1em;"></div>
-                  <script>
 
+                  <script>
                      var arrayServerPatches = [];
 
                      Array.prototype.remove = function () {
@@ -106,7 +108,7 @@
                      $(document).ready(function () {
                         var serverOptions;
                         $.ajax({
-                           url: 'server_user_list', //AQUI SE EXTRAERÁN LOS DATOS
+                           url: 'server_user_list2', //AQUI SE EXTRAERÁN LOS DATOS
                            type: 'GET', //OBTENDREMOS DATOS
                            dataType: "text", //"json"  //FORMATO DE LOS DATOS
                            success: function (data) {  //SI TODO SALE BIEN (DATOS EXISTENTES, CONEXIÓN CON EL SERVIDOR)
@@ -121,10 +123,10 @@
                               })
 
                               // AGREGA LOS SERVIDORES A LA DROP-DOWN-LIST
-                              $('#serverServer').html(serverOptions);
+                              $('#serverServer2').html(serverOptions);
 
                               //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (AGREGA).
-                              $('#serverServer').on('select2:select', function (e) {
+                              $('#serverServer2').on('select2:select', function (e) {
                                  var data = e.params.data;
                                  arrayServerPatches.push(data.text);
                                  console.log(arrayServerPatches);
@@ -148,7 +150,7 @@
                               });
 
                               //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (ELIMINA).
-                              $('#serverServer').on('select2:unselect', function (e) {
+                              $('#serverServer2').on('select2:unselect', function (e) {
                                  var data = e.params.data;
                                  arrayServerPatches.remove(data.text);
                                  console.log(arrayServerPatches);
@@ -166,7 +168,7 @@
 
                      //MOSTRAR EL PLACE HOLDER
                      $(document).ready(function () {
-                        $("#serverServer").select2({
+                        $("#serverServer2").select2({
                            placeholder: function () {
                               $(this).data('placeholder');
                            }
@@ -177,10 +179,10 @@
                   <div class="container">
                      <div class="row">
                         <div style="padding-top: 2em;" class="col-md-3">
-                           <a style="background-color:#D0D0D5"href="{% url 'serverOrPatch' %}" class="btn btn-block">Back</a>
+                           <a style="background-color:#D0D0D5"href="{% url 'serverOrPatch' %}" class="btn btn-block">Back</a>                           
                         </div>
                         <div style="padding-top: 2em;" class="col-md-3">
-                           <a href="{% url 'selectPatches' %}" class="btn btn-primary btn-block">Next</a>
+                           <button class="btn btn-primary btn-block">Next</button>
                         </div>
                         <div class="col-md-6"> </div>
                      </div>
@@ -188,8 +190,8 @@
 
                </form>
             </div>
-         </fieldset>
-      </form>
+         <!-- </fieldset> -->
+      <!-- </form> -->
    </div>
 </section>
 

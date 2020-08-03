@@ -8,7 +8,6 @@
          <div class="col-md-12">
             <h1 class="display-4">Select servers</h1>
             <i class="fa fa-server fa-5x" aria-hidden="true"></i>
-            <p class="lead">Manage your patches if you have struggles</p>
          </div>
       </div>
    </div>
@@ -75,15 +74,21 @@
                   <br>to validate the entire exception.</i></p> -->
                   
                   <br>IMPORTANT:<br> <b> This action will prevent also future coming patches.</b></p>
+                  <!-- <p>If a patch server has any exceptions, </p> -->
          </div>
 
-         <div style="margin-top:2.5em; " class="form-bottom">
+         <div style="margin-top:2em; ">
             Choose server:
-            <form>
-               <select data-placeholder="Select server/servers" style="width:27em;" id="serverServer" multiple="multiple" required></select>
+            
+            <form action="{% url 'inquiryServers' %}">
+               {% csrf_token %}
+               <div >
+                  <select data-placeholder="Select server/servers" style="width:27em;" id="serverServer" multiple="multiple" required></select>
+                  <br>
+                  <i style="font-size: 17px;">If doesn't appear servers, means that all servers have been requested for risk exceptions.</i>
+               </div>
                <div style="margin-bottom: 1em;"></div>
                <script>
-
                   var arrayFullServers = [];
 
                   Array.prototype.remove = function () {
@@ -115,7 +120,7 @@
                            })
 
                            // AGREGA LOS SERVIDORES A LA DROP-DOWN-LIST
-                           $('#serverServer').html(serverOptions);
+                           $('#serverServer').html(serverOptions);                          
 
                            //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (AGREGA).
                            $('#serverServer').on('select2:select', function (e) {
@@ -153,14 +158,14 @@
                      });
                   });
                </script>
-
+               
                <div class="container">
                   <div class="row">
                      <div style="padding-top: 2em;" class="col-md-3">
                         <a style="background-color:#D0D0D5"href="{% url 'serverOrPatch' %}" class="btn btn-block">Back</a>
                      </div>
                      <div style="padding-top: 2em;" class="col-md-3">
-                        <a href="{% url 'inquiryServers' %}" class="btn btn-primary btn-block">Next</a>
+                        <button class="btn btn-primary btn-block">Next</button>
                      </div>
                      <div class="col-md-6"> </div>
                   </div>

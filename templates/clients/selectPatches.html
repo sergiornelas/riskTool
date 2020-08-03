@@ -29,7 +29,6 @@
             <div class="col-md-12">
                 <h1 class="display-4">Select Patches</h1>
                 <i class="fa fa-toolbox fa-5x" aria-hidden="true"></i>
-                <p class="lead">Manage your patches if you have struggles</p>
             </div>
         </div>
     </div>
@@ -55,8 +54,7 @@
 
 <section id="dashboard" class="py-4">
     <div class="container">
-        <form role="form" action="" method="post" class="registration-form">
-            <fieldset style="display: block;">
+        <!-- <form role="form" action="" method="post" class="registration-form"> -->
 
             <!--  PROGRESS BAR -->
                 <div class="container">
@@ -96,17 +94,17 @@
                 </div>
 
                 <div style="margin-bottom: 4em;"></div>
-                <div>Choose patch:
+                <div>Choose patch: 
 
                     {#<form action="{% url 'exclude_server' %}" method="POST">#}
-                    <form>
-                        <select data-placeholder="Select patch/patches" style="width:50em;" id="selectPatches_patch"
-                            multiple="multiple"></select>
-
+                    <form action="{% url 'inquiryPatches' %}">
+                        {% csrf_token %}
+                        <select data-placeholder="Select patch/patches" style="width:50em;" id="selectPatches_patch" multiple="multiple" required></select>
+                        <br>
+                        <i style="font-size: 17px;">If doesn't appear patches, means that all patches have been requested for risk exceptions.</i>
                         <div style="margin-bottom: 1em;"></div>
 
                         <script>
-                            
                             var arrayPatchesPatches = [];
 
                             Array.prototype.remove = function () {
@@ -271,17 +269,14 @@
                                   <a style="background-color:#D0D0D5"href="{% url 'selectServerPatch' %}" class="btn btn-block">Back</a>
                                </div>
                                <div style="padding-top: 2em;" class="col-md-3">
-                                <a href="{% url 'inquiryPatches' %}" class="btn btn-primary btn-block">Next</a>
+                                {#<a href="{% url 'inquiryPatches' %}" class="btn btn-primary btn-block">Next</a>#}
+                                <button class="btn btn-primary btn-block">Next</button>
                                </div>
                                <div class="col-md-6"> </div>
                             </div>
                          </div>
-
                     </form>
-
                 </div>
-            </fieldset>
-        </form>
     </div>
 </section>
 

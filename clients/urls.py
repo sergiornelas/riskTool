@@ -14,6 +14,7 @@ urlpatterns = [
     
 
     path('server_user_list', views.server_user_list, name='server_user_list'),
+    path('server_user_list2', views.server_user_list2, name='server_user_list2'),
     
     path('filterPatches', views.filterPatches, name='filterPatches'),
     

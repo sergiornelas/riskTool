@@ -200,20 +200,86 @@ def deleteException(request, deleteRow):
 
 #AJAX LISTA DE SERVIDORES DEL CLIENTE INGRESADO
 def server_user_list(request):
-    client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id).values_list('server_id', flat=True)
+    client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id).values_list('server_id', flat=True) #<QuerySet [1, 2]>
+
     #print(client_has_server)
-    serversPoll = SERVER.objects.filter(pk__in=client_has_server)
+    
+    # quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).filter(exception_type=2)
+    quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).filter(server_id__in=client_has_server)
+
+    arregloServidor = []
+    for x in quitarServidorSeleccionado:
+        arregloServidor.append(x.server_id)
+
+    # print("arreglo")
+    # print(arregloServidor)
+
+    serversPoll = SERVER.objects.filter(pk__in=client_has_server).exclude(pk__in=arregloServidor)
+    #serversPoll = SERVER.objects.filter(pk__in=client_has_server).exclude(pk=1)
+
+    print("HERMOSSOOOOSOOS")
     #print(serversPoll)
     """
     context={
         'serversPoll':serversPoll
     }
     """
-
     if request.method == "GET":
         return HttpResponse(serializers.serialize("json", serversPoll))
-    #return render(request, 'clients/selectServers.html', context)
 
+
+def server_user_list2(request):
+    client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id).values_list('server_id', flat=True) #<QuerySet [1, 2]>
+
+    #print(client_has_server)
+
+
+    #----------------------------------
+    # quitarParchesSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id)
+
+    # listPatches = [o.patch_id for o in quitarParchesSeleccionado]
+
+    # newList = []
+    # for x in listPatches:
+    #     newList.append(x.split(","))
+
+
+    # otherList = []
+
+    # for x in newList:
+    #     for y in x:
+    #         otherList.append(int(y))
+
+    # print(otherList)
+
+    #patch_advisory = PATCHES.objects.filter(server_id__in=servers_selected_ids).exclude(pk__in=otherList)
+
+
+    #----------------------------------
+
+
+    
+    quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).filter(exception_type=2)
+    #quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).filter(server_id__in=client_has_server)
+
+    arregloServidor = []
+    for x in quitarServidorSeleccionado:
+        arregloServidor.append(x.server_id)
+
+    # print("arreglo")
+    # print(arregloServidor)
+
+    serversPoll = SERVER.objects.filter(pk__in=client_has_server).exclude(pk__in=arregloServidor)
+    
+    print("HERMOSSOOOOSOOS")
+    #print(serversPoll)
+    """
+    context={
+        'serversPoll':serversPoll
+    }
+    """
+    if request.method == "GET":
+        return HttpResponse(serializers.serialize("json", serversPoll))
 
 
 #TESTING
@@ -261,7 +327,59 @@ def filterPatches(request):
         #hacemos comunicación entre un advisory y un server a través del parche.
         #por eso para conocer los advisories necesitamos los objetos patches.
         
-        patch_advisory = PATCHES.objects.filter(server_id__in=servers_selected_ids)
+        #+++++++++++ eliminar parches ya seleccionados por el usuario +++++++++++++++++++++++++++++++++
+
+        # arregloServidor = []
+        # for x in quitarServidorSeleccionado:
+        #     arregloServidor.append(x.server_id)
+
+        quitarParchesSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id)
+
+        #arregloParches = []
+
+        # for x in quitarParchesSeleccionado:
+        #     print(x.patch_id)
+        #     arregloParches.append(x.patch_id)
+        #     #print(arregloParches[x])
+
+        # #arregloParches = arregloParches.replace(",", " ")
+        # #arregloParches = arregloParches.split()
+        # justList=EXCEPTION.objects.filter(client_id=request.user.id).values_list("patch_id", flat=True)
+        # print(type(justList))
+        # print(justList)
+        # print(arregloParches)
+
+        listPatches = [o.patch_id for o in quitarParchesSeleccionado]
+        # print("listPatches")
+        # print(type(listPatches))
+        # print(listPatches)
+        
+        #listPatches=listPatches.split(",")
+        #print(listPatches[0].split(","))
+
+        newList = []
+        for x in listPatches:
+            newList.append(x.split(","))
+
+        # print("newList")
+        # print(newList) #[['6', '7', '8', '9'], ['2', '4'], ['5']]
+        # print(newList[0]) #['6', '7', '8', '9']
+
+        # print(newList[0][0]) #6
+        # print(newList[1][0]) #2
+        # print(type(newList[0][0])) #str
+        # print(type(int(newList[0][0]))) #int
+
+        otherList = []
+
+        for x in newList:
+            for y in x:
+                otherList.append(int(y))
+    
+        #print(otherList)
+
+        patch_advisory = PATCHES.objects.filter(server_id__in=servers_selected_ids).exclude(pk__in=otherList)
+        #patch_advisory = PATCHES.objects.filter(server_id__in=servers_selected_ids)
 
         #return HttpResponse(serializers.serialize("json", patch_advisory))
 
@@ -287,23 +405,6 @@ def filterPatches(request):
 
                 
         return HttpResponse(serializers.serialize("json", patch_advisory))
-        #return HttpResponse(patch_advisory)
-        
-        #----------------------------------------------------------------
-
-        #tomamos los id de los advisories de los parches que estan involucrados
-        #con el servidor seleccionado.
-        takeAdvisories = [o.advisory_id for o in patch_advisory]
-        print("takeadvisories: ",takeAdvisories)
-
-        #utilizamos los id de los advisories para obtener los objetos completos
-        #getAdvisoriesObjects = ADVISORY.objects.filter(pk__in=takeAdvisories)
-        #print(type(getAdvisoriesObjects))
-
-        #get() returns a single object. 
-                
-        getAdvisoriesObjects = ADVISORY.objects.filter(pk__in=takeAdvisories)
-        #print("getAdvisoriesObjects: ",getAdvisoriesObjects)
 
         """
         #UNION: When they querysets are from different models, the FIELDS and their datatypes should MATCH.
@@ -317,12 +418,6 @@ def filterPatches(request):
             takeAdvisoriesDescription = [o.description for o in getAdvisoriesObjects]
             print(takeAdvisoriesDescription)
         """
-
-        #return HttpResponse(serializers.serialize("json", getAdvisoriesObjects))
-        #return HttpResponse(data, content_type="application/json")
-        #return HttpResponse(json.dumps(context))
-        #return JsonResponse(json.loads(takeAdvisoriesDescription))
-        #return HttpResponse(takeAdvisoriesDescription)
 
 #-----------------------------------INQUIRY PARCHES-----------------------------------
 
