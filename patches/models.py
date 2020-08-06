@@ -20,6 +20,9 @@ class PATCHES(models.Model):
 
     
     patch_id=models.CharField(max_length=50, null=True)
+    #patch_id=models.CharField(max_length=50, primary_key=True)
+    
+    
     status_id = models.IntegerField(null=True)
     exception_id = models.IntegerField(null=True)
     created_date=models.DateTimeField(null=True)

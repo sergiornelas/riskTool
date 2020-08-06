@@ -196,7 +196,7 @@
          <div class="row">
             <div class="col-md-4"></div>
             <!-- <label for="excludeDate" class="col-form-label col-md-4""><b>Maximum target date:</b> <i>(This is defined by major patch criticality)</i></label> -->
-            <label for="excludeDate" class="col-form-label col-md-4""><b>Maximum target date</b> </br> <i>Choose risk expiration date </br> (this is defined by major patch criticality)</i></label>
+            <label for="excludeDate" class="col-form-label col-md-4""><b>Maximum target date</b> </br> <i>Choose risk expiration date </br> One year limit </i></label>
             <div class=" col-md-4"></div>
          </div>
       </div>
@@ -256,7 +256,8 @@
                start: data,
                //end: new Date(2020, 6, 30),
                //end: data.addDays(50)
-               end: data.addDays(parseInt(limitdays))
+               //end: data.addDays(parseInt(limitdays))
+               end: data.addDays(365)
                // days: true                 // This is the default
             }],
          dateStart: new Date(2018, 0, 5),

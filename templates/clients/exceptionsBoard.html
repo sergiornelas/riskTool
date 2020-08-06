@@ -191,119 +191,160 @@
                }
             </style>
             <div id="clean" class="queryContent" rows="7" class="form-control"></div>
-            
-            <script type="text/javascript">
-               $(document).ready(function (){
-                  $(".validationsQuery").click(function(){
+            <!-- <table class="table table-striped table-bordered"> -->
 
-                     document.getElementById("clean").innerHTML = "";
+            <!-- <table>   -->
+               <!-- <div id="clean" class="queryContent" rows="7" class="form-control"></div> -->
+               <!-- <table id="clean" style="font-size:15px;" class="queryContent"> -->
 
-                     query = this.value
-                     query = parseInt(query)
 
-                     console.log(query)
+               <script type="text/javascript">
+                  $(document).ready(function (){
+                     $(".validationsQuery").click(function(){
 
-                     $.ajax({
-                        //async: false,
-                        url: 'getValidationDetails',
-                        method: 'POST',
-                        dataType: "text", //"json"
-                        data: {
-                           query: query
-                        },
-                        success: function (data) {
-                           data = JSON.parse(data);
-                           //console.log("imhere")
-                           console.log(data)
-                           // me imprime los objetos aprobadores
+                        document.getElementById("clean").innerHTML = "";
 
-                           $.each(data, function (key, index) {
-                              //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
+                        query = this.value
+                        query = parseInt(query)
 
-                              //-------------------------------new ajax -------------------------------
-                              //-------------------------conseguir los nombres nada mas----------------
-                              var name
-                              var names = []
+                        console.log(query)
 
-                              $.ajax({
-                                 async: false,
-                                 url: 'getApprovalNames',
-                                 method: 'POST',
-                                 dataType: "text", //"json"
-                                 data: {
-                                    data: index.fields.approver
-                                 },
+                        $.ajax({
+                           //async: false,
+                           url: 'getValidationDetails',
+                           method: 'POST',
+                           dataType: "text", //"json"
+                           data: {
+                              query: query
+                           },
+                           success: function (data) {
+                              data = JSON.parse(data);
+                              //console.log("imhere")
+                              console.log(data)
+                              // me imprime los objetos aprobadores
 
-                                 success: function (approvername) {
-                                    console.log("estoy aqui")
-                                    name = JSON.parse(approvername);
+                              $.each(data, function (key, index) {
+                                 //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
 
-                                    $.each(name, function (key, index) {
-                                       names.push(index.fields.username);
-                                    })
-                                    console.log(names)
+                                 //-------------------------------new ajax -------------------------------
+                                 //-------------------------conseguir los nombres nada mas----------------
+                                 var name
+                                 var names = []
+
+                                 $.ajax({
+                                    async: false,
+                                    url: 'getApprovalNames',
+                                    method: 'POST',
+                                    dataType: "text", //"json"
+                                    data: {
+                                       data: index.fields.approver
+                                    },
+
+                                    success: function (approvername) {
+                                       console.log("estoy aqui")
+                                       name = JSON.parse(approvername);
+
+                                       $.each(name, function (key, index) {
+                                          names.push(index.fields.username);
+                                       })
+                                       console.log(names)
+                                    }
+                                 });
+
+                                 //-------------------------------new ajax -------------------------------
+                                 
+                                 /*
+                                 var exceptionDate = index.fields.time
+
+                                 function formatDate(date) {
+                                    var d = new Date(date),
+                                       month = d.getMonth(),
+                                       date = d.getDate(),
+                                       year = d.getFullYear(),
+                                       hours = ('0' + d.getHours()).slice(-2),
+                                       minutes = ('0' + d.getMinutes()).slice(-2);
+
+                                    month++;
+
+                                    return (month + '/' + date + '/' + year + ' ' + hours + ':' + minutes);
                                  }
-                              });
 
-                              //-------------------------------new ajax -------------------------------
+                                 //$(".queryContent").append("<table>");
+                                    $(".queryContent").append("<tr>");
+                                       $(".queryContent").append("<th>" + "Approver name" + "</th>");
+                                       $(".queryContent").append("<th>" + "Approval date" + "</th>");
+                                       $(".queryContent").append("<th>" + "Comment" + "</th>");
+                                       $(".queryContent").append("<th>" + "Status" + "</th>");
+                                       $(".queryContent").append("</br>");
+                                    $(".queryContent").append("</tr>");
+                                    $(".queryContent").append("<tr>");
+                                       $(".queryContent").append("<td>" + names + "</td>");
+                                       $(".queryContent").append("<td>" + formatDate(exceptionDate) + "</td>");
+                                       $(".queryContent").append("<td>" + index.fields.comment + "</td>");
+                                       $(".queryContent").append("<td>" + index.fields.state + "</td>");
+                                    $(".queryContent").append("</tr>");
+                                 */
 
-                              $(".queryContent").append("<b>" + "Approver name:" + "</b>");
-                              $(".queryContent").append("<p>" + names + "</p>");
-                              $(".queryContent").append("<b>" + "Comment:" + "</b>");
-                              $(".queryContent").append("<p>" + index.fields.comment + "</p>");
-                              $(".queryContent").append("<b>" + "Approval date:" + "</b>");
+                                                                    
+                                 $(".queryContent").append("<b>" + "Approver name:" + "</b>");
+                                 $(".queryContent").append("<p>" + names + "</p>");
+                                 $(".queryContent").append("<b>" + "Comment:" + "</b>");
+                                 $(".queryContent").append("<p>" + index.fields.comment + "</p>");
+                                 $(".queryContent").append("<b>" + "Approval date:" + "</b>");
 
 
-                              var exceptionDate = index.fields.time
+                                 var exceptionDate = index.fields.time
 
-                              function formatDate(date) {
-                                 var d = new Date(date),
-                                    month = d.getMonth(),
-                                    date = d.getDate(),
-                                    year = d.getFullYear(),
-                                    hours = ('0' + d.getHours()).slice(-2),
-                                    minutes = ('0' + d.getMinutes()).slice(-2);
+                                 function formatDate(date) {
+                                    var d = new Date(date),
+                                       month = d.getMonth(),
+                                       date = d.getDate(),
+                                       year = d.getFullYear(),
+                                       hours = ('0' + d.getHours()).slice(-2),
+                                       minutes = ('0' + d.getMinutes()).slice(-2);
 
-                                 month++;
+                                    month++;
 
-                                 return (month + '/' + date + '/' + year + ' ' + hours + ':' + minutes);
-                              }
-                              $(".queryContent").append("<p>" + formatDate(exceptionDate) + "</p>");
-                              $(".queryContent").append("<b>" + "Status:" + "</b>");
-                              $(".queryContent").append("<p>" + index.fields.state + "</p>");
-                              $(".queryContent").append("<hr>");
-                           })
-                        }
-                     })
-
-                     $.ajax({
-                        //async: false,
-                        url: 'getValidationsRemaining',
-                        method: 'POST',
-                        dataType: "text", //"json"
-                        data: {
-                           query: query
-                        },
-                        success: function (data) {
-                           data = JSON.parse(data);
-                           console.log("REMAINING")
-                           console.log(data)
-
-                           var missingnames = []
-
-                           $.each(data, function (key, index) {
-                              missingnames.push(index.fields.username);
-                           })
-
-                           if (typeof missingnames !== 'undefined' && missingnames.length > 0) {
-                              $(".queryContent").append("<b>" + "Remaining approver name:" + "</b>");
-                              $(".queryContent").append("<p>" + missingnames + "</p>");
+                                    return (month + '/' + date + '/' + year + ' ' + hours + ':' + minutes);
+                                 }
+                                 $(".queryContent").append("<p>" + formatDate(exceptionDate) + "</p>");
+                                 $(".queryContent").append("<b>" + "Status:" + "</b>");
+                                 $(".queryContent").append("<p>" + index.fields.state + "</p>");
+                                 $(".queryContent").append("<hr>");
+                                 
+                              })
                            }
-                        }
+                        })
+
+                        $.ajax({
+                           //async: false,
+                           url: 'getValidationsRemaining',
+                           method: 'POST',
+                           dataType: "text", //"json"
+                           data: {
+                              query: query
+                           },
+                           success: function (data) {
+                              data = JSON.parse(data);
+                              console.log("REMAINING")
+                              console.log(data)
+
+                              var missingnames = []
+
+                              $.each(data, function (key, index) {
+                                 missingnames.push(index.fields.username);
+                              })
+
+                              if (typeof missingnames !== 'undefined' && missingnames.length > 0) {
+                                 $(".queryContent").append("<b>" + "Remaining approver name:" + "</b>");
+                                 $(".queryContent").append("<p>" + missingnames + "</p>");
+                              }
+                           }
+                        });
                      });
                   });
-               });
-            </script>
+               </script>
+            </table>
             <hr>
             <input type="submit" name="state" value="Close" class="btn btn-block btn-success col-md"
                data-dismiss="modal">
