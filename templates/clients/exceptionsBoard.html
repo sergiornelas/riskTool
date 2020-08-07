@@ -39,6 +39,8 @@
             <h2>Welcome {{ user.username }}</h2>
             </br>
 
+            {% if client_exceptions %}
+
             <form action="{% url 'searchClient' %}">
                <div class="container" style="margin-bottom: 45px;">
                  <div class="row">
@@ -64,22 +66,34 @@
                </div>
              </form>
 
-
-            {% if client_exceptions %}
-
-            <table class="table table-striped table-bordered">
+            <table id="mytab1" class="table table-striped table-bordered" style="text-align: center;">
                <thead class="table-info ">
                   <tr>
-                     <th class="bg-primary" style="text-align:center; color:white" scope="col">Exception ID
+                     <th class="bg-primary" style="color:white" scope="col">Exception ID
                      </th>
-                     <th class="bg-primary" style="text-align:center; color:white;" scope="col">Title</th>
-                     <th class="bg-primary" style="text-align:center; color:white" scope="col">Patch application date</th>
-                     <th class="bg-primary" style="text-align:center; color:white;" scope="col">Content</th>
-                     <th class="bg-primary" style="text-align:center; color:white;" scope="col">Change</th>
-                     <th class="bg-primary" style="text-align:center; color:white;" scope="col">Final status</th>
+                     <th class="bg-primary" style="color:white;" scope="col">Title</th>
+                     <th class="bg-primary" style="color:white" scope="col">Maximum target date</th>
+                     <th class="bg-primary" style="color:white;" scope="col">Content</th>
+                     <th class="bg-primary" style="color:white;" scope="col">Change</th>
+                     <th class="bg-primary" style="color:white;" scope="col">Final status</th>
                   </tr>
                </thead>
                <tbody>
+                  <!-- <p id="demo"></p> -->
+
+                  <script>
+                     //conseguir los id de cada excepcion a JS
+                     var excID = " {{datazz}} ";
+                     excID = excID.replace('[',''); //]>
+                     excID=excID.split(',');
+
+                     for (a in excID ) {
+                        excID[a] = parseInt(excID[a]); // Explicitly include base as per Álvaro's comment
+                     }
+                     console.log(excID)
+                     console.log(typeof(excID))
+                     var x=0
+                  </script>
 
                   {% for p in client_exceptions %}
                      {#{% if p.state != "Canceled" %}#}
@@ -88,7 +102,34 @@
                            {#<td><i>{{ p.id }}</i></td>#}
                            <td>{{ p.title }}</td>
                            <td>{{ p.exclude_date }}</td>
-                           <td style="font-size: 16px;">{{ p.content }}</td>
+                           {#<td style="font-size: 16px; text-align: left">{{ p.content }}</td>#}
+                           
+                           <td style="font-size: 16px; text-align: left" class="demo2">{{ p.content }}
+                              <script>
+                                 /*
+                                 var datos = " {{datazz}} ";
+                                 //datos=datos.toUpperCase;
+                                 datos = datos.replace('&lt;QuerySet [',''); //<QuerySet [
+                                 datos = datos.replace(']&gt;',''); //]>
+                                 
+                                 //datos = datos.split(",").join("<br />")
+                                 datos = datos.split(",").join("<p>hola</p>")
+                                 */
+                                 //console.log(datos)
+                                 
+                                 var z = document.getElementsByClassName("demo2")
+
+                                 z[x].innerHTML = excID[x]
+                                 
+                                 console.log(excID[x])
+                                 x++
+                              </script>
+                              
+                              {#{% for i in datazz %}#}
+                                 {#<p>{{ i }}</p>#}
+                              {#{% endfor %}#}
+
+                           </td>
                            <td>
                               {% if p.state == "Approved" or p.state == "Rejected" %}
                                  <!-- <p style="font-size: .9em; color:dimgray">Has a status already</p> -->

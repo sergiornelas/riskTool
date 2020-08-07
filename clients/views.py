@@ -88,16 +88,61 @@ def exceptionsBoard(request):
     page = request.GET.get('page')
     paged_listings = paginator.get_page(page)
 
+    # print("paged_listings")
+    # print(paged_listings)
+
+    #--------#--------#-------intento de poner el contenido de la excepcion con enters.
+    # ------------- a lo mejor se resuelve con AJAX
+
+    zarreglo = []
+
+    for i in paged_listings:
+        zarreglo.append(i.pk)
+        #arreglo.append(x)
+        print("hola")
+
+    print("zarreglo")
+    print(zarreglo)
+
+    # zarreglo =  ', '.join(zarreglo)
+    # zarreglo = zarreglo.split(",")
+
+    print("zarreglo")
+    print(zarreglo)
+    print(type(zarreglo))
+
+    #zarreglo = list(map(str, zarreglo))
+
+    # print("zarreglo0")
+    # print(zarreglo[0])
+    # print("zarreglo1")
+    # print(zarreglo[1])
+    # print("zarreglo2")
+    # print(zarreglo[2])
+    # print("zarreglo3")
+    # print(zarreglo[3])
+
+    validaciones=EXCEPTION.objects.all().values_list('content', flat=True)
+    print("validaciones")
+    print(validaciones)
+
+    #listPatches = [o.content for o in client_exceptions]
+
     context ={
         #'client_exceptions':client_exceptions,
         'client_exceptions':paged_listings,
         'remaining':remaining,
 
-        'state_choices':state_choices
+        'state_choices':state_choices,
+
+        #'data': [1, 2, 3, 4, 5],
+        #'datazz': validaciones,
+        'datazz': zarreglo,
     }
 
     return render(request, 'clients/exceptionsBoard.html', context)
 
+    
 def serverOrPatch(request):
     return render(request, 'clients/serverOrPatch.html')
 
@@ -119,15 +164,27 @@ def inquiryServers(request):
 
 def inquiryEdit(request, exclude_patch_ID):
     getException = EXCEPTION.objects.get(pk=exclude_patch_ID)
+
+    getContent = EXCEPTION.objects.filter(pk=exclude_patch_ID)
+    getContent = [o.content for o in getContent]
+    getContent =  ', '.join(getContent)
+    getContent = getContent.split(",")
+    #getContent = list(map(int, getContent))
+    getContent = list(map(str, getContent))
+    
+    print("getContent")
+    print(getContent)
     
     """
         patch_id: "10,11,12,13" (simple string) -> [10, 11, 12, 13] (list of integers)
     """
+
     getPatches = EXCEPTION.objects.filter(pk=exclude_patch_ID)
     getPatches = [o.patch_id for o in getPatches]
     getPatches =  ', '.join(getPatches)
     getPatches = getPatches.split(",")
-    getPatches = list(map(int, getPatches))
+    #getPatches = list(map(int, getPatches))
+    getPatches = list(map(str, getPatches))
     
     getPatches = PATCHES.objects.filter(pk__in=getPatches).values_list('advisory_id', flat=True)
     getPatches = ADVISORY.objects.filter(pk__in=getPatches).values_list('criticality', flat=True)
@@ -150,7 +207,8 @@ def inquiryEdit(request, exclude_patch_ID):
     #print(days)
     context = {
         'getException':getException,
-        'days':days
+        'days':days,
+        'getContent':getContent
     }
     return render(request, 'clients/inquiryEdit.html', context)
 
@@ -204,8 +262,10 @@ def server_user_list(request):
 
     #print(client_has_server)
     
-    # quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).filter(exception_type=2)
-    quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).filter(server_id__in=client_has_server)
+    #quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).filter(exception_type=2)
+
+    #quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).filter(server_id__in=client_has_server)
+    quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).exclude(state="Canceled").filter(server_id__in=client_has_server)
 
     arregloServidor = []
     for x in quitarServidorSeleccionado:
@@ -233,34 +293,13 @@ def server_user_list2(request):
 
     #print(client_has_server)
 
+    #quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).filter(exception_type=2)
 
-    #----------------------------------
-    # quitarParchesSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id)
+    #quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).exclude(state="Canceled").filter(server_id__in=client_has_server)
+    quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).filter(server_id__in=client_has_server)
 
-    # listPatches = [o.patch_id for o in quitarParchesSeleccionado]
-
-    # newList = []
-    # for x in listPatches:
-    #     newList.append(x.split(","))
-
-
-    # otherList = []
-
-    # for x in newList:
-    #     for y in x:
-    #         otherList.append(int(y))
-
-    # print(otherList)
-
-    #patch_advisory = PATCHES.objects.filter(server_id__in=servers_selected_ids).exclude(pk__in=otherList)
-
-
-    #----------------------------------
-
-
-    
-    quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).filter(exception_type=2)
-    #quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).filter(server_id__in=client_has_server)
+    print("quitarServidorSeleccionado")
+    print(quitarServidorSeleccionado)
 
     arregloServidor = []
     for x in quitarServidorSeleccionado:
@@ -269,7 +308,8 @@ def server_user_list2(request):
     # print("arreglo")
     # print(arregloServidor)
 
-    serversPoll = SERVER.objects.filter(pk__in=client_has_server).exclude(pk__in=arregloServidor)
+    #serversPoll = SERVER.objects.filter(pk__in=client_has_server).exclude(pk__in=arregloServidor)
+    serversPoll = SERVER.objects.filter(pk__in=client_has_server)
     
     print("HERMOSSOOOOSOOS")
     #print(serversPoll)
@@ -374,7 +414,8 @@ def filterPatches(request):
 
         for x in newList:
             for y in x:
-                otherList.append(int(y))
+                #otherList.append(int(y))
+                otherList.append(str(y))
     
         #print(otherList)
 
@@ -393,6 +434,8 @@ def filterPatches(request):
         
         print(patch_advisory)
 
+        print("patch_advisory")
+
         print(type(patch_advisory)) #'django.db.models.query.QuerySet'
         print(type(serializers.serialize("json", patch_advisory))) #'str'
 
@@ -406,18 +449,40 @@ def filterPatches(request):
                 
         return HttpResponse(serializers.serialize("json", patch_advisory))
 
-        """
-        #UNION: When they querysets are from different models, the FIELDS and their datatypes should MATCH.
-        #Junta dos query sets, evitando las repeticiones (+<User: rishab>)
-            total = ADVISORY.objects.filter(pk__in=takeAdvisories).union(ADVISORY.objects.filter(pk__in=[1, 2]), all=True)
-            print("total: ",total)
-        """
+
+@csrf_exempt
+def getPatchesInquiryServer(request):
+    if request.method == 'POST':
         
-        """
-        #obtenemos solo la descripción de esos objetos, REGRESA UN SOLO STRING
-            takeAdvisoriesDescription = [o.description for o in getAdvisoriesObjects]
-            print(takeAdvisoriesDescription)
-        """
+        #string mode
+        selectedServer = request.POST['selectedServer'] #wdcdmzyz22033245,wdcgz22050068
+        selectedServer = selectedServer.replace(",", " ")
+        selectedServer = selectedServer.split()
+
+        client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
+
+        servers_ids=[]
+        for server in client_has_server:
+            servers_ids.append(server.server_id)
+
+        takeServers=SERVER.objects.filter(pk__in=servers_ids).filter(hostname__in=selectedServer)
+        
+        servers_selected_ids=[]
+
+        for server in takeServers:
+            servers_selected_ids.append(server.pk)
+        
+        patch_advisory = PATCHES.objects.filter(server_id__in=servers_selected_ids)       
+        
+        print(patch_advisory)
+
+        print("patch_advisory")
+
+        #print(type(patch_advisory)) #'django.db.models.query.QuerySet'
+        #print(type(serializers.serialize("json", patch_advisory))) #'str'
+
+                
+        return HttpResponse(serializers.serialize("json", patch_advisory))
 
 #-----------------------------------INQUIRY PARCHES-----------------------------------
 
@@ -603,7 +668,11 @@ def transform(request):
         # print(advisoryID)
         """
 
+
+        # print("fullObject")
+        # print(fullObject)
         takeID = re.findall(r'\((.*?)\)',fullObject)
+        #print(takeID)
         patches = PATCHES.objects.filter(pk__in=takeID)
         return HttpResponse(serializers.serialize("json", patches))
 
@@ -612,31 +681,61 @@ def clean(request):
     if request.method == 'POST':
         fullObject2 = request.POST['fullObject2']
         
-        #print("fullObject2")
+        print("fullObject2")
         #print(type(fullObject2)) #str
-        #print(fullObject2)
+        print(fullObject2)
 
         """
         eliminar contenido dentro de parentesis (2), (8)
         """
 
         clean = re.sub(r'\([^)]*\)', '', fullObject2)
-        
-        clean2 = re.findall('\(([^)]+)', fullObject2)
-        array=[]
-        
-        for i in range(0, len(clean2)):
-            clean2[i] = int(clean2[i])
-            array.append(clean2[i])
-        
-        patches = PATCHES.objects.filter(pk__in=array).values_list('advisory_id', flat=True) #faltaría filtrar aqui con el status_id=2
-        advisories = ADVISORY.objects.filter(pk__in=patches).values_list('criticality', flat=True)
-        print(advisories) #['Low', 'High', 'Low']
+        #print("clean")
+        #print(clean) #wdcdmzyz22033245:[SUSE-SU-2019:3091-1: important: Securityupdate for ucode-intel] criticality: Low
 
-        context = {
-            'clean':clean,
-            'advisories':advisories,
-        }
+        
+        # clean2 = re.findall('\(([^)]+)', fullObject2)
+        # #print("clean2")
+        # #print(clean2) #['MSS-0AR-E01-2011:0487.1_atlbz151024', 'MSS-0AR-E01-2011:0487.1_atlbz151037']
+
+        # array=[]
+        
+        # for i in range(0, len(clean2)):
+        #     #clean2[i] = int(clean2[i])
+        #     clean2[i] = str(clean2[i])
+        #     array.append(clean2[i])
+        
+        # patches = PATCHES.objects.filter(pk__in=array).values_list('advisory_id', flat=True) #faltaría filtrar aqui con el status_id=2
+        # advisories = ADVISORY.objects.filter(pk__in=patches).values_list('criticality', flat=True)
+        # print(advisories) #['Low', 'High', 'Low']
+
+        # context = {
+        #     'clean':clean,
+        #     'advisories':advisories,
+        # }
+
+        print("clean")
+        print(clean)
+
+        return HttpResponse(clean)
+
+def cleanEdit(request):
+    if request.method == 'POST':
+        fullObject2 = request.POST['fullObject2']
+        
+        print("fullObject2")
+        #print(type(fullObject2)) #str
+        print(fullObject2)
+
+        """
+        eliminar contenido dentro de parentesis (2), (8)
+        """
+
+        clean = re.sub(r'\([^)]*\)', '', fullObject2)
+
+
+        print("clean")
+        print(clean)
 
         return HttpResponse(clean)
 

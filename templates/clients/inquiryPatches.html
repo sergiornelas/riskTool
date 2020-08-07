@@ -87,7 +87,7 @@
         url: 'clean',
       }).done(function (data) {
         greyBox= data
-        //console.warn("greyBox")
+        //console.warn("GREY BOX")
         //console.warn(typeof(greyBox))
         //console.warn(greyBox)
 
@@ -173,9 +173,7 @@
     <div style="padding:5em;" class="container">
         <div class="row"></div>
         <p>List of servers and patches selected:</p>
-        <div id="demo"
-            style="background-color: lightgrey; padding: 1em; border: 1px solid grey; margin-bottom: 2em; font-style: italic; font-size:.8em;">
-        </div>
+        <div id="demo" style="background-color: lightgrey; padding: 1em; border: 1px solid grey; margin-bottom: 2em; font-style: italic; font-size:.8em;"></div>
         <script>
             document.getElementById("demo").innerHTML = greyBox2;
             //document.getElementById("demo").innerHTML = patchesModel;

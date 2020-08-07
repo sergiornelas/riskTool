@@ -49,6 +49,12 @@ urlpatterns = [
     
 
     path('clean', views.clean, name='clean'),
+    path('cleanEdit', views.cleanEdit, name='cleanEdit'),
+    
+    path('getPatchesInquiryServer', views.getPatchesInquiryServer, name='getPatchesInquiryServer'),
+    
+
+    
     #path('getPatchObject', views.getPatchObject, name='getPatchObject'),
     
 ]

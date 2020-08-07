@@ -65,10 +65,12 @@
          //limitDay: localStorage.arrayServerPatches
          selectedServer: localStorage.arrayFullServers
       },
-      url: 'filterPatches',
+      url: 'getPatchesInquiryServer',
 
    }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
-      //console.log(data)
+      
+      console.log("ACA COMPAA")
+      console.log(data)
       
       data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
 
@@ -105,6 +107,7 @@
 
 <script>
    var serverString=""
+   console.log("patchesPk")
    console.log(patchesPk)
    console.log(servesPK)
    $(document).ready(function () {

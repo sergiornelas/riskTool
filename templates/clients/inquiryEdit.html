@@ -55,12 +55,15 @@
    <div style="padding-left:5em; padding-right:5em; padding-bottom:3em; margin-top:3em;" class="container">
       <div class="row"></div>
       <p>Content:</p>
-      <div id="demo"
-         style="background-color: lightgrey; padding: 1em; border: 1px solid grey; margin-bottom: 2em; font-style: italic;">
+      <div id="demo" style="background-color: lightgrey; padding: 1em; border: 1px solid grey; margin-bottom: 2em; font-style: italic; font-size:.8em;">
+      
+         {%for i in getContent%}
+            <p>{{i}}</p>
+         {%endfor%}
+         {#{{getException.content}}#}
+
       </div>
-      <script>
-         document.getElementById("demo").innerHTML = localStorage.arrayFullServers;
-      </script>
+
       <!-- </div> -->
 
       {#<form action="{% url 'exclude_server' %}" method="POST">#}

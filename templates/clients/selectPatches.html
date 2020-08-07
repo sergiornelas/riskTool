@@ -99,10 +99,20 @@
                     {#<form action="{% url 'exclude_server' %}" method="POST">#}
                     <form action="{% url 'inquiryPatches' %}">
                         {% csrf_token %}
-                        <select data-placeholder="Select patch/patches" style="width:50em;" id="selectPatches_patch" multiple="multiple" required></select>
+                        <select data-placeholder="Select patch/patches" style="width:59.5em;" id="selectPatches_patch" multiple="multiple" required></select>
+                        
                         <br>
                         <i style="font-size: 17px;">If doesn't appear patches, means that all patches have been requested for risk exceptions.</i>
                         <div style="margin-bottom: 1em;"></div>
+                        
+                        <style>
+                            .select2-results__option {
+                                font-size: 15.5px;
+                            }
+                            .select2-container--default .select2-selection--multiple .select2-selection__choice {
+                                font-size: 15.5px;
+                            }
+                        </style>
 
                         <script>
                             var arrayPatchesPatches = [];
@@ -262,7 +272,6 @@
                                 });
                             });
                         </script>
-                      
                         <div class="container">
                             <div class="row">
                                <div style="padding-top: 2em;" class="col-md-3">

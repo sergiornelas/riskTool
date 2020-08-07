@@ -182,7 +182,8 @@ def approvalDet(request, exclude_patch_ID):
     takeExceptionPatchIDS = takeExceptionPatchIDS.split()
         #convertimos cada elemento string de la lista a entero (siguen siendo strings)
     for i in range(0, len(takeExceptionPatchIDS)): 
-        takeExceptionPatchIDS[i] = int(takeExceptionPatchIDS[i])
+        #takeExceptionPatchIDS[i] = int(takeExceptionPatchIDS[i])
+        takeExceptionPatchIDS[i] = str(takeExceptionPatchIDS[i])
     #[1, 2, 3, 4, 5, 6, 7, 8, 9]
     
     patchObjects = PATCHES.objects.filter(pk__in=takeExceptionPatchIDS).filter(server_id__in=takeServers)
@@ -239,7 +240,8 @@ def approvalDet(request, exclude_patch_ID):
 
     takeExceptionServerID = takeExceptionServerID.split(",")
     #print(takeExceptionServerID)
-    takeExceptionServerID = list(map(int, takeExceptionServerID))
+    #takeExceptionServerID = list(map(int, takeExceptionServerID))
+    takeExceptionServerID = list(map(str, takeExceptionServerID))
     #print(takeExceptionServerID)
 
 #</takeException hostname from database>
