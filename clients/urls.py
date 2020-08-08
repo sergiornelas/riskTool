@@ -52,6 +52,9 @@ urlpatterns = [
     path('cleanEdit', views.cleanEdit, name='cleanEdit'),
     
     path('getPatchesInquiryServer', views.getPatchesInquiryServer, name='getPatchesInquiryServer'),
+
+    path('contentSeparated', views.contentSeparated, name='contentSeparated'),
+    
     
 
     

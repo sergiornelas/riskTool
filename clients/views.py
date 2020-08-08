@@ -449,6 +449,21 @@ def filterPatches(request):
                 
         return HttpResponse(serializers.serialize("json", patch_advisory))
 
+#pendiente
+@csrf_exempt
+def contentSeparated(request):
+    if request.method == 'POST':
+        query = request.POST['query']
+        print("QUERYYY")
+        print(query)
+
+        query = EXCEPTION.objects.filter(pk=query)
+        
+        print("QUERYYY2")
+        print(query)
+
+        return HttpResponse(serializers.serialize("json", query))
+
 
 @csrf_exempt
 def getPatchesInquiryServer(request):
