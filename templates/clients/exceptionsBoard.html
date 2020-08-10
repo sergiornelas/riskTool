@@ -72,7 +72,8 @@
                      <th class="bg-primary" style="color:white;" scope="col">Exception ID</th>
                      <th class="bg-primary" style="color:white;" scope="col">Title</th>
                      <th class="bg-primary" style="color:white;" scope="col">Maximum target date</th>
-                     <th class="bg-primary" style="color:white;" scope="col">Content</th>
+                     <!-- <th class="bg-primary" style="color:white;" scope="col">Content</th> -->
+                     <th class="bg-primary" style="color:white;" scope="col">Justification</th>
                      <th class="bg-primary" style="color:white;" scope="col">Change</th>
                      <th class="bg-primary" style="color:white;" scope="col">Final status</th>
                   </tr>
@@ -101,7 +102,8 @@
                            {#<td><i>{{ p.id }}</i></td>#}
                            <td>{{ p.title }}</td>
                            <td>{{ p.exclude_date }}</td>
-                           <td style="font-size: 16px; text-align: left">{{ p.content }}</td>
+                           {#<td style="font-size: 16px; text-align: left">{{ p.content }}</td>#}
+                           <td style="font-size: 16px; text-align: left">{{ p.justification }}</td>
                            
                            <!-- <td style="font-size: 16px; text-align: left" class="demo2"> -->
                               <script>

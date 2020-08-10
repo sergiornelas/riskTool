@@ -1,23 +1,16 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.shortcuts import get_object_or_404
-
 from exception.choices import state_choices
-
 #message alerts
 from django.contrib import messages
-
 #user registration, model 
 from django.contrib.auth.models import User
-
 #user registration, login after register
 from django.contrib import auth
-
-#*
 from patches.models import PATCHES
 from advisory.models import ADVISORY
 import re
-
 from roles.models import Profile
 from exception.models import EXCEPTION
 from exception.models import VALIDATE_EXCEPTION
@@ -26,12 +19,14 @@ from django import forms
 from django.forms import ModelForm
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
-
 from servers.models import SERVER_USER_RELATION
 from servers.models import SERVER
 
-def approvalsList(request):
+# [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+# [[[[[[[[[[[[[[[[[[[[[[ APPROVAL LIST ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+# [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 
+def approvalsList(request):
     serversApprover = SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
     
     takeServerID = [o.server_id for o in serversApprover]
@@ -142,6 +137,66 @@ def approvalsList(request):
     else:
         return render(request, 'pages/index.html')
 
+#NUEVO!
+def search(request):
+    serversApprover = SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
+    takeServerID = [o.server_id for o in serversApprover]
+    servers = SERVER.objects.filter(pk__in=takeServerID)
+    takeHostnames = [o.hostname for o in servers]
+    for hostname in takeHostnames:
+        exceptionsApprover = EXCEPTION.objects.filter(content__contains=hostname) #tiene que ser el valor exacto.
+    arreglin=[]
+    for server_id in takeServerID:
+        arreglin.extend(EXCEPTION.objects.filter(server_id__contains=server_id).values_list('id', flat=True))
+    arreglin=set(arreglin)
+    
+    queryset_list=EXCEPTION.objects.filter(pk__in=arreglin)
+
+    # paginator2 = Paginator(queryset_list, 3)
+    # page2 = request.GET.get('page2')
+    # paged_listings2 = paginator2.get_page(page2)
+
+    if 'keywords' in request.GET:
+        keywords = request.GET['keywords'] #"KEYWORDS" ES EL NAME EN HTML
+        if keywords:
+            #queryset_list = queryset_list.filter(risk_id__icontains=keywords) #contiene
+            #SI ES POSIBLE FILTRAR NUEVAMENTE UN QUERYSET!!!
+            queryset_list = queryset_list.filter(risk_id__iexact=keywords)
+
+    if 'state' in request.GET:
+        state = request.GET['state']
+        if state:
+            queryset_list = queryset_list.filter(state__iexact=state)
+
+    # paginator2 = Paginator(queryset_list, 3)
+    # page2 = request.GET.get('page2')
+    # paged_listings2 = paginator2.get_page(page2)
+
+    context = {
+        'state_choices':state_choices,
+        'excepciones': queryset_list,
+        #'excepciones2': paged_listings2,
+        'values': request.GET
+    }
+
+    # excepciones=EXCEPTION.objects.filter(pk__in=arreglin)
+
+    # paginator = Paginator(excepciones, 3)
+    # page = request.GET.get('page')
+    # paged_listings = paginator.get_page(page)
+
+    # context = {
+        
+    #     #'excepciones':excepciones
+    #     'excepciones': paged_listings,
+    #     'state_choices':state_choices
+    # }
+
+    return render(request, 'approvers/search.html', context)
+
+# [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+# [[[[[[[[[[[[[[[[[[[[[[ APPROVAL DETAIL ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+# [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 
 def approvalDet(request, exclude_patch_ID):
     justException = get_object_or_404(EXCEPTION, pk=exclude_patch_ID)
@@ -383,63 +438,6 @@ def authorize(request):
     return redirect('approvalDet', exception_id)
 
 
-#NUEVO!
-def search(request):
-    serversApprover = SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
-    takeServerID = [o.server_id for o in serversApprover]
-    servers = SERVER.objects.filter(pk__in=takeServerID)
-    takeHostnames = [o.hostname for o in servers]
-    for hostname in takeHostnames:
-        exceptionsApprover = EXCEPTION.objects.filter(content__contains=hostname) #tiene que ser el valor exacto.
-    arreglin=[]
-    for server_id in takeServerID:
-        arreglin.extend(EXCEPTION.objects.filter(server_id__contains=server_id).values_list('id', flat=True))
-    arreglin=set(arreglin)
-    
-    queryset_list=EXCEPTION.objects.filter(pk__in=arreglin)
-
-    # paginator2 = Paginator(queryset_list, 3)
-    # page2 = request.GET.get('page2')
-    # paged_listings2 = paginator2.get_page(page2)
-
-    if 'keywords' in request.GET:
-        keywords = request.GET['keywords'] #"KEYWORDS" ES EL NAME EN HTML
-        if keywords:
-            #queryset_list = queryset_list.filter(risk_id__icontains=keywords) #contiene
-            #SI ES POSIBLE FILTRAR NUEVAMENTE UN QUERYSET!!!
-            queryset_list = queryset_list.filter(risk_id__iexact=keywords)
-
-    if 'state' in request.GET:
-        state = request.GET['state']
-        if state:
-            queryset_list = queryset_list.filter(state__iexact=state)
-
-    # paginator2 = Paginator(queryset_list, 3)
-    # page2 = request.GET.get('page2')
-    # paged_listings2 = paginator2.get_page(page2)
-
-    context = {
-        'state_choices':state_choices,
-        'excepciones': queryset_list,
-        #'excepciones2': paged_listings2,
-        'values': request.GET
-    }
-
-    # excepciones=EXCEPTION.objects.filter(pk__in=arreglin)
-
-    # paginator = Paginator(excepciones, 3)
-    # page = request.GET.get('page')
-    # paged_listings = paginator.get_page(page)
-
-    # context = {
-        
-    #     #'excepciones':excepciones
-    #     'excepciones': paged_listings,
-    #     'state_choices':state_choices
-    # }
-
-    return render(request, 'approvers/search.html', context)
-
 #NOTAS:
     #get_object_or_404 will only return one object, get_list_or_404 multiple objects. Levanta la excepción Http404 si no existe el objeto.
         #get_object_or_404 uses get(), get_list_or_404 uses filter()
@@ -457,4 +455,3 @@ def search(request):
     #If you are using values_list() with a single field, you can use flat=True to return a QuerySet of single values instead of 1-tuples:
     #flat=True will remove the tuples and return the list
         #<QuerySet [1, 2]>
-

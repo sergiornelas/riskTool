@@ -6,6 +6,7 @@ from advisory.models import ADVISORY
 from django.conf import settings
 
 class PATCHES(models.Model):
+    patch_id=models.CharField(max_length=50, primary_key=True)
     is_supported=models.PositiveSmallIntegerField(default=1)
     due_date=models.DateField(default=datetime.now, blank=False)
     scheduled_date=models.DateTimeField(default=datetime.now, blank=False)
@@ -20,8 +21,6 @@ class PATCHES(models.Model):
 
     
     #patch_id=models.CharField(max_length=50, null=True)
-    patch_id=models.CharField(max_length=50, primary_key=True)
-    
     
     status_id = models.IntegerField(null=True)
     exception_id = models.IntegerField(null=True)
@@ -29,11 +28,7 @@ class PATCHES(models.Model):
     last_update_date=models.DateTimeField(null=True)
     patched_date=models.CharField(max_length=50, null=True)
 
-    
-
     def __str__(self):
         return (self.server.hostname + " : " + "'" + self.advisory.description + "'" +" , ")
-
-
 
 # NO SE TE OLVIDE QUITAR EL NULL CUANDO EN EL CAMPO DEL USER, AL MOMENTO QUE HAGAS DEL DEPLOY AL SERVER.
