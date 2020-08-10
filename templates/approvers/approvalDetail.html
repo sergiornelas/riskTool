@@ -1,6 +1,55 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<style>
+    #showcase-inner::before {
+        background: rgba(75, 125, 172, 0.8);
+    }
+    #services::before {
+        background: rgba(75, 125, 172, 0.8);
+      }
+</style>
+
+<section id="showcase-inner" class="py-5 text-white">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h1 class="display-4">Risk detail</h1>
+          <!-- <p class="lead">Application that allows managing the exceptions of updates that cause
+            conflicts in customer services</p> -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <br>
+                        <!-- <h4>Type of exception:</h4> -->
+                        <h4>Type of exception:
+                        {% if  justException.exception_type == 1 %}
+                            <!-- <p style="font-size:1.5em;" ><u>Patch</u></p> -->
+                            <u>Patch</u>
+                        {% elif  justException.exception_type  == 2 %}
+                            <!-- <p style="font-size:1.5em;"  ><u>Full server</u></p> -->
+                            <u>Full server</u>
+                        {% else %}
+                            <!-- <p style="font-size:1.5em;"><u>Unknown</u></p> -->
+                            <u>Unknown</u>
+                        {% endif %}
+                        </h4>
+                    </div>
+                    <!-- <div style="padding-top: 1.5em;" class="col-md-6">
+                        <h4>Server:</h4> -->
+                        {#<p >{{ justException.content }}</p>#}
+                        <!-- <style>
+                            .nobr { white-space: nowrap }
+                        </style> -->
+                            {#<span style="white-space: nowrap"><b>{{ takeServersFront }}</b></span>#}
+                    <!-- </div> -->
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</section>
+
 <!-- Breadcrumb -->
 <section id="bc" class="mt-3">
     <div class="container">
@@ -17,52 +66,12 @@
   </section>
 
 <div class="p-5 container text-center">
-    <h1 style="margin-bottom:.5rem" class="display-4">
+    <!-- <h1 style="margin-bottom:.5rem" class="display-4">
         Risk detail
-    </h1>
-    <section class="py-4">
+    </h1> -->
+    <!-- <section class="py-4"> -->
+    <section >
         {% include 'partials/_alerts.html' %}
-
-        <style>
-            table, th, td {
-                border: 1px solid black;
-                border-collapse: collapse;
-                font-size: 15px;
-            }
-            th, td {
-                padding: 5px;
-                text-align: left;
-                /*font-size: 15px;*/
-            }
-              
-            .tere { display: block; float: left; font-size: 1em; }
-            .tede { display: block; font-size: 1em; }
-        </style>
-
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <br>
-                    <h4>Type of exception:</h4>
-                    {% if  justException.exception_type == 1 %}
-                        <p style="font-size:1.5em;" ><u>Patch</u></p>
-                    {% elif  justException.exception_type  == 2 %}
-                        <p style="font-size:1.5em;"  ><u>Full server</u></p>
-                        <!-- <b> This action will prevent also future coming patches in the servers.</b> -->
-                    {% else %}
-                        <p style="font-size:1.5em;"><u>Unknown</u></p>
-                    {% endif %}
-                </div>
-                <!-- <div style="padding-top: 1.5em;" class="col-md-6">
-                    <h4>Server:</h4> -->
-                    {#<p >{{ justException.content }}</p>#}
-                    <!-- <style>
-                        .nobr { white-space: nowrap }
-                    </style> -->
-                        {#<span style="white-space: nowrap"><b>{{ takeServersFront }}</b></span>#}
-                <!-- </div> -->
-            </div>
-        </div>
 
         <table style="font-size:2em;" class="table mt-4 table-bordered">
             <thead class="thead-dark">
@@ -83,50 +92,38 @@
 
         <br>
 
-        <table style="width:100%; font-size: 13.5px;">
-            <tr class="tere">
-              <th >Patch ID</th>
+        <table class="table table-bordered" style="text-align: center; ">
+            <thead class="table-info ">
+                <tr>
+                    <th scope="col">Patch ID</th>
+                    <th scope="col">Server</th>
+                    <th scope="col">Patch description</th>
+                    <th scope="col">Target implementation date</th>
+                </tr>
+            </thead>
+            <tbody>
                 {% for alias in patchObjects %}
-                    <td class="tede">{{ alias.patch_id }}</td>
+                    <tr>
+                        <td style="text-align: left; font-size:15px;">{{ alias.patch_id }}</td>
+                        <td style="font-size:15px;">{{ alias.server }}</td>
+                        <td style="text-align: left; font-size:15px;">{{ alias.advisory }}</td>
+                        <td style="font-size:15px;">{{ alias.scheduled_date }}</td>
+                    </tr>
                 {% endfor %}
-            </tr>
-            <tr class="tere">
-              <th>Server</th>
-                {% for alias in patchObjects %}
-                    <td class="tede">{{ alias.server }}</td>
-                {% endfor %}
-            </tr>
-            <tr class="tere">
-              <th>Patch description</th>
-                {% for alias in patchObjects %}
-                    <td class="tede">{{ alias.advisory }}</td>
-                {% endfor %}
-            </tr>
-            <!-- <tr class="tere"> -->
-                <!-- <th>Criticality</th> -->
-                  {#{% for alias in advisories %}#}
-                      {#<td class="tede">{{ alias.criticality }}</td>#}
-                  {#{% endfor %}#}
-              <!-- </tr> -->
-              <tr class="tere">
-                <th>Target implementation date</th>
-                  {% for alias in patchObjects %}
-                      <td class="tede">{{ alias.scheduled_date }}</td>
-                  {% endfor %}
-              </tr>
+            </tbody>
         </table>
     </section>
 
     <div>
         <br>
-        <h2>{{ justException.title }}</h2>
+        <h2 style="margin-top: 1em;">{{ justException.title }}</h2>
         <h4>Requestor justification</h4>
         <textarea style="padding:15px;" readonly class="form-control border border-primary" rows="3">{{ justException.justification }}</textarea>
     </div>
 
     <div>
         <br>
-        <h4>Requestor action plan</h4>
+        <h4 style="margin-top: 1em;">Requestor action plan</h4>
         <textarea style="padding:15px;" readonly class="form-control border border-primary" rows=8">{{ justException.action_plan }}</textarea>
     </div>
 
@@ -137,8 +134,6 @@
     <div>
         <br>
         <h4>Your state:</h4>
-
-        <!-- <textarea cols="70" rows="8">hi</textarea> -->
         
         <div class="container">
             <div class="row">
@@ -192,7 +187,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-3"></div>
-                        <button style="margin-top: 2em;" class="col-md-6 btn btn-primary btn-block" data-toggle="modal" data-target="#inquiryModal2" value={{ singleAuthorize.comment }}>Read</button>
+                        <button style="margin-top: 2em;" class="col-md-6 btn btn-primary btn-block clickbtn" data-toggle="modal" data-target="#inquiryModal2" value={{ singleAuthorize.comment }}>Read</button>
                         <div class="col-md-3"></div>
                     </div>
                 </div>
@@ -204,23 +199,30 @@
 <script>
     //aprobadores pendientes 
 
-    var lastArray = {{ lastArray|safe }}
+    //var lastArray = {{ lastArray|safe }} //["approver3"] (object) (error)
 
-
-    console.log(typeof(lastArray))
+    var lastArray = "{{ lastArray|safe }}"; //['approver3'] (string)
+    lastArray = lastArray.replace(/'/g, '"');
+    lastArray = JSON.parse(lastArray)
+    
+    //console.log(typeof(lastArray))
     console.log(lastArray)
+    console.log(lastArray.length)
 
-    if(lastArray==""){
+    //if(lastArray==""){
+    if(lastArray && lastArray.length > 0){
+        
+        jQuery(document).ready(function () {
+            $("#abc").val(lastArray);
+        });
+        
+        console.log("hay algo")
+    }
+    else{
         jQuery(document).ready(function () {
             $("#abc").val("All approvers have taken action");
         });
         console.log("All approvers have taken action")
-    }
-    else{
-        jQuery(document).ready(function () {
-            $("#abc").val(lastArray);
-        });
-        console.log("hay algo")
     }
     
 </script>
@@ -244,7 +246,7 @@
                 <input type="hidden" name="risk_id" value={{ justException.risk_id }}>
                                 
                 {#<input type="hidden" name="approver_pending" value={{ takeApproverNames }}>#}
-                <input id="abc" type="hidden" name="approver_pending" >
+                <input class="abcd" id="abc" type="hidden" name="approver_pending" >
                 
                 <div class="form-group">
                     <label for="comment" class="col-form-label">Comment:</label>
@@ -269,14 +271,6 @@
     </div>
   </div>
 
-<div>
-    {#{{ pendingApprover.username }}#}
-    {#{{ justException.justification }}#}
-    {#{{takeApproverNames}}#}
-    {#{{lastArray}}#}
-</div>
-
-
 
   <!-- Inquiry Modal Read comentaries-->
 <div class="modal fade" id="inquiryModal2" role="dialog">
@@ -294,7 +288,22 @@
 
             <div style="font-size:15px; margin-top:1em;">Approval date: {{ singleAuthorize.time }} </div>
             <hr>
-            <input type="submit" name="state" value="Close" class="btn btn-block btn-success col-md" data-dismiss="modal">
+            <input type="submit" name="state" value="Close" class="btn btn-block btn-success col-md clickbtn" data-dismiss="modal">
+
+            <script>
+                /*
+                jQuery(document).ready(function () {
+                    $(".clickbtn").click(function () {
+                        jQuery(document).ready(function () {
+                            //$("#abc").val("All approvers have taken action");
+                            $(".abcd").val("Rejected by an approver");
+                            console.log("rechazo!")
+                        });
+                    });
+                });
+                */
+            </script>
+            
         </div>
                         <!-- name = database field, value = input value to db -->
       </div>
