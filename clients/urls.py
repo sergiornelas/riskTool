@@ -54,10 +54,9 @@ urlpatterns = [
     path('getPatchesInquiryServer', views.getPatchesInquiryServer, name='getPatchesInquiryServer'),
 
     path('contentSeparated', views.contentSeparated, name='contentSeparated'),
-    
-    
 
-    
-    #path('getPatchObject', views.getPatchObject, name='getPatchObject'),
-    
+    #path('exceptionDet/<int:exclude_patch_ID>', views.exceptionDet, name='exceptionDet'),
+    path('exceptionDetail/<int:exclude_patch_ID>', views.exceptionDetail, name='exceptionDetail'),   
+        
+    #path('getPatchObject', views.getPatchObject, name='getPatchObject'),   
 ]

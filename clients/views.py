@@ -871,3 +871,49 @@ def getCriticality(request):
         criticalidad = ADVISORY.objects.filter(pk__in=criticality)
         return HttpResponse(serializers.serialize("json", criticalidad))
 """
+
+# [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+# [[[[[[[[[[[[[[[[[[[[[[ EXCEPTION DETAIL ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+# [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+def exceptionDetail(request, exclude_patch_ID):
+    justException = get_object_or_404(EXCEPTION, pk=exclude_patch_ID) #FRONTEND
+
+    exceptionQuery = EXCEPTION.objects.filter(pk=exclude_patch_ID)
+    client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
+    servers_ids=[]
+    for server in client_has_server:
+        servers_ids.append(server.server_id)
+    takeServers=SERVER.objects.filter(pk__in=servers_ids)
+    takeExceptionPatchIDS=[]
+    for x in exceptionQuery:
+        takeExceptionPatchIDS.append(x.patch_id)
+    takeExceptionPatchIDS =  ', '.join(takeExceptionPatchIDS)
+    takeExceptionPatchIDS = takeExceptionPatchIDS.replace(",", " ")
+    takeExceptionPatchIDS = takeExceptionPatchIDS.split()
+    for i in range(0, len(takeExceptionPatchIDS)): 
+        takeExceptionPatchIDS[i] = str(takeExceptionPatchIDS[i])
+    patchObjects = PATCHES.objects.filter(pk__in=takeExceptionPatchIDS).filter(server_id__in=takeServers) #FRONTEND
+
+    validations=VALIDATE_EXCEPTION.objects.filter(exception=exclude_patch_ID)
+
+    #approver remaining:
+    takeExceptionServerID= [o.server_id for o in exceptionQuery]
+    takeExceptionServerID=', '.join(takeExceptionServerID)
+    takeExceptionServerID = takeExceptionServerID.split(",")
+    takeExceptionServerID = list(map(int, takeExceptionServerID))
+    usersApprover = Profile.objects.filter(role=2).values_list("user_id")
+    getServerID = SERVER.objects.filter(pk__in=takeExceptionServerID).values_list("id")
+    serverApprover = SERVER_USER_RELATION.objects.filter(user_id__in=usersApprover).filter(server_id__in=getServerID).values_list('user_id')
+    approver_detail = User.objects.filter(pk__in=serverApprover)
+    authorize = VALIDATE_EXCEPTION.objects.filter(exception=justException.id).filter(approver_id__in =approver_detail)
+    approver_detail_pending = approver_detail.exclude(pk__in=authorize.values_list('approver_id'))
+
+    context = {
+        'justException':justException, #FRONTEND
+        'patchObjects':patchObjects, #FRONTEND
+        'approver_detail_pending':approver_detail_pending, #FRONTEND
+        'validations':validations
+    }
+
+    return render(request, 'clients/exceptionDet.html', context)

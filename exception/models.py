@@ -87,5 +87,8 @@ class VALIDATE_EXCEPTION(models.Model):
     #approver_pending = models.CharField(max_length=100, null=True)
     approver_pending = models.TextField(blank=True, null=True)
 
+    # def __str__(self):
+    #     return self.hostname
+
     
 

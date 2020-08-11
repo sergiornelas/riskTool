@@ -75,7 +75,7 @@
                      <!-- <th class="bg-primary" style="color:white;" scope="col">Content</th> -->
                      <th class="bg-primary" style="color:white;" scope="col">Justification</th>
                      <th class="bg-primary" style="color:white;" scope="col">Change</th>
-                     <th class="bg-primary" style="color:white;" scope="col">Final status</th>
+                     <th class="bg-primary" style="color:white;" scope="col">More info</th>
                   </tr>
                </thead>
                <tbody>
@@ -155,6 +155,7 @@
                                  */
                               </script>
                            <!-- </td> -->
+
                            <td>
                               {% if p.state == "Approved" or p.state == "Rejected" %}
                                  <!-- <p style="font-size: .9em; color:dimgray">Has a status already</p> -->
@@ -178,11 +179,14 @@
                            </td>
 
                            {% if p.state == "Pending" %}
-                              <td><button value={{ p.id }} style="font-style: italic;" class="btn btn-block validationsQuery"data-toggle="modal" data-target="#inquiryModal2">{{ p.state }}</button></td>
+                              {#<td><button value={{ p.id }} style="font-style: italic;" class="btn btn-block validationsQuery"data-toggle="modal" data-target="#inquiryModal2">{{ p.state }}</button></td>#}
+                              <td><a href="{% url 'exceptionDetail' p.id %}" style="font-style: italic; background-color: lightgray;" class="btn btn-block">Pending</a></td>
                            {% elif p.state == "Approved" %}
-                              <td><button value={{ p.id }} class="btn btn-success btn-block validationsQuery" data-toggle="modal"data-target="#inquiryModal2">{{ p.state }}</button></td>
+                              {#<td><button value={{ p.id }} class="btn btn-success btn-block validationsQuery" data-toggle="modal"data-target="#inquiryModal2">{{ p.state }}</button></td>#}
+                              <td><a href="{% url 'exceptionDetail' p.id %}" class="btn btn-success btn-block">Approved</a></td>
                            {% elif p.state == "Rejected" %}
-                              <td><button value={{ p.id }} class="btn btn-danger btn-block validationsQuery" data-toggle="modal"data-target="#inquiryModal2">{{ p.state }}</button></td>
+                              {#<td><button value={{ p.id }} class="btn btn-danger btn-block validationsQuery" data-toggle="modal"data-target="#inquiryModal2">{{ p.state }}</button></td>#}
+                              <td><a href="{% url 'exceptionDetail' p.id %}" class="btn btn-danger btn-block">Rejected</a></td>
                            {% else %}
                               <td>{{ p.state }}</td> <!-- bugs-->
                            {% endif %}
@@ -199,7 +203,7 @@
 
       <div class="row">
          <div class="col-md-12">
-           {% if client_exceptions.has_other_pages %}
+            {% if client_exceptions.has_other_pages %}
              <ul class="pagination">
                {% if client_exceptions.has_previous %}
                  <li class="page-item">
@@ -231,9 +235,9 @@
                  </li>
                {% endif %}
              </ul>
-           {% endif %}
+            {% endif %}
          </div>
-       </div>
+      </div>
 
    </div>
 </section>
@@ -262,7 +266,6 @@
             <!-- <table>   -->
                <!-- <div id="clean" class="queryContent" rows="7" class="form-control"></div> -->
                <!-- <table id="clean" style="font-size:15px;" class="queryContent"> -->
-
 
                <script type="text/javascript">
                   $(document).ready(function (){

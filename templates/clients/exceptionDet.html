@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    #showcase-inner::before {
+        background: rgba(166, 155, 170, 0.8);
+    }
+    #services::before {
+        background: rgba(166, 155, 170, 0.8);
+    }
+</style>
+
+<section id="showcase-inner" class="py-5 text-white">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h1 class="display-4">Risk detail</h1>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <br>
+                        <h4>Type of exception:
+                        {% if  justException.exception_type == 1 %}
+                            <u>Patch</u>
+                        {% elif  justException.exception_type  == 2 %}
+                            <u>Full server</u>
+                        {% else %}
+                            <u>Unknown</u>
+                        {% endif %}
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+<!-- Breadcrumb -->
+<section id="bc" class="mt-3">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="{% url 'exceptionsBoard' %}">
+               <i class="fas fa-calendar-check"></i> List of risk exceptions </a>
+         </li>
+        </ol>
+      </nav>
+    </div>
+</section>
+
+<div class="p-5 container text-center">
+    <section >
+        {% include 'partials/_alerts.html' %}
+
+        <h4>Approver status</h4>
+
+        <table class="table mt-4 table-bordered" >
+            <thead class="table-info bg-primary">
+                <tr>
+                    <th style="color: white;">Approver name</th>
+                    <th style="color: white;">Comment</th>
+                    <th style="color: white;">Approval date</th>
+                    <th style="color: white;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in validations %}
+                    <tr>
+                        {#<td>{{ j }}</td>#}
+                        <td>{{ i.approver }}</td>
+
+                        <td><button class="btn btn-primary btn-block approverComment" data-toggle="modal" data-target="#inquiryModal2" value={{ i.comment }}>Read</button></td>
+                        <td>{{ i.time }}</td>
+                        {% if i.state == 'Approved' %}
+                            <td style="color: green;"><b>{{ i.state }}</b></td>
+                        {% elif i.state == 'Rejected' %}
+                            <td style="color: red;"><b>{{ i.state }}</b></td>
+                        {% else %}
+                            <td>{{ i.state }}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+
+                {% for i in approver_detail_pending %}
+                    <tr>
+                        <td>{{ i.username }}</td>
+                        <td><button class="btn  btn-block" style="pointer-events:none">Pending</button></td>
+                        <td>Pending</td>
+                        <td><i>Pending</i></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if justException.state == "Approved" %}
+            <h4 style="margin-top: 2em;">Current status: <b style="color:green"> {{justException.state}} </b> </h4>
+        {% elif justException.state == "Rejected" %}
+            <h4 style="margin-top: 2em; ">Current status: <b style="color:red"> {{justException.state}} </b> </h4>
+        {% else %}
+            <h4 style="margin-top: 2em;">Current status: <b> {{justException.state}} </b> </h4>
+        {% endif %}
+
+        <hr style="margin-top: 3rem;">
+
+        
+        <h4 style="margin-top: 2em;">Content</h4>
+
+        <table style="font-size:2em;" class="table mt-4 table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th style="text-align:center; font-size:.5em;" scope="col">Risk ID</th>
+                    <th style="text-align:center; font-size:.5em;" scope="col">Requestor name</th>
+                    <th style="text-align:center; font-size:.5em;" scope="col">Maximum Target Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align:center; font-size:.5em;"> {{ justException.risk_id }}</td>
+                    <td style="text-align:center; font-size:.5em;">{{ justException.client }}</td>
+                    <td style="text-align:center; font-size:.5em;">{{ justException.exclude_date }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <table class="table table-bordered" style="text-align: center; ">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Patch ID</th>
+                    <th scope="col">Server</th>
+                    <th scope="col">Patch description</th>
+                    <th scope="col">Target implementation date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alias in patchObjects %}
+                    <tr>
+                        <td style="text-align: left; font-size:15px;">{{ alias.patch_id }}</td>
+                        <td style="font-size:15px;">{{ alias.server }}</td>
+                        <td style="text-align: left; font-size:15px;">{{ alias.advisory }}</td>
+                        <td style="font-size:15px;">{{ alias.scheduled_date }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <div>
+        <br>
+        <h2 >{{ justException.title }}</h2>
+        <h4 style="margin-top: 1.5em;">Justification</h4>
+        <textarea style="padding:15px; margin-top: 1em;" readonly class="form-control border border-primary" rows="3">{{ justException.justification }}</textarea>
+    </div>
+    <div>
+        <br>
+        <h4 style="margin-top: 1em;">Action plan</h4>
+        <textarea style="padding:15px;" readonly class="form-control border border-primary" rows=8">{{ justException.action_plan }}</textarea>
+    </div>
+    <br>
+</div>
+
+  <!-- Inquiry Modal Read comentaries-->
+<div class="modal fade" id="inquiryModal2" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="inquiryModalLabel">Approval comments</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <textarea id="clean" readonly rows="7" name="comment" class="form-control queryContent"></textarea>
+
+            <script type="text/javascript">
+                $(document).ready(function (){
+                   $(".approverComment").click(function(){
+                        document.getElementById("clean").innerHTML = "";
+                        query = this.value
+                        console.log(query)
+                      $(".queryContent").append(query);
+                    });
+                });
+            </script>
+
+            <hr>
+            <input type="submit" name="state" value="Close" class="btn btn-block btn-success col-md clickbtn" data-dismiss="modal">
+        </div>
+                        <!-- name = database field, value = input value to db -->
+      </div>
+    </div>
+</div>
+
+{% endblock %}
