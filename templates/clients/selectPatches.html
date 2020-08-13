@@ -5,22 +5,6 @@
 <script>
     //string simple
     console.log(localStorage.arrayServerPatches)
-    
-    //window.fecha;
-    
-    //testing
-    //var guardado = localStorage.getItem('datos');
-    //console.log('objetoObtenido: ', JSON.parse(guardado));
-
-    //object
-    //var serversObject = localStorage.getItem('data');
-    //var serversObjectJSON = JSON.parse(serversObject);
-    
-    //console.log('object: ', JSON.parse(serversObject));  //object
-    //console.log(serversObjectJSON)
-    //console.log(typeof(serversObject))  //string
-    //console.log(typeof(JSON.parse(serversObject))) // object
-    //console.log(typeof(serversObjectJSON)) // object
 </script>
 
 <section id="showcase-inner" class="py-5 text-white">
@@ -54,238 +38,179 @@
 
 <section id="dashboard" class="py-4">
     <div class="container">
-        <!-- <form role="form" action="" method="post" class="registration-form"> -->
-
-            <!--  PROGRESS BAR -->
-                <div class="container">
-                    <div class="steps">
-                    <ul class="steps-container">
-                        <li style="width:25%;" class="activated">
-                            <div class="step">
-                                <div class="step-image"><span></span></div>
-                                <div class="step-current">Type of exception</div>
-                                <div class="step-description">Server or patch</div>
-                            </div>
-                        </li>
-                        <li style="width:25%;"class="activated">
-                            <div class="step">
-                                <div class="step-image"><span></span></div>
-                                <div class="step-current">Choose server</div>
-                                <div class="step-description">Select server</div>
-                            </div>
-                        </li>
-                        <li style="width:25%;"class="activated">
-                            <div class="step">
-                                <div class="step-image"><span></span></div>
-                                <div class="step-current">Choose patch</div>
-                                <div class="step-description">Select patches</div>
-                            </div>
-                        </li>
-                        <li style="width:25%;">
-                            <div class="step">
-                                <div class="step-image"><span></span></div>
-                                <div class="step-current">Inquiry</div>
-                                <div class="step-description">Form</div>
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="step-bar" style="width: 76%;"></div>
+        <!--  PROGRESS BAR -->
+        <div class="container">
+            <div class="steps">
+            <ul class="steps-container">
+                <li style="width:25%;" class="activated">
+                    <div class="step">
+                        <div class="step-image"><span></span></div>
+                        <div class="step-current">Type of exception</div>
+                        <div class="step-description">Server or patch</div>
                     </div>
-                </div>
+                </li>
+                <li style="width:25%;"class="activated">
+                    <div class="step">
+                        <div class="step-image"><span></span></div>
+                        <div class="step-current">Choose server</div>
+                        <div class="step-description">Select server</div>
+                    </div>
+                </li>
+                <li style="width:25%;"class="activated">
+                    <div class="step">
+                        <div class="step-image"><span></span></div>
+                        <div class="step-current">Choose patch</div>
+                        <div class="step-description">Select patches</div>
+                    </div>
+                </li>
+                <li style="width:25%;">
+                    <div class="step">
+                        <div class="step-image"><span></span></div>
+                        <div class="step-current">Inquiry</div>
+                        <div class="step-description">Form</div>
+                    </div>
+                </li>
+            </ul>
+            <div class="step-bar" style="width: 76%;"></div>
+            </div>
+        </div>
 
-                <div style="margin-bottom: 4em;"></div>
-                <div>Choose patch: 
+        <div style="margin-bottom: 4em;"></div>
+        <div>Choose patch:
+            <form action="{% url 'inquiryPatches' %}">
+                {% csrf_token %}
+                <select data-placeholder="Select patch/patches" style="width:59.5em;" id="selectPatches_patch" multiple="multiple" required></select>
+                <br>
+                <i style="font-size: 17px;">If doesn't appear patches, means that all patches have been requested for risk exceptions.</i>
+                <div style="margin-bottom: 1em;"></div>
+                <style>
+                    .select2-results__option {
+                        font-size: 15.5px;
+                    }
+                    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+                        font-size: 15.5px;
+                    }
+                </style>
 
-                    {#<form action="{% url 'exclude_server' %}" method="POST">#}
-                    <form action="{% url 'inquiryPatches' %}">
-                        {% csrf_token %}
-                        <select data-placeholder="Select patch/patches" style="width:59.5em;" id="selectPatches_patch" multiple="multiple" required></select>
-                        
-                        <br>
-                        <i style="font-size: 17px;">If doesn't appear patches, means that all patches have been requested for risk exceptions.</i>
-                        <div style="margin-bottom: 1em;"></div>
-                        
-                        <style>
-                            .select2-results__option {
-                                font-size: 15.5px;
+                <script>
+                    var arrayPatchesPatches = [];
+
+                    Array.prototype.remove = function () {
+                        var what, a = arguments, L = a.length, ax;
+                        while (L && this.length) {
+                            what = a[--L];
+                            while ((ax = this.indexOf(what)) !== -1) {
+                                this.splice(ax, 1);
                             }
-                            .select2-container--default .select2-selection--multiple .select2-selection__choice {
-                                font-size: 15.5px;
-                            }
-                        </style>
+                        }
+                        return this;
+                    };
 
-                        <script>
-                            var arrayPatchesPatches = [];
-
-                            Array.prototype.remove = function () {
-                                var what, a = arguments, L = a.length, ax;
-                                while (L && this.length) {
-                                    what = a[--L];
-                                    while ((ax = this.indexOf(what)) !== -1) {
-                                        this.splice(ax, 1);
-                                    }
-                                }
-                                return this;
-                            };
-
-                            $(document).ready(function () {
-                                
-                                //console.log(localStorage.arrayServerPatches)
-                                //var selectedServer = JSON.stringify(localStorage.arrayServerPatches);
-                                
-                                //var selectedServer = JSON.stringify(serversObjectJSON);
-
-                                //REGEXP QUITAR CORCHETES Y COMILLAS (CLEAR DATA)
-                                //selectedServer = selectedServer.replace(/"/g, '');
-                                //selectedServer = selectedServer.replace(/[\[\]']+/g, '')
-
-                                //console.log(selectedServer)
+                    $(document).ready(function () {
+                        $.ajax({
+                            method: "POST",
+                            data: {
+                                //simple string
+                                selectedServer: localStorage.arrayServerPatches
+                            },
+                            url: 'filterPatches',
+                        }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
+                            var patchesOptions;
+                            data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
+                            $.each(data, function (key, index) {
+                            //-------------------------------get hostname -------------------------------
+                                var hostname
+                                var hostnames = []
                                 
                                 $.ajax({
-                                    method: "POST",
+                                    async: false,
+                                    url: 'getHostnames',
+                                    method: 'POST',
+                                    dataType: "text",
                                     data: {
-                                        //simple string
-                                        selectedServer: localStorage.arrayServerPatches
+                                        serverID: index.fields.server
                                     },
-                                    url: 'filterPatches',
-                                })
-                                    .done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
-                                        
-                                        //var x = JSON.stringify(data);
-
-                                        //REGEXP QUITAR CORCHETES Y COMILLAS (CLEAR DATA)
-                                        //x = x.replace(/PATCHES/g, '');
-                                        //x = x.replace(/<\[\>']+/g, '')
-                                        //x = x.replace(/QuerySet/g, '');
-                                        //console.log(x)
-                                        //console.log("ENTRAN LOS DATOS: ") //string
-                                        //console.log(typeof(data)) //string
-                                        //console.log(data)
-
-                                        var patchesOptions;
-
-                                        //data = JSON.stringify(data);
-
-                                        data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
-
-                                        //console.log("DATOS PARSEADOS A JSON: ") //string
-                                        //console.log(typeof(data)) //object
-                                        
-                                        
-                                        console.warn(data)
-
-                                        $.each(data, function (key, index) {
-                                            //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
-                                            
-                        //-------------------------------get hostname -------------------------------
-
-                                            var hostname
-                                            var hostnames = []
-                                            
-                                            $.ajax({
-                                                async: false,
-                                                url: 'getHostnames',
-                                                method: 'POST',
-                                                dataType: "text", //"json"
-                                                data: {
-                                                   serverID: index.fields.server
-                                                },
-                                                
-                                                success: function (host_name) {
-                                                   hostname = JSON.parse(host_name);
-                                                   //console.log(hostname)
-                                                   
-                                                    $.each(hostname,function(key,index){
-                                                        hostnames.push(index.fields.hostname);
-                                                   })
-                                                   
-                                                   //console.log(hostnames)
-                                                }
-                                             });
-
-                        //-------------------------------get description -------------------------------
-
-                                            var description
-                                            var descriptions = []
-                                            var crits = []
-                                            
-                                            $.ajax({
-                                                async: false,
-                                                url: 'getAdvisoriesDesc',
-                                                method: 'POST',
-                                                dataType: "text", //"json"
-                                                data: {
-                                                    advisoryDescription: index.fields.advisory
-                                                },
-                                                
-                                                success: function (advisory_description) {
-                                                description = JSON.parse(advisory_description);
-                                                //console.log(description)
-                                                
-                                                    $.each(description,function(key,index){
-                                                        descriptions.push(index.fields.description);
-                                                        crits.push(index.fields.criticality);
-                                                    })
-                                                
-                                                    //console.log(descriptions)
-                                                }
-                                            });
-                                           
-                                            //patchesOptions += "<option>" + "(" + index.pk + ")" + hostnames + ":[" + descriptions + "]" + "</option>";
-                                            //patchesOptions += "<option>" + "(" + index.pk + ")" + hostnames + ":[" + descriptions + "]" + "~" + crits + "</option>";
-                                            patchesOptions += "<option>" + "(" + index.pk + ")" + hostnames + ":[" + descriptions + "]" + " criticality: " + crits + "</option>";
-                                            
-                                        });
-                                        //console.log(patchesOptions)
-
-                                        // AGREGA LOS PARCHES A LA DROP-DOWN-LIST
-                                        $('#selectPatches_patch').html(patchesOptions);                                       
-
-                                        //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA PARCHE (AGREGA).
-                                        $('#selectPatches_patch').on('select2:select', function (e) {
-                                            var data = e.params.data;
-                                            arrayPatchesPatches.push(data.text);
-                                            console.log(arrayPatchesPatches);
-
-                                            var savePatches = arrayPatchesPatches
-                                            localStorage.arrayPatchesPatches = savePatches;
-                                        });
-
-                                        //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA PARCHE (ELIMINA).
-                                        $('#selectPatches_patch').on('select2:unselect', function (e) {
-                                            var data = e.params.data;
-                                            arrayPatchesPatches.remove(data.text);
-                                            console.log(arrayPatchesPatches);
-
-                                            var savePatches = arrayPatchesPatches
-                                            localStorage.arrayPatchesPatches = savePatches;
-                                        });
-                                    });
-                            });
-
-                            //MOSTRAR EL PLACE HOLDER
-                            $(document).ready(function () {
-                                $("#selectPatches_patch").select2({
-                                    placeholder: function () {
-                                        $(this).data('placeholder');
+                                    
+                                    success: function (host_name) {
+                                        hostname = JSON.parse(host_name);                                        
+                                        $.each(hostname,function(key,index){
+                                            hostnames.push(index.fields.hostname);
+                                        })
                                     }
                                 });
+                            //-------------------------------get description -------------------------------
+                                var description
+                                var descriptions = []
+                                var crits = []
+                                
+                                $.ajax({
+                                    async: false,
+                                    url: 'getAdvisoriesDesc',
+                                    method: 'POST',
+                                    dataType: "text",
+                                    data: {
+                                        advisoryDescription: index.fields.advisory
+                                    },
+                                    
+                                    success: function (advisory_description) {
+                                    description = JSON.parse(advisory_description);
+                                        $.each(description,function(key,index){
+                                            descriptions.push(index.fields.description);
+                                            crits.push(index.fields.criticality);
+                                        })
+                                    }
+                                });
+                                //patchesOptions += "<option>" + "(" + index.pk + ")" + hostnames + ":[" + descriptions + "]" + "</option>";
+                                patchesOptions += "<option>" + "(" + index.pk + ")" + hostnames + ":[" + descriptions + "]" + " criticality: " + crits + "</option>";
                             });
-                        </script>
-                        <div class="container">
-                            <div class="row">
-                               <div style="padding-top: 2em;" class="col-md-3">
-                                  <a style="background-color:#D0D0D5"href="{% url 'selectServerPatch' %}" class="btn btn-block">Back</a>
-                               </div>
-                               <div style="padding-top: 2em;" class="col-md-3">
-                                {#<a href="{% url 'inquiryPatches' %}" class="btn btn-primary btn-block">Next</a>#}
-                                <button class="btn btn-primary btn-block">Next</button>
-                               </div>
-                               <div class="col-md-6"> </div>
-                            </div>
-                         </div>
-                    </form>
+                            // AGREGA LOS PARCHES A LA DROP-DOWN-LIST
+                            $('#selectPatches_patch').html(patchesOptions);                                       
+
+                            //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA PARCHE (AGREGA).
+                            $('#selectPatches_patch').on('select2:select', function (e) {
+                                var data = e.params.data;
+                                arrayPatchesPatches.push(data.text);
+                                console.log(arrayPatchesPatches);
+
+                                var savePatches = arrayPatchesPatches
+                                localStorage.arrayPatchesPatches = savePatches;
+                            });
+
+                            //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA PARCHE (ELIMINA).
+                            $('#selectPatches_patch').on('select2:unselect', function (e) {
+                                var data = e.params.data;
+                                arrayPatchesPatches.remove(data.text);
+                                console.log(arrayPatchesPatches);
+
+                                var savePatches = arrayPatchesPatches
+                                localStorage.arrayPatchesPatches = savePatches;
+                            });
+                        });
+                    });
+
+                    //MOSTRAR EL PLACE HOLDER
+                    $(document).ready(function () {
+                        $("#selectPatches_patch").select2({
+                            placeholder: function () {
+                                $(this).data('placeholder');
+                            }
+                        });
+                    });
+                </script>
+                <div class="container">
+                    <div class="row">
+                        <div style="padding-top: 2em;" class="col-md-3">
+                            <a style="background-color:#D0D0D5"href="{% url 'selectServerPatch' %}" class="btn btn-block">Back</a>
+                        </div>
+                        <div style="padding-top: 2em;" class="col-md-3">
+                            {#<a href="{% url 'inquiryPatches' %}" class="btn btn-primary btn-block">Next</a>#}
+                            <button class="btn btn-primary btn-block">Next</button>
+                        </div>
+                        <div class="col-md-6"> </div>
+                    </div>
                 </div>
+            </form>
+        </div>
     </div>
 </section>
 

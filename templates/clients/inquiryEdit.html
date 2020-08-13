@@ -60,32 +60,21 @@
 </script>
 
 <div class="container">
-
    <div style="padding-left:5em; padding-right:5em; padding-bottom:3em; margin-top:3em;" class="container">
       <div class="row"></div>
       <p>Content:</p>
       <div id="demo" style="background-color: lightgrey; padding: 1em; border: 1px solid grey; margin-bottom: 2em; font-style: italic; font-size:.8em;">
-      
          {%for i in getContent%}
             <p>{{i}}</p>
          {%endfor%}
-         {#{{getException.content}}#}
-
       </div>
-
-      <!-- </div> -->
 
       {#<form action="{% url 'exclude_server' %}" method="POST">#}
       <form action="{% url 'updateException' getException.id %}" method="POST">
-
          {% csrf_token %}
-
          <input id="content" type="hidden" name="content">
-
          <input id="exception_type_IDD" type="hidden" name="exception_type">
-
          <input id="patch_ide" type="hidden" name="patch_id">
-
          <input id="server_ide" type="hidden" name="server_id">
 
          <!-- Estos se introducen del modelo de exception -->
@@ -112,20 +101,10 @@
          <div class="container">
             <div class="row">
                <div class="col-md-4"></div>
-               <label for="excludeDate" class="col-form-label col-md-4""><b>Maximum target date</b> </br> <i>Choose risk expiration date </br> One year limit </i></label>
+               <label for="excludeDate" class="col-form-label col-md-4""><b>Maximum target date</b> </br> <i>Choose risk expiration date. </br> One year limit. </i></label>
                <div class=" col-md-4"></div>
             </div>
          </div>
-
-   <!--     CALENDAR      -->
-   <!-- <div class="container">
-      <div class="row">
-         <div class="col-md-4"></div>
-         <input type="datetime" readonly="readonly" name="exclude_date"
-            class="tail-datetime-field form-control col-md-4" autocomplete="off" required>
-         <div class="col-md-4"></div>
-      </div>
-   </div> -->
 
    <div class="form-group">
       <label for="exclude_date" class="col-form-label"></label>
@@ -142,7 +121,7 @@
 <script>
    var dias = 0
 </script>
-<!-- probablemente truene por el "elif" -->
+
 {% if days == 30 %}
 <script>
    dias = 30
@@ -215,9 +194,7 @@
       }
       );
    });
-
 </script>
-
 <div style="margin-bottom: 16em;"></div>
 
 <div class="container">
@@ -231,7 +208,6 @@
       </div>
    </div>
 </div>
-
 <!-- name = database field, value = input value to db -->
 </form>
 </div>

@@ -45,13 +45,11 @@
       async: false,
       method: "POST",
       data: {
-         //limitDay: localStorage.arrayServerPatches
          limitDay: localStorage.arrayFullServers
       },
       url: 'getDaysLimit',
 
    }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
-      //console.log(data)
       limitdays = data
    });
 
@@ -62,21 +60,15 @@
       async: false,
       method: "POST",
       data: {
-         //limitDay: localStorage.arrayServerPatches
          selectedServer: localStorage.arrayFullServers
       },
       url: 'getPatchesInquiryServer',
 
    }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
-      
       console.log("ACA COMPAA")
       console.log(data)
-      
       data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
-
       $.each(data, function (key, index) {
-            //console.log(index.fields.server)
-            //console.log(index.pk)
             patchesPk.push(index.pk)
       });
       
@@ -86,45 +78,31 @@
       async: false,
       method: "POST",
       data: {
-         //limitDay: localStorage.arrayServerPatches
          selectedServer: localStorage.arrayFullServers
       },
       url: 'getServerIDServer',
 
    }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
       console.log(data)
-      //console.log(typeof(data))
       
       data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
 
       $.each(data, function (key, index) {
-            //console.log(index.fields.server)
-            //console.log(index.pk)
             servesPK.push(index.pk)
       });
    });
 </script>
 
 <script>
-   var serverString=""
-   console.log("patchesPk")
-   console.log(patchesPk)
-   console.log(servesPK)
+   //console.log(patchesPk)
+   //console.log(servesPK)
    $(document).ready(function () {
       $("#patch_ide").val(patchesPk);
       $("#server_ide").val(servesPK);
-
-      /*
-      console.log("xxxxxxxxxxxxxx")
-      serverString = servesPK.toString()
-      console.log(serverString)
-      console.log(typeof(serverString))
-      */
-  });
+   });
 </script>
 
 <div class="container">
-
    <!--  PROGRESS BAR -->
          <div class="container">
             <div class="steps">
@@ -164,18 +142,12 @@
       <script>
          document.getElementById("demo").innerHTML = localStorage.arrayFullServers;
       </script>
-   <!-- </div> -->
 
    <form action="{% url 'exclude_server' %}" method="POST">
-
       {% csrf_token %}
-
       <input id="content" type="hidden" name="content">
-
       <input id="exception_type_IDD" type="hidden" name="exception_type">
-
       <input id="patch_ide" type="hidden" name="patch_id">
-
       <input id="server_ide" type="hidden" name="server_id">
 
       <!-- Estos se introducen del modelo de exception -->
@@ -199,13 +171,12 @@
          <div class="row">
             <div class="col-md-4"></div>
             <!-- <label for="excludeDate" class="col-form-label col-md-4""><b>Maximum target date:</b> <i>(This is defined by major patch criticality)</i></label> -->
-            <label for="excludeDate" class="col-form-label col-md-4""><b>Maximum target date</b> </br> <i>Choose risk expiration date </br> One year limit </i></label>
+            <label for="excludeDate" class="col-form-label col-md-4""><b>Maximum target date</b> </br> <i>Choose risk expiration date. </br> One year limit. </i></label>
             <div class=" col-md-4"></div>
          </div>
       </div>
 
       <!--     CALENDAR      -->
-      
       <div class="form-group">
          <label for="exclude_date" class="col-form-label"></label>
          <div class="container">
@@ -250,7 +221,6 @@
    console.log(limitdays)
 
    document.addEventListener("DOMContentLoaded", function () {
-
       tail.DateTime(".tail-datetime-field", {
          dateRanges: [
             {
@@ -282,7 +252,6 @@
 
 <!-- FALTA AGREGAR EL ACTION PLAN -->
 <div style="margin-bottom: 16em;"></div>
-
 <div class="container">
    <div class="row">
       <div class="col-md-3"> </div>
@@ -295,9 +264,7 @@
 
    </div>
 </div>
-
 <!-- name = database field, value = input value to db -->
 </form>
 </div>
-
 {% endblock %}

@@ -33,8 +33,6 @@
 
 <section id="dashboard" class="py-4">
    <div class="container">
-      <!-- <form role="form" action="" method="post" class="registration-form"> -->
-
          <!--  PROGRESS BAR -->
          <div class="container">
             <div class="steps">
@@ -67,19 +65,12 @@
 
          <div style="margin-top:2.5em; "></div>
 
-         <div style="margin-top:10px;" >
-
-               <!-- <p style="margin-top:10px;"><i>If more than one server is incorporated in the same exception, 
-                  <br> the approval of each one of those servers will be required
-                  <br>to validate the entire exception.</i></p> -->
-                  
-                  <br>IMPORTANT:<br> <b> This action will prevent also future coming patches.</b></p>
-                  <!-- <p>If a patch server has any exceptions, </p> -->
+         <div style="margin-top:10px;" >      
+            <!-- <br>IMPORTANT:<br> <b> This action will prevent also future coming patches.</b></p> -->
          </div>
 
          <div style="margin-top:2em; ">
             Choose server:
-            
             <form action="{% url 'inquiryServers' %}">
                {% csrf_token %}
                <div >
@@ -90,7 +81,6 @@
                <div style="margin-bottom: 1em;"></div>
                <script>
                   var arrayFullServers = [];
-
                   Array.prototype.remove = function () {
                      var what, a = arguments, L = a.length, ax;
                      while (L && this.length) {
@@ -110,12 +100,8 @@
                         dataType: "text", //"json"  //FORMATO DE LOS DATOS
                         success: function (data) {  //SI TODO SALE BIEN (DATOS EXISTENTES, CONEXIÓN CON EL SERVIDOR)
                            data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON
-                           //console.log(data)
                            $.each(data, function (key, index) {
                               //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
-                              //imprime solo los campos que necesitamos.
-                              //console.log(data[key]); //todo el objeto
-                              //console.log(data[key].fields.hostname); // el hostname solamente
                               serverOptions += "<option value='" + index + "' >" + index.fields.hostname + "</option>";
                            })
 
@@ -170,10 +156,8 @@
                      <div class="col-md-6"> </div>
                   </div>
                </div>
-
             </form>
          </div>
-      <!-- </form> -->
    </div>
 </section>
 

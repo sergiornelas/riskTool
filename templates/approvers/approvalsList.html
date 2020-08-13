@@ -1,8 +1,5 @@
 {% extends 'base.html' %}
 
-<!-- comentar el jinja -->
-{# {% load humanize %} #}
-
 {% block content %}
 
 <section id="showcase-inner" class="py-5 text-white">
@@ -38,7 +35,7 @@
     {% include 'partials/_alerts.html' %}
     <div class="row">
       <div class="col-md-12">
-        <h2 style="margin-bottom: 1em;">Welcome {{ user.username }}</h2>
+        <h2 style="margin-bottom: 1em; font-size: 1.5rem;">Welcome {{ user.username }}</h2>
 
         <form action="{% url 'search' %}">
           <div class="container" style="margin-bottom: 45px;">

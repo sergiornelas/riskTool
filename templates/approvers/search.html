@@ -1,8 +1,5 @@
 {% extends 'base.html' %}
 
-<!-- comentar el jinja -->
-{# {% load humanize %} #}
-
 {% block content %}
 
 <section id="showcase-inner" class="py-5 text-white">
@@ -22,8 +19,6 @@
   <div class="container">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-
-        <!-- <li class="breadcrumb-item active"> List of exceptions</li> -->
         <li class="breadcrumb-item">
           <a href="{% url 'approvalsList' %}">
              <i class="fas fa-calendar-check"></i> List of exceptions </a>
@@ -39,7 +34,6 @@
     <div class="row">
       <div class="col-md-12">
         <h2 style="margin-bottom: 1em;">Welcome {{ user.username }}</h2>
-
         <form action="{% url 'search' %}">
           <div class="container" style="margin-bottom: 45px;">
             <div class="row">
@@ -58,7 +52,6 @@
 
             </select>
           </div>
-
           <div class="col-md-4">
             <input type="text" name="keywords" class="form-control" placeholder="Filter by risk ID" value="{{ values.keywords }}">
           </div>
@@ -82,7 +75,6 @@
               </tr>
             </thead>
             <tbody>
-              {#{% for alias, alias2 in all %}#}
               {% for alias in excepciones %}
                 {% if alias.state != "Canceled" %}
                   <tr>
@@ -98,7 +90,6 @@
                       <td style="text-align:center" >Unknown</td>
                     {% endif %}
                     <td style="text-align:center" > {{ alias.client}} </td>
-                    {#<td style="text-align:center" >{{ alias2.state}}</td>#}
                     {% if alias.state == "Approved" %}
                       <td style="text-align:center; color:green;" ><b>{{ alias.state }}</b></td>
                     {% elif alias.state == "Rejected" %}
@@ -118,7 +109,6 @@
         {% endif %}
       </div>
     </div>
-
     <!--
     <div class="row">
       <div class="col-md-12">
@@ -158,7 +148,6 @@
       </div>
     </div>
     -->
-
   </div>
 </section>
 

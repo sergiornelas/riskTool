@@ -33,165 +33,134 @@
 
 <section id="dashboard" class="py-4">
    <div class="container">
-      <!-- <form role="form" action="" method="post" class="registration-form"> -->
-         <!-- <fieldset style="display: block;"> -->
-
-               <!--  PROGRESS BAR -->
-         <div class="container">
-            <div class="steps">
-               <ul class="steps-container">
-                  <li style="width:25%;" class="activated">
-                     <div class="step">
-                        <div class="step-image"><span></span></div>
-                        <div class="step-current">Type of exception</div>
-                        <div class="step-description">Server or patch</div>
-                     </div>
-                  </li>
-                  <li style="width:25%;"class="activated">
-                     <div class="step">
-                        <div class="step-image"><span></span></div>
-                        <div class="step-current">Choose server</div>
-                        <div class="step-description">Select server</div>
-                     </div>
-                  </li>
-                  <li style="width:25%;">
-                     <div class="step">
-                        <div class="step-image"><span></span></div>
-                        <div class="step-current">Choose patch</div>
-                        <div class="step-description">Select patches</div>
-                     </div>
-                  </li>
-                  <li style="width:25%;">
-                     <div class="step">
-                        <div class="step-image"><span></span></div>
-                        <div class="step-current">Inquiry</div>
-                        <div class="step-description">Form</div>
-                     </div>
-                  </li>
-               </ul>
-               <div class="step-bar" style="width: 50%;"></div>
-            </div>
+      <!--  PROGRESS BAR -->
+      <div class="container">
+         <div class="steps">
+            <ul class="steps-container">
+               <li style="width:25%;" class="activated">
+                  <div class="step">
+                     <div class="step-image"><span></span></div>
+                     <div class="step-current">Type of exception</div>
+                     <div class="step-description">Server or patch</div>
+                  </div>
+               </li>
+               <li style="width:25%;"class="activated">
+                  <div class="step">
+                     <div class="step-image"><span></span></div>
+                     <div class="step-current">Choose server</div>
+                     <div class="step-description">Select server</div>
+                  </div>
+               </li>
+               <li style="width:25%;">
+                  <div class="step">
+                     <div class="step-image"><span></span></div>
+                     <div class="step-current">Choose patch</div>
+                     <div class="step-description">Select patches</div>
+                  </div>
+               </li>
+               <li style="width:25%;">
+                  <div class="step">
+                     <div class="step-image"><span></span></div>
+                     <div class="step-current">Inquiry</div>
+                     <div class="step-description">Form</div>
+                  </div>
+               </li>
+            </ul>
+            <div class="step-bar" style="width: 50%;"></div>
          </div>
+      </div>
 
-         <div style="margin-bottom: 4em;"></div>
-            <!-- <p style="margin-top:30px;"><i><br>If more than one server is incorporated in the same exception, 
-               <br> the approval of each one of those servers will be required
-               <br>to validate the entire exception patches.</i></p> -->
+      <div style="margin-bottom: 4em;"></div>
+      <!-- <p style="margin-top:30px;"><i><br>If more than one server is incorporated in the same exception, 
+         <br> the approval of each one of those servers will be required
+         <br>to validate the entire exception patches.</i></p> -->
 
-
-         
-            <div>Choose patch servers: 
-
-               <form action="{% url 'selectPatches' %}">
-                  {% csrf_token %}
-                  <div>
-                     <select data-placeholder="Select server/servers" style="width:27em;" id="serverServer2" multiple="multiple" required></select>
-                     <br>
-                     <!-- <i style="font-size: 17px;">If doesn't appear servers, means that all servers have been requested for risk exceptions.</i> -->
-                  </div>
-                  <div style="margin-bottom: 1em;"></div>
-
-                  <script>
-                     var arrayServerPatches = [];
-
-                     Array.prototype.remove = function () {
-                        var what, a = arguments, L = a.length, ax;
-                        while (L && this.length) {
-                           what = a[--L];
-                           while ((ax = this.indexOf(what)) !== -1) {
-                              this.splice(ax, 1);
-                           }
-                        }
-                        return this;
-                     };
-
-                     $(document).ready(function () {
-                        var serverOptions;
-                        $.ajax({
-                           url: 'server_user_list2', //AQUI SE EXTRAERÁN LOS DATOS
-                           type: 'GET', //OBTENDREMOS DATOS
-                           dataType: "text", //"json"  //FORMATO DE LOS DATOS
-                           success: function (data) {  //SI TODO SALE BIEN (DATOS EXISTENTES, CONEXIÓN CON EL SERVIDOR)
-                              data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON
-
-                              $.each(data, function (key, index) {
-                                 //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
-                                 //imprime solo los campos que necesitamos.
-                                 //console.log(data[key]); //todo el objeto
-                                 //console.log(data[key].fields.hostname); // el hostname solamente
-                                 serverOptions += "<option value='" + index + "' >" + index.fields.hostname + "</option>";
-                              })
-
-                              // AGREGA LOS SERVIDORES A LA DROP-DOWN-LIST
-                              $('#serverServer2').html(serverOptions);
-
-                              //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (AGREGA).
-                              $('#serverServer2').on('select2:select', function (e) {
-                                 var data = e.params.data;
-                                 arrayServerPatches.push(data.text);
-                                 console.log(arrayServerPatches);
-
-                                 //string simple (LOCALSTORAGE SOLO NOS PERMITE GUARDAR UN STRING)
-                                 var saveServers = arrayServerPatches
-                                 localStorage.arrayServerPatches = saveServers;
-
-
-                                 //object
-                                 //var saveServers = arrayServerPatches
-                                 //// Guardo el objeto como un string
-                                 //localStorage.setItem('data', JSON.stringify(saveServers));
-                                 //console.log(typeof(saveServers))
-
-
-                                 //TESTING
-                                 //var miObjeto = { 'marcado': 'html5', 'estilo': 'css3', 'comportamiento': 'js' };
-                                    // Guardo el objeto como un string
-                                 //localStorage.setItem('datos', JSON.stringify(miObjeto));
-                              });
-
-                              //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (ELIMINA).
-                              $('#serverServer2').on('select2:unselect', function (e) {
-                                 var data = e.params.data;
-                                 arrayServerPatches.remove(data.text);
-                                 console.log(arrayServerPatches);
-
-                                 var saveServers = arrayServerPatches
-                                 localStorage.arrayServerPatches = saveServers;
-                              });
-                           },
-                           error: function (data) {
-                              console.log(data);
-                              $("#bbbbb").append("<br>" + data.statusText);
-                           }
-                        });
-                     });
-
-                     //MOSTRAR EL PLACE HOLDER
-                     $(document).ready(function () {
-                        $("#serverServer2").select2({
-                           placeholder: function () {
-                              $(this).data('placeholder');
-                           }
-                        });
-                     });
-                  </script>
-
-                  <div class="container">
-                     <div class="row">
-                        <div style="padding-top: 2em;" class="col-md-3">
-                           <a style="background-color:#D0D0D5"href="{% url 'serverOrPatch' %}" class="btn btn-block">Back</a>                           
-                        </div>
-                        <div style="padding-top: 2em;" class="col-md-3">
-                           <button class="btn btn-primary btn-block">Next</button>
-                        </div>
-                        <div class="col-md-6"> </div>
-                     </div>
-                  </div>
-
-               </form>
+      <div>Choose patch servers:
+         <form action="{% url 'selectPatches' %}">
+            {% csrf_token %}
+            <div>
+               <select data-placeholder="Select server/servers" style="width:27em;" id="serverServer2" multiple="multiple" required></select>
+               <br>
+               <!-- <i style="font-size: 17px;">If doesn't appear servers, means that all servers have been requested for risk exceptions.</i> -->
             </div>
-         <!-- </fieldset> -->
-      <!-- </form> -->
+            <div style="margin-bottom: 1em;"></div>
+            <script>
+               var arrayServerPatches = [];
+               Array.prototype.remove = function () {
+                  var what, a = arguments, L = a.length, ax;
+                  while (L && this.length) {
+                     what = a[--L];
+                     while ((ax = this.indexOf(what)) !== -1) {
+                        this.splice(ax, 1);
+                     }
+                  }
+                  return this;
+               };
+               $(document).ready(function () {
+                  var serverOptions;
+                  $.ajax({
+                     url: 'server_user_list2', //AQUI SE EXTRAERÁN LOS DATOS
+                     type: 'GET', //OBTENDREMOS DATOS
+                     dataType: "text", //"json"  //FORMATO DE LOS DATOS
+                     success: function (data) {  //SI TODO SALE BIEN (DATOS EXISTENTES, CONEXIÓN CON EL SERVIDOR)
+                        data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON
+                        $.each(data, function (key, index) {
+                           //key representa cada objeto del json (0, 1, 2...), index es el contenido de cada objeto.
+                           serverOptions += "<option value='" + index + "' >" + index.fields.hostname + "</option>";
+                        })
+
+                        // AGREGA LOS SERVIDORES A LA DROP-DOWN-LIST
+                        $('#serverServer2').html(serverOptions);
+
+                        //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (AGREGA).
+                        $('#serverServer2').on('select2:select', function (e) {
+                           var data = e.params.data;
+                           arrayServerPatches.push(data.text);
+                           console.log(arrayServerPatches);
+
+                           //string simple (LOCALSTORAGE SOLO NOS PERMITE GUARDAR UN STRING)
+                           var saveServers = arrayServerPatches
+                           localStorage.arrayServerPatches = saveServers;
+                        });
+
+                        //AL MOMENTO EN QUE EL CLIENTE DA CLICK EN UNA OPCIÓN (ELIMINA).
+                        $('#serverServer2').on('select2:unselect', function (e) {
+                           var data = e.params.data;
+                           arrayServerPatches.remove(data.text);
+                           console.log(arrayServerPatches);
+                           var saveServers = arrayServerPatches
+                           localStorage.arrayServerPatches = saveServers;
+                        });
+                     },
+                     error: function (data) {
+                        console.log(data);
+                        $("#bbbbb").append("<br>" + data.statusText);
+                     }
+                  });
+               });
+               //MOSTRAR EL PLACE HOLDER
+               $(document).ready(function () {
+                  $("#serverServer2").select2({
+                     placeholder: function () {
+                        $(this).data('placeholder');
+                     }
+                  });
+               });
+            </script>
+
+            <div class="container">
+               <div class="row">
+                  <div style="padding-top: 2em;" class="col-md-3">
+                     <a style="background-color:#D0D0D5"href="{% url 'serverOrPatch' %}" class="btn btn-block">Back</a>                           
+                  </div>
+                  <div style="padding-top: 2em;" class="col-md-3">
+                     <button class="btn btn-primary btn-block">Next</button>
+                  </div>
+                  <div class="col-md-6"> </div>
+               </div>
+            </div>
+         </form>
+      </div>
    </div>
 </section>
 
