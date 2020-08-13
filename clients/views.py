@@ -20,6 +20,10 @@ from django.shortcuts import get_object_or_404
 from exception.choices import state_choices
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
+import operator
+from django.db.models import Q
+from functools import reduce
+
 # [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 # [[[[[[[[[[[[[[[[[[[[[[ DASHBOARD ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 # [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
@@ -61,6 +65,14 @@ def dashboard(request):
         #return HttpResponse(serializers.serialize("json", patches))
 
 def serverOrPatch(request):
+    #client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id).values_list('server_id', flat=True) #<QuerySet [1, 2]>
+
+    #quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).filter(state="Pending").filter(status_id=1).filter(server_id__in=client_has_server)
+
+    #print(quitarServidorSeleccionado)
+
+    #1) Seleccionar excepciones del usuario loggeado.
+    #2)
     return render(request, 'clients/serverOrPatch.html')
 
 # [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
@@ -365,32 +377,90 @@ def inquiryServers(request):
 
 #AJAX LISTA DE SERVIDORES DEL CLIENTE INGRESADO
 def server_user_list(request):
+
+        # client_has_exception=EXCEPTION.objects.filter(client_id=request.user.id)
+        # listServer_ID = [o.server_id for o in client_has_exception]
+        # newList = []
+
+        # for x in listServer_ID:
+        #     newList.append(x.split(","))
+
+        # newArray = []
+        
+        # for x in newList:
+        #     for y in x:
+        #         newArray.append(y)
+
+        # newArray = set(newArray)
+        # newArray = list(newArray) #quitar los repetidos #["1", "1", "2", "2"] -> ["1", "2"]
+
+        # #print(type(newArray[0])) #<class 'str'>
+
+        #     # prueba=EXCEPTION.objects.filter(server_id__contains=newArray) #filtra los que contenga el valor [2] con "1,2" funciona (icontains = insensitive (mayus minus por igual))
+            
+        #     # print("prueba")
+        #     # print(prueba)
+
+        #     # obj_list = [obj for obj in EXCEPTION.objects.all() if any(server_id in obj.server_id for server_id in newArray)]
+
+        #     # print("obj_list")
+        #     # print(obj_list)
+        #     # print(type(obj_list)) #<class 'list'>
+
+        # ob_list = EXCEPTION.objects.filter(reduce(lambda x, y: x | y, [Q(server_id__contains=word) for word in newArray]))
+        # # print("ob_list")
+        # # print(ob_list) #<QuerySet [<EXCEPTION: EXCEPTION object (226)>, <EXCEPTION: EXCEPTION object (227)>, <EXCEPTION: EXCEPTION object (228)>]>
+        # #                 #aqui tenemos la lista de las excepciones que contienen los servidores de la matriz del paso 2) y 3)
+        # # print(type(ob_list)) #<class 'list'>
+
+        # listServer_Exception = [o.pk for o in ob_list]
+
+    #-------------------------------------------------------
+   
+    quitarServidorPendiente= EXCEPTION.objects.filter(client_id=request.user.id).filter(state="Pending")
+    quitarServidorStatusUno= EXCEPTION.objects.filter(client_id=request.user.id).filter(status_id=1)
+
+    #quitamos los servidores que ya tengan realizada una excepción y este "Pendiente" o esten aprobados "status_id=1":
+    arregloPendientes = []
+    for x in quitarServidorPendiente:
+        arregloPendientes.append(x.server_id.split(","))
+        #newList.append(x.split(","))
+    print("arregloPendientes")
+    print(arregloPendientes) #[['1', '2'], ['1', '2']]
+
+    ordenedArray = []
+    
+    for x in arregloPendientes:
+        for y in x:
+            ordenedArray.append(y)
+    
+    print("arregloPendientes nuevamente")
+    print(ordenedArray) #[['1', '2'], ['1', '2']]
+
+    #-------------------------------------------------------
+    
+    #quitamos los servidores que ya tengan realizada una excepción y este "Pendiente" o esten aprobados "status_id=1":
+    arregloStatus = []
+
+    for x in quitarServidorStatusUno:
+        arregloStatus.append(x.server_id.split(","))
+
+    print("arregloStatus")
+    print(arregloStatus)
+
+    ordenedArray2 = []
+    
+    for x in arregloStatus:
+        for y in x:
+            ordenedArray2.append(y)
+    
+    print("arregloStatus nuevamente")
+    print(ordenedArray2) #[['1', '2'], ['1', '2']]
+
     client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id).values_list('server_id', flat=True) #<QuerySet [1, 2]>
 
-    #print(client_has_server)
+    serversPoll = SERVER.objects.filter(pk__in=client_has_server).exclude(pk__in=ordenedArray).exclude(pk__in=ordenedArray2)
     
-    #quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).filter(exception_type=2)
-
-    #quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).filter(server_id__in=client_has_server)
-    quitarServidorSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id).exclude(state="Canceled").filter(server_id__in=client_has_server)
-
-    arregloServidor = []
-    for x in quitarServidorSeleccionado:
-        arregloServidor.append(x.server_id)
-
-    # print("arreglo")
-    # print(arregloServidor)
-
-    serversPoll = SERVER.objects.filter(pk__in=client_has_server).exclude(pk__in=arregloServidor)
-    #serversPoll = SERVER.objects.filter(pk__in=client_has_server).exclude(pk=1)
-
-    print("HERMOSSOOOOSOOS")
-    #print(serversPoll)
-    """
-    context={
-        'serversPoll':serversPoll
-    }
-    """
     if request.method == "GET":
         return HttpResponse(serializers.serialize("json", serversPoll))
 
@@ -591,8 +661,19 @@ def selectServerPatch(request):
 def selectPatches(request):
     return render(request, 'clients/selectPatches.html')
 
-def server_user_list2(request):
+def server_user_list2(request): #cuando seleccionas un Server Patch
     client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id).values_list('server_id', flat=True) #<QuerySet [1, 2]>
+
+    #-- robado del de arriba
+
+    # quitarServidorPendiente= EXCEPTION.objects.filter(server_id__in=client_has_server).filter(client_id=request.user.id).filter(state="Pending")
+    # quitarServidorStatusUno= EXCEPTION.objects.filter(server_id__in=client_has_server).filter(client_id=request.user.id).filter(status_id=1)
+    # print("quitarServidorPendiente")
+    # print(quitarServidorPendiente)
+    # print("quitarServidorStatusUno")
+    # print(quitarServidorStatusUno)
+
+    #-- robado del de arriba
 
     #print(client_has_server)
 
@@ -670,87 +751,51 @@ def filterPatches(request):
 
         #hacemos comunicación entre un advisory y un server a través del parche.
         #por eso para conocer los advisories necesitamos los objetos patches.
-        
+
+
         #+++++++++++ eliminar parches ya seleccionados por el usuario +++++++++++++++++++++++++++++++++
 
-        # arregloServidor = []
-        # for x in quitarServidorSeleccionado:
-        #     arregloServidor.append(x.server_id)
+        quitarParchesPendientes= EXCEPTION.objects.filter(client_id=request.user.id).filter(state="Pending")
 
-        quitarParchesSeleccionado=EXCEPTION.objects.filter(client_id=request.user.id)
-
-        #arregloParches = []
-
-        # for x in quitarParchesSeleccionado:
-        #     print(x.patch_id)
-        #     arregloParches.append(x.patch_id)
-        #     #print(arregloParches[x])
-
-        # #arregloParches = arregloParches.replace(",", " ")
-        # #arregloParches = arregloParches.split()
-        # justList=EXCEPTION.objects.filter(client_id=request.user.id).values_list("patch_id", flat=True)
-        # print(type(justList))
-        # print(justList)
-        # print(arregloParches)
-
-        listPatches = [o.patch_id for o in quitarParchesSeleccionado]
-        # print("listPatches")
-        # print(type(listPatches))
-        # print(listPatches)
+        listPatches = [o.patch_id for o in quitarParchesPendientes]
         
-        #listPatches=listPatches.split(",")
-        #print(listPatches[0].split(","))
-
         newList = []
         for x in listPatches:
             newList.append(x.split(","))
 
-        # print("newList")
-        # print(newList) #[['6', '7', '8', '9'], ['2', '4'], ['5']]
-        # print(newList[0]) #['6', '7', '8', '9']
-
-        # print(newList[0][0]) #6
-        # print(newList[1][0]) #2
-        # print(type(newList[0][0])) #str
-        # print(type(int(newList[0][0]))) #int
-
         otherList = []
-
         for x in newList:
             for y in x:
-                #otherList.append(int(y))
                 otherList.append(str(y))
     
-        #print(otherList)
+        quitarParchesStatusUno=EXCEPTION.objects.filter(client_id=request.user.id).filter(status_id=1)
 
-        patch_advisory = PATCHES.objects.filter(server_id__in=servers_selected_ids).exclude(pk__in=otherList)
-        #patch_advisory = PATCHES.objects.filter(server_id__in=servers_selected_ids)
-
-        #return HttpResponse(serializers.serialize("json", patch_advisory))
-
-        #----------------------------------------------------------------
-
-        #sample_instance = SERVER.objects.get(id=2)
-            #sample_instance = SERVER.objects.filter(pk=request.user.id)
-        #value_of_name = sample_instance.hostname
-            #print(value_of_name)
+        listPatches2 = [o.patch_id for o in quitarParchesStatusUno]
         
+        newList2 = []
+        for x in listPatches2:
+            newList2.append(x.split(","))
+
+        otherList2 = []
+        for x in newList2:
+            for y in x:
+                otherList2.append(str(y))
+
+        #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        patch_advisory = PATCHES.objects.filter(server_id__in=servers_selected_ids).exclude(pk__in=otherList).exclude(pk__in=otherList2)
         
         print(patch_advisory)
-
         print("patch_advisory")
-
         print(type(patch_advisory)) #'django.db.models.query.QuerySet'
         print(type(serializers.serialize("json", patch_advisory))) #'str'
 
-
-        # takeAdvisoriesid = [o.advisory_id for o in patch_advisory]
-        # print("takeadvisories: ",takeAdvisoriesid)
-
-        # takeduedate = [o.due_date for o in patch_advisory]
-        # print("takeadvisories: ",takeduedate)
-
         return HttpResponse(serializers.serialize("json", patch_advisory))
+
+
+
+
+
 
 @csrf_exempt
 def getHostnames(request):
@@ -873,7 +918,7 @@ def getCriticality(request):
 """
 
 # [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
-# [[[[[[[[[[[[[[[[[[[[[[ EXCEPTION DETAIL ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+# [[[[[[[[[[[[[[[[[[[[[[ EXCEPTION DETAIL ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 # [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 
 def exceptionDetail(request, exclude_patch_ID):

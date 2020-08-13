@@ -367,7 +367,6 @@ def approvalDet(request, exclude_patch_ID):
 
     print("LASTARRAY")
     print(lastArray)
-    
 
     print("PENDING!")
     print(approver_detail_pending)
@@ -389,7 +388,9 @@ def approvalDet(request, exclude_patch_ID):
             #print("Approver found it:", p)
             print("Approved")
             justException.state = 'Approved'
+            justException.status_id = 1
             justException.save(update_fields=['state'])
+            justException.save(update_fields=['status_id'])
             break
         if p.state == 'Rejected':
             print("Approver reject exception:", p)

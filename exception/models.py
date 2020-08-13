@@ -55,6 +55,7 @@ class EXCEPTION(models.Model):
     #TEMPORAL!!!!!
     server_id = models.TextField(null=True) #!
     risk_id = models.CharField(max_length=15, null=True)
+    status_id = models.IntegerField(null=True, default=0)
 
     # def save(self, **kwargs):
     #     if not self.id:
@@ -89,6 +90,3 @@ class VALIDATE_EXCEPTION(models.Model):
 
     # def __str__(self):
     #     return self.hostname
-
-    
-
