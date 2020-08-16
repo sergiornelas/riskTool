@@ -3,7 +3,8 @@
 {% block content %}
 
 <script>
-   console.log(localStorage.arrayFullServers)
+   //console.log("localStorage.arrayFullServers")
+   //console.log(localStorage.arrayFullServers)
    $(document).ready(function () {
       $("#content").val(localStorage.arrayFullServers);
       $("#exception_type_IDD").val("2");
@@ -41,6 +42,7 @@
 
 <script>
    var limitdays;
+   var excludeDate;
    $.ajax({
       async: false,
       method: "POST",
@@ -65,8 +67,8 @@
       url: 'getPatchesInquiryServer',
 
    }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
-      console.log("ACA COMPAA")
-      console.log(data)
+      //console.log("ACA COMPAA")
+      //console.log(data)
       data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
       $.each(data, function (key, index) {
             patchesPk.push(index.pk)
@@ -83,7 +85,7 @@
       url: 'getServerIDServer',
 
    }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
-      console.log(data)
+      //console.log(data)
       
       data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
 
@@ -91,12 +93,24 @@
             servesPK.push(index.pk)
       });
    });
+
+   $.ajax({
+      async: false,
+      method: "POST",
+      data: {
+         selectedServer: localStorage.arrayFullServers
+      },
+      url: 'getExpirationDate',
+   }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
+      excludeDate = data
+      //data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
+   });
 </script>
 
 <script>
    //console.log(patchesPk)
    //console.log(servesPK)
-   $(document).ready(function () {
+   $(document).ready(function(){
       $("#patch_ide").val(patchesPk);
       $("#server_ide").val(servesPK);
    });
@@ -182,7 +196,9 @@
          <div class="container">
             <div class="row">
                <div class="col-md-4"></div>
-               <input type="datetime" name="exclude_date" class="tail-datetime-field form-control col-md-4 " autocomplete="off" onkeydown="return false;" style="caret-color: transparent !important;" required>
+               <!-- <input value="2050-08-15 00:00:00" type="datetime" name="exclude_date" class="tail-datetime-field form-control col-md-4 " autocomplete="off" onkeydown="return false;" style="caret-color: transparent !important;" required> -->
+               <!-- <input id="myText" type="datetime" name="exclude_date" class="tail-datetime-field form-control col-md-4 " autocomplete="off" onkeydown="return false;" style="caret-color: transparent !important;" required> -->
+               <input id="myInput" type="datetime" name="exclude_date" class="tail-datetime-field form-control col-md-4 " autocomplete="off" onkeydown="return false;" style="caret-color: transparent !important;" required>
                <div class="col-md-4"></div>
             </div>
          </div>
@@ -190,6 +206,7 @@
    </div>
 
 <script type="text/javascript">
+   //document.getElementById("myInput").value = excludeDate;
    /*
    var today = new Date();
    var dd = String(today.getDate()).padStart(2, '0');
@@ -216,41 +233,70 @@
       return date;
    }
 
-   var data = new Date();
+   var hoy = new Date();
+   //hoy=hoy.toDateString()
+   console.log("TODAY (hoy)")
+   console.log(hoy)
+   console.log("-------------")
+   
+   var scheduledDate = new Date(excludeDate);
+   //scheduledDate=scheduledDate.toDateString()
+   console.log("LATEST SCHEDULED_DATE (scheduledDate)")
+   console.log(scheduledDate);
+   console.log("-------------")
+   
+   if(scheduledDate > hoy ){
+      scheduledDate=scheduledDate.addDays(1)
+      document.getElementById("myInput").value = scheduledDate;
+      console.log("scheduled date es mas grande");
+      document.addEventListener("DOMContentLoaded", function () {
+         tail.DateTime(".tail-datetime-field", {
+            dateRanges: [
+               {
+                  start: scheduledDate,
+                  //end: data.addDays(parseInt(limitdays))
+                  //end: data.addDays(365)
+                  end: scheduledDate.addDays(365)
+               }],
+            dateBlacklist: false,
+            viewDecades: false,
+            startOpen: true,
+            stayOpen: true,
+            closeButton: false,
+            timeMinutes: true,
+            timeSeconds: false,
+            timeStepMinutes: 30
+         }
+         );
+      });
+   }
 
-   console.log(limitdays)
-
-   document.addEventListener("DOMContentLoaded", function () {
-      tail.DateTime(".tail-datetime-field", {
-         dateRanges: [
-            {
-               //start: new Date(2020, 5, 5),
-               //start: today,
-               start: data,
-               //end: new Date(2020, 6, 30),
-               //end: data.addDays(50)
-               //end: data.addDays(parseInt(limitdays))
-               end: data.addDays(365)
-               // days: true                 // This is the default
-            }],
-         dateStart: new Date(2018, 0, 5),
-         dateBlacklist: false,
-         viewDecades: false,
-         //animate: false,
-         startOpen: true,
-         stayOpen: true,
-         closeButton: false,
-         
-         timeMinutes: true,
-         timeSeconds: false,
-         timeStepMinutes: 30
-      }
-      );
-   });
-
+   else{
+      document.getElementById("myInput").value = hoy;
+      console.log("hoy es mas grande");
+      document.addEventListener("DOMContentLoaded", function () {
+         tail.DateTime(".tail-datetime-field", {
+            dateRanges: [
+               {
+                  start: hoy,
+                  //end: data.addDays(parseInt(limitdays))
+                  //end: data.addDays(365)
+                  end: hoy.addDays(365)
+               }],
+            dateBlacklist: false,
+            viewDecades: false,
+            startOpen: true,
+            stayOpen: true,
+            closeButton: false,
+            timeMinutes: true,
+            timeSeconds: false,
+            timeStepMinutes: 30
+         }
+         );
+      });
+   }
 </script>
 
-<!-- FALTA AGREGAR EL ACTION PLAN -->
 <div style="margin-bottom: 16em;"></div>
 <div class="container">
    <div class="row">
@@ -267,4 +313,5 @@
 <!-- name = database field, value = input value to db -->
 </form>
 </div>
+
 {% endblock %}

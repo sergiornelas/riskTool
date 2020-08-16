@@ -22,6 +22,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 import operator
 from django.db.models import Q
 from functools import reduce
+from datetime import datetime
 
 # [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 # [[[[[[[[[[[[[[[[[[[[[[ DASHBOARD ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
@@ -76,7 +77,7 @@ def exceptionsBoard(request):
                 
     remaining = EXCEPTION.objects.filter(client_id=request.user.id).exclude(pk__in=arreglo)
 
-    paginator = Paginator(client_exceptions, 8)
+    paginator = Paginator(client_exceptions, 4)
     page = request.GET.get('page')
     paged_listings = paginator.get_page(page)
 
@@ -87,6 +88,11 @@ def exceptionsBoard(request):
     }
 
     return render(request, 'clients/exceptionsBoard.html', context)
+
+def deleteEverything(request):
+    EXCEPTION.objects.all().delete()
+    VALIDATE_EXCEPTION.objects.all().delete()
+    return redirect('dashboard')
 
 def searchClient(request):
     client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id)
@@ -418,6 +424,37 @@ def getDaysLimit(request):
         return HttpResponse(days)
 
 @csrf_exempt
+def getExpirationDate(request):
+    if request.method == 'POST':
+        selectedServer = request.POST['selectedServer']
+
+        selectedServer = selectedServer.replace(",", " ")
+        selectedServer = selectedServer.split()
+        
+        client_has_server=SERVER_USER_RELATION.objects.filter(user_id=request.user.id)
+
+        servers_ids=[]
+        for server in client_has_server:
+            servers_ids.append(server.server_id)
+
+        takeServers=SERVER.objects.filter(pk__in=servers_ids).filter(hostname__in=selectedServer)
+        
+        servers_selected_ids=[]
+
+        for server in takeServers:
+            servers_selected_ids.append(server.pk)
+
+        # patch = PATCHES.objects.filter(server_id__in=servers_selected_ids)
+        #patch = PATCHES.objects.filter(server_id__in=servers_selected_ids).latest('scheduled_date')
+        #patch = PATCHES.objects.all().order_by('scheduled_date')
+        patch = PATCHES.objects.filter(server_id__in=servers_selected_ids).order_by('scheduled_date')
+        patch = [o.scheduled_date for o in patch]
+        
+        patch=patch[-1]
+
+        return HttpResponse(patch)
+
+@csrf_exempt
 def getPatchesInquiryServer(request):
     if request.method == 'POST':
         
@@ -605,7 +642,6 @@ def filterPatches(request):
         print("patch_advisory")
         print(type(patch_advisory)) #'django.db.models.query.QuerySet'
         print(type(serializers.serialize("json", patch_advisory))) #'str'
-
         return HttpResponse(serializers.serialize("json", patch_advisory))
 
 @csrf_exempt
@@ -640,7 +676,6 @@ def clean(request):
         clean = re.sub(r'\([^)]*\)', '', fullObject2)
         print("clean")
         print(clean)
-
         return HttpResponse(clean)
 
 @csrf_exempt
