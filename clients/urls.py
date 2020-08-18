@@ -34,4 +34,5 @@ urlpatterns = [
     path('exceptionDetail/<int:exclude_patch_ID>', views.exceptionDetail, name='exceptionDetail'),
     path('deleteEverything', views.deleteEverything, name='deleteEverything'),
     path('getExpirationDate', views.getExpirationDate, name='getExpirationDate'),
+    path('getExpirationDatePatch', views.getExpirationDatePatch, name='getExpirationDatePatch'),
 ]

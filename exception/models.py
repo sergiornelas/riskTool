@@ -46,6 +46,7 @@ class EXCEPTION(models.Model):
     justification = models.TextField(blank=False)
     action_plan=models.TextField(blank=False)
     exclude_date = models.DateTimeField(default=datetime.now, blank=False)
+    created_date = models.DateTimeField(default=datetime.now, blank=False)
     content=models.TextField(blank=False, null=True)
     
     client = models.ForeignKey(settings.AUTH_USER_MODEL,

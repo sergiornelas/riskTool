@@ -101,7 +101,7 @@
          selectedServer: localStorage.arrayFullServers
       },
       url: 'getExpirationDate',
-   }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
+   }).done(function (data) {
       excludeDate = data
       //data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
    });
@@ -246,7 +246,7 @@
    console.log("-------------")
    
    if(scheduledDate > hoy ){
-      scheduledDate=scheduledDate.addDays(1)
+      scheduledDate=scheduledDate.addDays(2)
       document.getElementById("myInput").value = scheduledDate;
       console.log("scheduled date es mas grande");
       document.addEventListener("DOMContentLoaded", function () {
@@ -256,7 +256,9 @@
                   start: scheduledDate,
                   //end: data.addDays(parseInt(limitdays))
                   //end: data.addDays(365)
-                  end: scheduledDate.addDays(365)
+                  
+                  //end: scheduledDate.addDays(365)
+                  end: hoy.addDays(365)
                }],
             dateBlacklist: false,
             viewDecades: false,

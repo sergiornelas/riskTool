@@ -201,84 +201,6 @@ def getValidationsRemaining(request):
         return HttpResponse(serializers.serialize("json", approver_detail_pending))
 
 # [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
-# [[[[[[[[[[[[[[[[[[[[[[ EDIT EXCEPTION ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
-# [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
-
-def inquiryEdit(request, exclude_patch_ID):
-    getException = EXCEPTION.objects.get(pk=exclude_patch_ID)
-    getContent = EXCEPTION.objects.filter(pk=exclude_patch_ID)
-    getContent = [o.content for o in getContent]
-    getContent =  ', '.join(getContent)
-    getContent = getContent.split(",")
-    getContent = list(map(str, getContent))
-    
-    print("getContent")
-    print(getContent)
-    
-    #patch_id: "10,11,12,13" (simple string) -> [10, 11, 12, 13] (list of integers)
-    getPatches = EXCEPTION.objects.filter(pk=exclude_patch_ID)
-    getPatches = [o.patch_id for o in getPatches]
-    getPatches =  ', '.join(getPatches)
-    getPatches = getPatches.split(",")
-    getPatches = list(map(str, getPatches))
-    
-    getPatches = PATCHES.objects.filter(pk__in=getPatches).values_list('advisory_id', flat=True)
-    getPatches = ADVISORY.objects.filter(pk__in=getPatches).values_list('criticality', flat=True)
-    
-    days=0
-
-    for critical in getPatches:
-        if critical == "High":
-            days = 30
-            break
-        elif critical == "Medium":
-            days = 90
-            break
-        elif critical == "Low":
-            days = 180
-
-    context = {
-        'getException':getException,
-        'days':days,
-        'getContent':getContent
-    }
-    return render(request, 'clients/inquiryEdit.html', context)
-
-def updateException(request, exclude_patch_ID):
-    print (exclude_patch_ID)
-    getException = EXCEPTION.objects.get(pk=exclude_patch_ID)
-    if request.method == 'POST':   
-        getException.title = request.POST['title']
-        getException.save(update_fields=['title'])
-
-        getException.justification = request.POST['justification']
-        getException.save(update_fields=['justification'])
-
-        getException.action_plan = request.POST['action_plan']
-        getException.save(update_fields=['action_plan'])
-
-        getException.exclude_date = request.POST['exclude_date']
-        getException.save(update_fields=['exclude_date'])
-
-    messages.success(request, "Your request has been submitted, an approver will get back to you soon")
-
-    return redirect('exceptionsBoard')
-
-def cleanEdit(request):
-    if request.method == 'POST':
-        fullObject2 = request.POST['fullObject2']
-        
-        print("fullObject2")
-        print(fullObject2)
-
-        clean = re.sub(r'\([^)]*\)', '', fullObject2)
-
-        print("clean")
-        print(clean)
-
-        return HttpResponse(clean)
-
-# [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 # [[[[[[[[[[[[[[[[[[[[[[ CREATE EXCEPTION TYPE SERVER ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 # [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 
@@ -444,13 +366,13 @@ def getExpirationDate(request):
         for server in takeServers:
             servers_selected_ids.append(server.pk)
 
-        # patch = PATCHES.objects.filter(server_id__in=servers_selected_ids)
+        #patch = PATCHES.objects.filter(server_id__in=servers_selected_ids)
         #patch = PATCHES.objects.filter(server_id__in=servers_selected_ids).latest('scheduled_date')
         #patch = PATCHES.objects.all().order_by('scheduled_date')
         patch = PATCHES.objects.filter(server_id__in=servers_selected_ids).order_by('scheduled_date')
         patch = [o.scheduled_date for o in patch]
         
-        patch=patch[-1]
+        patch=patch[-1] #excludeDate
 
         return HttpResponse(patch)
 
@@ -691,6 +613,119 @@ def getServerIDPatch(request):
         
         serverID = SERVER.objects.filter(hostname__in=fullObject)
         return HttpResponse(serializers.serialize("json", serverID))
+
+@csrf_exempt
+def getExpirationDatePatch(request):
+    if request.method == 'POST':
+        selectedPatches = request.POST['selectedPatches']
+        takeID = re.findall(r'\((.*?)\)',selectedPatches)
+
+        patches = PATCHES.objects.filter(pk__in=takeID).order_by('scheduled_date')
+
+        #getPatchesPk = PATCHES.objects.filter(pk__in=getPatches).order_by('scheduled_date')
+        patches = [o.scheduled_date for o in patches]
+        patches=patches[-1]
+        print("patches")
+        print(patches)
+
+        return HttpResponse(patches)
+
+# [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+# [[[[[[[[[[[[[[[[[[[[[[ EDIT EXCEPTION ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+# [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+def inquiryEdit(request, exclude_patch_ID):
+    getException = EXCEPTION.objects.get(pk=exclude_patch_ID)
+    getContent = EXCEPTION.objects.filter(pk=exclude_patch_ID)
+    getContent = [o.content for o in getContent]
+    getContent =  ', '.join(getContent)
+    getContent = getContent.split(",")
+    getContent = list(map(str, getContent))
+    
+    print("getContent")
+    print(getContent)
+    
+    #patch_id: "10,11,12,13" (simple string) -> [10, 11, 12, 13] (list of integers)
+    getPatches = EXCEPTION.objects.filter(pk=exclude_patch_ID)
+    getPatches = [o.patch_id for o in getPatches]
+    getPatches =  ', '.join(getPatches)
+    getPatches = getPatches.split(",")
+    getPatches = list(map(str, getPatches))
+    
+    getPatchesPk = PATCHES.objects.filter(pk__in=getPatches).order_by('scheduled_date')
+    getPatchesPk = [o.scheduled_date for o in getPatchesPk]
+    getPatchesPk=getPatchesPk[-1]
+
+    print("getPatchesPk")
+    print(getPatchesPk)
+
+    # exceptionType = EXCEPTION.objects.filter(pk=exclude_patch_ID)
+    # exceptionType = [o.exception_type for o in exceptionType]
+    # exceptionType=exceptionType[0]
+    # exceptionType=int(exceptionType)
+    # print(exceptionType)
+
+    # getPatches = PATCHES.objects.filter(pk__in=getPatches).values_list('advisory_id', flat=True)
+    # getPatches = ADVISORY.objects.filter(pk__in=getPatches).values_list('criticality', flat=True)   
+    
+    # days=0
+
+    # for critical in getPatches:
+    #     if critical == "High":
+    #         days = 30
+    #         break
+    #     elif critical == "Medium":
+    #         days = 90
+    #         break
+    #     elif critical == "Low":
+    #         days = 180
+
+    createdDate = EXCEPTION.objects.filter(pk=exclude_patch_ID)
+    createdDate = [o.created_date for o in createdDate]
+    createdDate=createdDate[0]
+    print("createdDate")
+    print(createdDate)
+
+    context = {
+        'getException':getException,
+        #'days':days,
+        'getContent':getContent,
+        'getPatchesPk':getPatchesPk,
+        'createdDate':createdDate
+        # 'exceptionType':exceptionType
+    }
+
+    return render(request, 'clients/inquiryEdit.html', context)
+
+def updateException(request, exclude_patch_ID):
+    print (exclude_patch_ID)
+    getException = EXCEPTION.objects.get(pk=exclude_patch_ID)
+    if request.method == 'POST':   
+        getException.title = request.POST['title']
+        getException.save(update_fields=['title'])
+
+        getException.justification = request.POST['justification']
+        getException.save(update_fields=['justification'])
+
+        getException.action_plan = request.POST['action_plan']
+        getException.save(update_fields=['action_plan'])
+
+        getException.exclude_date = request.POST['exclude_date']
+        getException.save(update_fields=['exclude_date'])
+
+    messages.success(request, "Your request has been submitted, an approver will get back to you soon")
+
+    return redirect('exceptionsBoard')
+
+def cleanEdit(request):
+    if request.method == 'POST':
+        fullObject2 = request.POST['fullObject2']
+        print("fullObject2")
+        print(fullObject2)
+        clean = re.sub(r'\([^)]*\)', '', fullObject2)
+        print("clean")
+        print(clean)
+        return HttpResponse(clean)
 
 # [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 # [[[[[[[[[[[[[[[[[[[[[[ EXCEPTION DETAIL ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]

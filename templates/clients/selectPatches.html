@@ -108,6 +108,7 @@
 
                     $(document).ready(function () {
                         $.ajax({
+                            async: false,
                             method: "POST",
                             data: {
                                 //simple string
@@ -118,6 +119,7 @@
                             var patchesOptions;
                             data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
                             $.each(data, function (key, index) {
+
                             //-------------------------------get hostname -------------------------------
                                 var hostname
                                 var hostnames = []
@@ -138,6 +140,7 @@
                                         })
                                     }
                                 });
+
                             //-------------------------------get description -------------------------------
                                 var description
                                 var descriptions = []

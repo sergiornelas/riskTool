@@ -3,7 +3,7 @@
 {% block content %}
 
 <script>
-    console.log("AQUI?")
+    console.log("AQUI")
     console.log(localStorage.arrayPatchesPatches)
 </script>
 
@@ -61,6 +61,7 @@
    var greyBox
    var servesPK = []
    jsonsaso = JSON.stringify(localStorage.arrayPatchesPatches); //string
+   
     $.ajax({
       async: false,
       method: "POST",
@@ -70,12 +71,12 @@
       url: 'transform',
     }).done(function (data) {
       data = JSON.parse(data);
-      console.warn(data)
+      //console.warn(data)
     $.each(data, function (key, index) {
             patchesPk.push(index.pk)
       });
     });
-
+    
     $.ajax({
         async: false,
         method: "POST",
@@ -92,7 +93,7 @@
         $("#content").val(greyBox);
         $("#exception_type_IDD").val("1");
     });
-
+    
     $.ajax({
         async: false,
         method: "POST",
@@ -102,16 +103,28 @@
         url: 'getServerIDPatch',
   
      }).done(function (data) { //ME DEVUELVE LOS OBJETOS ADVIOSORY RELACIONADOS AL SERVER SELECCIONADO
-        console.log(data)
+        //console.log(data)
         data = JSON.parse(data); //LOS DATOS LOS CONVERTIMOS A JSON, para poder usar el each
         $.each(data, function (key, index) {
             servesPK.push(index.pk)
         });
      });
+    
+    $.ajax({
+        async: false,
+        method: "POST",
+        data: {
+           selectedPatches: localStorage.arrayPatchesPatches
+        },
+        url: 'getExpirationDatePatch',
+    }).done(function (data) {
+        excludeDate = data
+    });
+    
 </script>
 
 <script>
-    console.log(servesPK)
+    //console.log(servesPK)
 </script>
 
 <script>
@@ -202,7 +215,8 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-4"></div>
-                        <input type="datetime" name="exclude_date" class="tail-datetime-field form-control col-md-4 " autocomplete="off" onkeydown="return false;" style="caret-color: transparent !important;" required>
+                        <!-- <input type="datetime" name="exclude_date" class="tail-datetime-field form-control col-md-4 " autocomplete="off" onkeydown="return false;" style="caret-color: transparent !important;" required> -->
+                        <input id="myInput" type="datetime" name="exclude_date" class="tail-datetime-field form-control col-md-4 " autocomplete="off" onkeydown="return false;" style="caret-color: transparent !important;" required>
                         <div class="col-md-4"></div>
                     </div>
                 </div>
@@ -210,32 +224,78 @@
     </div>
 
     <script type="text/javascript">
-        /*
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
-    
-        today = yyyy + '-' + mm + '-' + dd;
-        
-        var limit = new Date();
-        var dd = String(limit.getDate() - 30 *86400000).padStart(2, '0');
-        var mm = String(limit.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = limit.getFullYear();
-    
-        limit = yyyy + '-' + mm + '-' + dd;
-        
-        //limitdays
-        console.log(today)
-        console.log(limit)
-        */
-
         Date.prototype.addDays = function (days) {
             var date = new Date(this.valueOf());
             date.setDate(date.getDate() + days);
             return date;
         }
 
+        var hoy = new Date();
+        //hoy=hoy.toDateString()
+        console.log("TODAY (hoy)")
+        console.log(hoy)
+        console.log("-------------")
+        
+        var scheduledDate = new Date(excludeDate);
+        //scheduledDate=scheduledDate.toDateString()
+        console.log("LATEST SCHEDULED_DATE (scheduledDate)")
+        console.log(scheduledDate);
+        console.log("-------------")
+        
+        if(scheduledDate > hoy ){
+            scheduledDate=scheduledDate.addDays(2)
+            document.getElementById("myInput").value = scheduledDate;
+            console.log("scheduled date es mas grande");
+            document.addEventListener("DOMContentLoaded", function () {
+                tail.DateTime(".tail-datetime-field", {
+                    dateRanges: [
+                    {
+                        start: scheduledDate,
+                        //end: data.addDays(parseInt(limitdays))
+                        //end: data.addDays(365)
+                        
+                        //end: scheduledDate.addDays(365)
+                        end: hoy.addDays(365)
+                    }],
+                    dateBlacklist: false,
+                    viewDecades: false,
+                    startOpen: true,
+                    stayOpen: true,
+                    closeButton: false,
+                    timeMinutes: true,
+                    timeSeconds: false,
+                    timeStepMinutes: 30
+                }
+                );
+            });
+        }
+
+        else{
+            document.getElementById("myInput").value = hoy;
+            console.log("hoy es mas grande");
+            document.addEventListener("DOMContentLoaded", function () {
+                tail.DateTime(".tail-datetime-field", {
+                    dateRanges: [
+                    {
+                        start: hoy,
+                        //end: data.addDays(parseInt(limitdays))
+                        //end: data.addDays(365)
+                        end: hoy.addDays(365)
+                    }],
+                    dateBlacklist: false,
+                    viewDecades: false,
+                    startOpen: true,
+                    stayOpen: true,
+                    closeButton: false,
+                    timeMinutes: true,
+                    timeSeconds: false,
+                    timeStepMinutes: 30
+                }
+                );
+            });
+        }
+
+        /* calendario viejito
         var data = new Date();
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -266,6 +326,7 @@
             }
             );
         });
+        */
     </script>
 
     <!-- FALTA AGREGAR EL ACTION PLAN -->
