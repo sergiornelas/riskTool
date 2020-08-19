@@ -95,8 +95,10 @@ def deleteEverything(request):
     return redirect('dashboard')
 
 def searchClient(request):
-    client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id)
-    excepciones= EXCEPTION.objects.filter(client_id=request.user.id).values_list('pk', flat=True)
+    client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id).exclude(state="Canceled")
+
+    #excepciones= EXCEPTION.objects.filter(client_id=request.user.id).values_list('pk', flat=True)
+    excepciones= EXCEPTION.objects.filter(client_id=request.user.id).exclude(state="Canceled").values_list('pk', flat=True)
     validaciones=VALIDATE_EXCEPTION.objects.filter(exception_id__in=excepciones).values_list('exception_id', flat=True)
     arreglo=[]
     for x in excepciones:

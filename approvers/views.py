@@ -44,7 +44,7 @@ def approvalsList(request):
     
     excepciones=EXCEPTION.objects.filter(pk__in=arreglin).exclude(state="Canceled")
     
-    paginator = Paginator(excepciones, 8)
+    paginator = Paginator(excepciones, 4)
     page = request.GET.get('page')
     paged_listings = paginator.get_page(page)
 
@@ -76,7 +76,8 @@ def search(request):
         arreglin.extend(EXCEPTION.objects.filter(server_id__contains=server_id).values_list('id', flat=True))
     arreglin=set(arreglin)
     
-    queryset_list=EXCEPTION.objects.filter(pk__in=arreglin)
+    #queryset_list=EXCEPTION.objects.filter(pk__in=arreglin)
+    queryset_list=EXCEPTION.objects.filter(pk__in=arreglin).exclude(state="Canceled")
 
     if 'keywords' in request.GET:
         keywords = request.GET['keywords'] #"KEYWORDS" ES EL NAME EN HTML
@@ -246,7 +247,6 @@ def authorize(request):
     validate = VALIDATE_EXCEPTION(exception_id=exception_id, approver=approver, state=state, comment=comment, approver_pending=approver_pending, risk_id=risk_id)
     validate.save()
     return redirect('approvalDet', exception_id)
-
 
 #NOTAS:
     #get_object_or_404 will only return one object, get_list_or_404 multiple objects. Levanta la excepción Http404 si no existe el objeto.
