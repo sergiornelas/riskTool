@@ -47,7 +47,7 @@
                         <select name="state" class="form-control">
                         <option selected="true" disabled="disabled">State (All)</option>
       
-                        {% for key,value in state_choices.items %}
+                        {% for key,value in state_choices_client.items %}
                            <option value="{{ key }}">{{ value }}</option>
                         {% endfor %}
                         </select>
@@ -87,14 +87,17 @@
                                     <!-- <p style="font-size: .9em; color:dimgray">Has a status already</p> -->
                                  {% else %}
                                     {% for r in remaining %}
-                                       {#{% if p.id == r.id %}#}
-                                       {% if p.id == r.id and p.state != "Canceled" %}
-                                          <a href="{% url 'inquiryEdit' p.id %}">Edit</a>
+                                       {% if p.id == r.id %}
+                                       {#{% if p.id == r.id and p.state != "Canceled" %}#}
+                                          {% if p.state != "Canceled" %}
+                                             <a href="{% url 'inquiryEdit' p.id %}">Edit</a>
+                                          {% endif %}
                                        {% else %}
                                           <!-- <p style="font-size: .9em; color:dimgray">Has a status already</p> -->
                                        {% endif %}
                                     {% endfor %}
                                  {% endif %}
+
                                  {% if p.state == "Pending" %}
                                     <a id="{{p.id}}" class="clickbtn"style="color:red;" href="{% url 'deleteException' p.id %}"><i class="fa fa-pencil-square-o" ></i>Cancel</a>
                                  {% else %}
@@ -113,7 +116,8 @@
                                  {#<td><button value={{ p.id }} class="btn btn-danger btn-block validationsQuery" data-toggle="modal"data-target="#inquiryModal2">{{ p.state }}</button></td>#}
                                  <td><a href="{% url 'exceptionDetail' p.id %}" class="btn btn-danger btn-block">Rejected</a></td>
                               {% else %}
-                                 <td>{{ p.state }}</td> <!-- bugs-->
+                                 {#<td>{{ p.state }}</td> <!-- bugs-->#}
+                                 <td><a style="background-color:rgb(173, 173, 173);" href="{% url 'exceptionDetail' p.id %}" class="btn btn-light">Canceled</a></td>
                               {% endif %}
                            </tr>
                      {% endfor %}
@@ -129,7 +133,7 @@
                         <select name="state" class="form-control">
                         <option selected="true" disabled="disabled">State (All)</option>
       
-                        {% for key,value in state_choices.items %}
+                        {% for key,value in state_choices_client.items %}
                            <option value="{{ key }}">{{ value }}</option>
                         {% endfor %}
                         </select>

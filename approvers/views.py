@@ -82,9 +82,9 @@ def search(request):
     if 'keywords' in request.GET:
         keywords = request.GET['keywords'] #"KEYWORDS" ES EL NAME EN HTML
         if keywords:
-            #queryset_list = queryset_list.filter(risk_id__icontains=keywords) #contiene
             #SI ES POSIBLE FILTRAR NUEVAMENTE UN QUERYSET!!!
-            queryset_list = queryset_list.filter(risk_id__iexact=keywords)
+            #queryset_list = queryset_list.filter(risk_id__iexact=keywords)
+            queryset_list = queryset_list.filter(risk_id__icontains=keywords) #contiene
 
     if 'state' in request.GET:
         state = request.GET['state']

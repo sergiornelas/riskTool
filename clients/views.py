@@ -18,6 +18,7 @@ import string
 from roles.models import Profile
 from django.shortcuts import get_object_or_404
 from exception.choices import state_choices
+from clients.choices_client import state_choices_client
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 import operator
 from django.db.models import Q
@@ -84,7 +85,8 @@ def exceptionsBoard(request):
     context ={
         'client_exceptions':paged_listings,
         'remaining':remaining,
-        'state_choices':state_choices,
+        #'state_choices':state_choices,
+        'state_choices_client':state_choices_client
     }
 
     return render(request, 'clients/exceptionsBoard.html', context)
@@ -96,6 +98,7 @@ def deleteEverything(request):
 
 def searchClient(request):
     client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id).exclude(state="Canceled")
+    #client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id)
 
     #excepciones= EXCEPTION.objects.filter(client_id=request.user.id).values_list('pk', flat=True)
     excepciones= EXCEPTION.objects.filter(client_id=request.user.id).exclude(state="Canceled").values_list('pk', flat=True)
@@ -113,17 +116,22 @@ def searchClient(request):
         if keywords:
             #queryset_list = queryset_list.filter(risk_id__icontains=keywords) #contiene
             #SI ES POSIBLE FILTRAR NUEVAMENTE UN QUERYSET!!!
-            client_exceptions = client_exceptions.filter(risk_id__iexact=keywords)
+            #client_exceptions = client_exceptions.filter(risk_id__iexact=keywords)
+            client_exceptions = client_exceptions.filter(risk_id__icontains=keywords)
             #remaining = remaining.filter(risk_id__iexact=keywords)
 
     if 'state' in request.GET:
         state = request.GET['state']
-        if state:
+        if state == "Canceled":
+            print("ta cancelao compa")
+            #client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id).filter(state__iexact=state)
+            client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id).filter(state__iexact=state).filter(risk_id__icontains=keywords)
+        else:
             client_exceptions = client_exceptions.filter(state__iexact=state)
-            #remaining = remaining.filter(state__iexact=state)
 
     context ={
-        'state_choices':state_choices,
+        #'state_choices':state_choices,
+        'state_choices_client':state_choices_client,
         'client_exceptions':client_exceptions,
         'remaining':remaining,
         'values': request.GET

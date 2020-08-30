@@ -47,7 +47,7 @@
                         <select name="state" class="form-control">
                         <option selected="true" disabled="disabled">State (All)</option>
       
-                        {% for key,value in state_choices.items %}
+                        {% for key,value in state_choices_client.items %}
                            <option value="{{ key }}">{{ value }}</option>
                         {% endfor %}
                         </select>
