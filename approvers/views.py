@@ -91,11 +91,27 @@ def search(request):
         if state:
             queryset_list = queryset_list.filter(state__iexact=state)
 
+    paginator = Paginator(queryset_list, 2)
+    parametros = request.GET.copy()
+    
+    if parametros.get('pagina') != None:
+        del parametros['pagina']
+    
+    page = request.GET.get('pagina') #OBTENEMOS LA PÁGINA ACTUAL
+
+    try:
+        queryset = paginator.page(page)
+    except PageNotAnInteger:
+        queryset = paginator.page(1) # CUANDO PAGE NO TIENE NUMERO, ENTONCES ES LA PRIMERA PÁGINA SI O SI.
+    except EmptyPage:
+        queryset = paginator.page(paginator.num_pages)
+
     context = {
+        #'excepciones': queryset_list,
+        'excepciones': queryset,
+        "parametros": parametros,
+        'values': request.GET,
         'state_choices':state_choices,
-        'excepciones': queryset_list,
-        #'excepciones2': paged_listings2,
-        'values': request.GET
     }
 
     return render(request, 'approvers/search.html', context)

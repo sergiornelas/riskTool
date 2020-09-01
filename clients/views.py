@@ -80,10 +80,10 @@ def exceptionsBoard(request):
 
     paginator = Paginator(client_exceptions, 4)
     page = request.GET.get('page')
-    paged_listings = paginator.get_page(page)
+    paged_exceptions = paginator.get_page(page)
 
     context ={
-        'client_exceptions':paged_listings,
+        'client_exceptions':paged_exceptions,
         'remaining':remaining,
         #'state_choices':state_choices,
         'state_choices_client':state_choices_client
@@ -97,8 +97,8 @@ def deleteEverything(request):
     return redirect('dashboard')
 
 def searchClient(request):
-    client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id).exclude(state="Canceled")
-    #client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id)
+    client_exceptions_search = EXCEPTION.objects.filter(client_id=request.user.id).exclude(state="Canceled")
+    #client_exceptions_search = EXCEPTION.objects.filter(client_id=request.user.id)
 
     #excepciones= EXCEPTION.objects.filter(client_id=request.user.id).values_list('pk', flat=True)
     excepciones= EXCEPTION.objects.filter(client_id=request.user.id).exclude(state="Canceled").values_list('pk', flat=True)
@@ -116,25 +116,40 @@ def searchClient(request):
         if keywords:
             #queryset_list = queryset_list.filter(risk_id__icontains=keywords) #contiene
             #SI ES POSIBLE FILTRAR NUEVAMENTE UN QUERYSET!!!
-            #client_exceptions = client_exceptions.filter(risk_id__iexact=keywords)
-            client_exceptions = client_exceptions.filter(risk_id__icontains=keywords)
+            #client_exceptions_search = client_exceptions_search.filter(risk_id__iexact=keywords)
+            client_exceptions_search = client_exceptions_search.filter(risk_id__icontains=keywords)
             #remaining = remaining.filter(risk_id__iexact=keywords)
 
     if 'state' in request.GET:
         state = request.GET['state']
         if state == "Canceled":
-            print("ta cancelao compa")
-            #client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id).filter(state__iexact=state)
-            client_exceptions = EXCEPTION.objects.filter(client_id=request.user.id).filter(state__iexact=state).filter(risk_id__icontains=keywords)
+            #print("ta cancelao compa")
+            #client_exceptions_search = EXCEPTION.objects.filter(client_id=request.user.id).filter(state__iexact=state)
+            client_exceptions_search = EXCEPTION.objects.filter(client_id=request.user.id).filter(state__iexact=state).filter(risk_id__icontains=keywords)
         else:
-            client_exceptions = client_exceptions.filter(state__iexact=state)
+            client_exceptions_search = client_exceptions_search.filter(state__iexact=state)
 
-    context ={
-        #'state_choices':state_choices,
-        'state_choices_client':state_choices_client,
-        'client_exceptions':client_exceptions,
+    paginator = Paginator(client_exceptions_search, 2)
+    parametros = request.GET.copy()
+    
+    if parametros.get('pagina') != None:
+        del parametros['pagina']
+    
+    page = request.GET.get('pagina') #OBTENEMOS LA PÁGINA ACTUAL
+
+    try:
+        queryset = paginator.page(page)
+    except PageNotAnInteger:
+        queryset = paginator.page(1) # CUANDO PAGE NO TIENE NUMERO, ENTONCES ES LA PRIMERA PÁGINA SI O SI.
+    except EmptyPage:
+        queryset = paginator.page(paginator.num_pages)
+    
+    context = {
+        'client_exceptions_search':queryset,
+        "parametros": parametros,
         'remaining':remaining,
-        'values': request.GET
+        'values': request.GET, #esto es para mantener el filtro que insertamos
+        'state_choices_client':state_choices_client
     }
 
     return render(request, 'clients/searchClient.html', context)

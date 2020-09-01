@@ -45,11 +45,11 @@
                      <div class="col-md-4 ">
                         <label class="sr-only">State</label>
                         <select name="state" class="form-control">
-                        <option selected="true" disabled="disabled">State (All)</option>
-      
-                        {% for key,value in state_choices_client.items %}
-                           <option value="{{ key }}">{{ value }}</option>
-                        {% endfor %}
+                           <option selected="true" disabled="disabled">State (All)</option>
+         
+                           {% for key,value in state_choices_client.items %}
+                              <option value="{{ key }}">{{ value }}</option>
+                           {% endfor %}
                         </select>
                      </div>
                      <div class="col-md-4">
@@ -131,7 +131,8 @@
              <ul class="pagination">
                {% if client_exceptions.has_previous %}
                  <li class="page-item">
-                   <a href="?page={{ listings.previous_page_number}}" class="page-link">&laquo;</a>
+                   {#<a href="?page={{ listings.previous_page_number}}" class="page-link">&laquo;</a>#}
+                   <a href="?page={{ client_exceptions.previous_page_number}}" class="page-link">&laquo;</a>
                  </li>
                {% else %}
                  <li class="page-item disabled">
@@ -167,7 +168,7 @@
       <div class="container" style="margin-top:1.6rem;">
          <div class="row">
             <div class="col-md-4"></div>
-            <p><i style="font-size: 1rem;">Borrar todos los registros de risk exceptions (testing)</i></p>
+            <p><i style="font-size: 1rem;">Borrar todos los registros de excepciones (testing)</i></p>
             <div class="col-md-4"></div>
          </div>
       </div>
