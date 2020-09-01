@@ -157,7 +157,7 @@
          document.getElementById("demo").innerHTML = localStorage.arrayFullServers;
       </script>
 
-   <form action="{% url 'exclude_server' %}" method="POST">
+   <form action="{% url 'exclude_server' %}" method="POST" onsubmit="return checkForm(this);">
       {% csrf_token %}
       <input id="content" type="hidden" name="content">
       <input id="exception_type_IDD" type="hidden" name="exception_type">
@@ -173,13 +173,12 @@
       <div class="form-group">
          <label for="justification" class="col-form-label"><b>Justification:</b><i> (Reasons you want to make an exception)</i></label>
          <textarea style="border: 1px solid grey;" rows="7" name="justification" class="form-control" required></textarea>
-     </div>
+      </div>
      
-     <div class="form-group">
-         <label for="action_plan" class="col-form-label"><b>Action plan:</b><i> (Define steps you will execute for
-                 implement the updates)</i></label>
+      <div class="form-group">
+         <label for="action_plan" class="col-form-label"><b>Action plan:</b><i> (Define steps you will execute for implement the updates)</i></label>
          <textarea style="border: 1px solid grey;" rows="7" name="action_plan" class="form-control" required></textarea>
-     </div>
+      </div>
 
       <div class="container">
          <div class="row">
@@ -205,115 +204,121 @@
       </div>
    </div>
 
-<script type="text/javascript">
-   //document.getElementById("myInput").value = excludeDate;
-   /*
-   var today = new Date();
-   var dd = String(today.getDate()).padStart(2, '0');
-   var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-   var yyyy = today.getFullYear();
+      <script type="text/javascript">
+         //document.getElementById("myInput").value = excludeDate;
+         /*
+         var today = new Date();
+         var dd = String(today.getDate()).padStart(2, '0');
+         var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+         var yyyy = today.getFullYear();
 
-   today = yyyy + '-' + mm + '-' + dd;
-   
-   var limit = new Date();
-   var dd = String(limit.getDate() - 30 *86400000).padStart(2, '0');
-   var mm = String(limit.getMonth() + 1).padStart(2, '0'); //January is 0!
-   var yyyy = limit.getFullYear();
+         today = yyyy + '-' + mm + '-' + dd;
+         
+         var limit = new Date();
+         var dd = String(limit.getDate() - 30 *86400000).padStart(2, '0');
+         var mm = String(limit.getMonth() + 1).padStart(2, '0'); //January is 0!
+         var yyyy = limit.getFullYear();
 
-   limit = yyyy + '-' + mm + '-' + dd;
-   
-   //limitdays
-   console.log(today)
-   console.log(limit)
-   */
+         limit = yyyy + '-' + mm + '-' + dd;
+         
+         //limitdays
+         console.log(today)
+         console.log(limit)
+         */
 
-   Date.prototype.addDays = function (days) {
-      var date = new Date(this.valueOf());
-      date.setDate(date.getDate() + days);
-      return date;
-   }
-
-   var hoy = new Date();
-   //hoy=hoy.toDateString()
-   console.log("TODAY (hoy)")
-   console.log(hoy)
-   console.log("-------------")
-   
-   var scheduledDate = new Date(excludeDate);
-   //scheduledDate=scheduledDate.toDateString()
-   console.log("LATEST SCHEDULED_DATE (scheduledDate)")
-   console.log(scheduledDate);
-   console.log("-------------")
-   
-   if(scheduledDate > hoy ){
-      scheduledDate=scheduledDate.addDays(2)
-      document.getElementById("myInput").value = scheduledDate;
-      console.log("scheduled date es mas grande");
-      document.addEventListener("DOMContentLoaded", function () {
-         tail.DateTime(".tail-datetime-field", {
-            dateRanges: [
-               {
-                  start: scheduledDate,
-                  //end: data.addDays(parseInt(limitdays))
-                  //end: data.addDays(365)
-                  
-                  //end: scheduledDate.addDays(365)
-                  end: hoy.addDays(365)
-               }],
-            dateBlacklist: false,
-            viewDecades: false,
-            startOpen: true,
-            stayOpen: true,
-            closeButton: false,
-            timeMinutes: true,
-            timeSeconds: false,
-            timeStepMinutes: 30
+         Date.prototype.addDays = function (days) {
+            var date = new Date(this.valueOf());
+            date.setDate(date.getDate() + days);
+            return date;
          }
-         );
-      });
-   }
 
-   else{
-      document.getElementById("myInput").value = hoy;
-      console.log("hoy es mas grande");
-      document.addEventListener("DOMContentLoaded", function () {
-         tail.DateTime(".tail-datetime-field", {
-            dateRanges: [
-               {
-                  start: hoy,
-                  //end: data.addDays(parseInt(limitdays))
-                  //end: data.addDays(365)
-                  end: hoy.addDays(365)
-               }],
-            dateBlacklist: false,
-            viewDecades: false,
-            startOpen: true,
-            stayOpen: true,
-            closeButton: false,
-            timeMinutes: true,
-            timeSeconds: false,
-            timeStepMinutes: 30
+         var hoy = new Date();
+         //hoy=hoy.toDateString()
+         console.log("TODAY (hoy)")
+         console.log(hoy)
+         console.log("-------------")
+         
+         var scheduledDate = new Date(excludeDate);
+         //scheduledDate=scheduledDate.toDateString()
+         console.log("LATEST SCHEDULED_DATE (scheduledDate)")
+         console.log(scheduledDate);
+         console.log("-------------")
+         
+         if(scheduledDate > hoy ){
+            scheduledDate=scheduledDate.addDays(2)
+            document.getElementById("myInput").value = scheduledDate;
+            console.log("scheduled date es mas grande");
+            document.addEventListener("DOMContentLoaded", function () {
+               tail.DateTime(".tail-datetime-field", {
+                  dateRanges: [
+                     {
+                        start: scheduledDate,
+                        //end: data.addDays(parseInt(limitdays))
+                        //end: data.addDays(365)
+                        
+                        //end: scheduledDate.addDays(365)
+                        end: hoy.addDays(365)
+                     }],
+                  dateBlacklist: false,
+                  viewDecades: false,
+                  startOpen: true,
+                  stayOpen: true,
+                  closeButton: false,
+                  timeMinutes: true,
+                  timeSeconds: false,
+                  timeStepMinutes: 30
+               }
+               );
+            });
          }
-         );
-      });
-   }
-</script>
 
-<div style="margin-bottom: 16em;"></div>
-<div class="container">
-   <div class="row">
-      <div class="col-md-3"> </div>
-      <div style="padding-top: 2em;" class="col-md-3">
-         <a style="background-color:#D0D0D5" href="{% url 'selectServers' %}" class="btn btn-block">Back</a>
+         else{
+            document.getElementById("myInput").value = hoy;
+            console.log("hoy es mas grande");
+            document.addEventListener("DOMContentLoaded", function () {
+               tail.DateTime(".tail-datetime-field", {
+                  dateRanges: [
+                     {
+                        start: hoy,
+                        //end: data.addDays(parseInt(limitdays))
+                        //end: data.addDays(365)
+                        end: hoy.addDays(365)
+                     }],
+                  dateBlacklist: false,
+                  viewDecades: false,
+                  startOpen: true,
+                  stayOpen: true,
+                  closeButton: false,
+                  timeMinutes: true,
+                  timeSeconds: false,
+                  timeStepMinutes: 30
+               }
+               );
+            });
+         }
+      </script>
+   <div style="margin-bottom: 15em;"></div>
+   <div class="container">
+      <div class="row" style="margin-bottom: 2.5em;">
+         <div class="col-md-3"> </div>
+         <div style="padding-top: 2em;" class="col-md-3">
+            <a style="background-color:#D0D0D5" href="{% url 'selectServers' %}" class="btn btn-block">Back</a>
+         </div>
+         <!-- JUST CLICK ONCE -->
+         <script>
+            function checkForm(form){
+                form.myButton.disabled = true;
+                return true;
+            }
+        </script>
+         <div style="padding-top: 2em;" class="col-md-3">
+            <!-- <input style="margin-bottom: 1rem;" type="submit" value="Send" class="btn btn-block btn-secondary" /> -->
+            <input name="myButton" style="margin-bottom: 1rem;" type="submit" value="Send" class="btn btn-block btn-secondary"/>
+         </div>
       </div>
-      <div style="padding-top: 2em;" class="col-md-3">
-         <input style="margin-bottom: 1rem;" type="submit" value="Send" class="btn btn-block btn-secondary" />
-      </div>
-
    </div>
-</div>
-<!-- name = database field, value = input value to db -->
 </form>
 </div>
+<!-- name = database field, value = input value to db -->
 
 {% endblock %}

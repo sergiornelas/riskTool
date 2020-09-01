@@ -179,7 +179,7 @@
         <script>
             document.getElementById("demo").innerHTML = greyBox2;
         </script>
-        <form action="{% url 'exclude_server' %}" method="POST">
+        <form action="{% url 'exclude_server' %}" method="POST" onsubmit="return checkForm(this);">
             {% csrf_token %}
             <input id="content" type="hidden" name="content">
             <input id="exception_type_IDD" type="hidden" name="exception_type">
@@ -329,22 +329,27 @@
         */
     </script>
 
-    <!-- FALTA AGREGAR EL ACTION PLAN -->
-    <div style="margin-bottom: 16em;"></div>
-
+    <div style="margin-bottom: 15em;"></div>
     <div class="container">
-        <div class="row">
+        <div class="row" style="margin-bottom: 2.5em;">
             <div class="col-md-3"> </div>
             <div style="padding-top: 2em;" class="col-md-3">
                 <a style="background-color:#D0D0D5" href="{% url 'selectPatches' %}" class="btn btn-block">Back</a>
             </div>
+            <!-- JUST CLICK ONCE -->
+            <script>
+                function checkForm(form){
+                    form.myButton.disabled = true;
+                    return true;
+                }
+            </script>
             <div style="padding-top: 2em;" class="col-md-3">
-                <input style="margin-bottom: 1rem;" type="submit" value="Send" class="btn btn-block btn-secondary" />
+                <input name="myButton" style="margin-bottom: 1rem;" type="submit" value="Send" class="btn btn-block btn-secondary" />
             </div>
         </div>
     </div>
     <!-- name = database field, value = input value to db -->
-        </form>
+    </form>
 </div>
 
 {% endblock %}

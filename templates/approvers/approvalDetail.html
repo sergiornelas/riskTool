@@ -215,10 +215,10 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-sm">
-                            <input type="submit" name="state" value="Approved" class="btn btn-block btn-success col-md">
+                            <input onclick="var e=this;setTimeout(function(){e.disabled=true;},0);return true;" type="submit" name="state" value="Approved" class="btn btn-block btn-success col-md">
                         </div>
                         <div class="col-sm">
-                            <input type="submit" name="state" value="Rejected" class="btn btn-block btn-danger col-md">
+                            <input onclick="var e=this;setTimeout(function(){e.disabled=true;},0);return true;" type="submit" name="state" value="Rejected" class="btn btn-block btn-danger col-md">
                         </div>
                         <!-- name = database field, value = input value to db -->
                     </div>

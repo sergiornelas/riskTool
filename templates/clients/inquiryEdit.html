@@ -70,7 +70,7 @@
       </div>
 
       {#<form action="{% url 'exclude_server' %}" method="POST">#}
-      <form action="{% url 'updateException' getException.id %}" method="POST">
+      <form action="{% url 'updateException' getException.id %}" method="POST" onsubmit="return checkForm(this);">
          {% csrf_token %}
          <input id="content" type="hidden" name="content">
          <input id="exception_type_IDD" type="hidden" name="exception_type">
@@ -217,16 +217,23 @@
       });
    }
 </script>
-<div style="margin-bottom: 16em;"></div>
 
+<div style="margin-bottom: 17em;"></div>
 <div class="container">
-   <div class="row">
+   <div class="row" style="margin-bottom: 2.5em;">
       <div class="col-md-3"> </div>
       <div style="padding-top: 2em;" class="col-md-3">
          <a style="background-color:#D0D0D5" href="{% url 'exceptionsBoard' %}" class="btn btn-block">Back</a>
       </div>
+      <!-- JUST CLICK ONCE -->
+      <script>
+         function checkForm(form){
+             form.myButton.disabled = true;
+             return true;
+         }
+     </script>
       <div style="padding-top: 2em;" class="col-md-3">
-         <input style="margin-bottom: 1rem;" type="submit" value="Update" class="btn btn-block btn-secondary" />
+         <input name="myButton" style="margin-bottom: 1rem;" type="submit" value="Update" class="btn btn-block btn-secondary" />
       </div>
    </div>
 </div>
