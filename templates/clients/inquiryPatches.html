@@ -86,7 +86,7 @@
         url: 'clean',
       }).done(function (data) {
         greyBox= data
-        greyBox2 = greyBox.split(",").join("<br />")
+        greyBox2 = greyBox.split(",").join("<br>")
       });
 
     $(document).ready(function () {
@@ -205,7 +205,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-4"></div>
-                    <label for="excludeDate" class="col-form-label col-md-4""><b>Maximum target date</b> </br> <i>Choose risk expiration date. </br> One year limit. </i></label>
+                    <label for="excludeDate" class="col-form-label col-md-4""><b>Maximum target date</b> <br> <i>Choose risk expiration date. <br> One year limit. </i></label>
                     <div class=" col-md-4"></div>
                 </div>
             </div>
@@ -235,6 +235,8 @@
         console.log("TODAY (hoy)")
         console.log(hoy)
         console.log("-------------")
+        
+        excludeDate=excludeDate.substr(0,excludeDate.indexOf(' '));
         
         var scheduledDate = new Date(excludeDate);
         //scheduledDate=scheduledDate.toDateString()

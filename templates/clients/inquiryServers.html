@@ -184,7 +184,7 @@
          <div class="row">
             <div class="col-md-4"></div>
             <!-- <label for="excludeDate" class="col-form-label col-md-4""><b>Maximum target date:</b> <i>(This is defined by major patch criticality)</i></label> -->
-            <label for="excludeDate" class="col-form-label col-md-4""><b>Maximum target date</b> </br> <i>Choose risk expiration date. </br> One year limit. </i></label>
+            <label for="excludeDate" class="col-form-label col-md-4""><b>Maximum target date</b> <br> <i>Choose risk expiration date. <br> One year limit. </i></label>
             <div class=" col-md-4"></div>
          </div>
       </div>
@@ -205,28 +205,7 @@
    </div>
 
       <script type="text/javascript">
-         //document.getElementById("myInput").value = excludeDate;
-         /*
-         var today = new Date();
-         var dd = String(today.getDate()).padStart(2, '0');
-         var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-         var yyyy = today.getFullYear();
-
-         today = yyyy + '-' + mm + '-' + dd;
-         
-         var limit = new Date();
-         var dd = String(limit.getDate() - 30 *86400000).padStart(2, '0');
-         var mm = String(limit.getMonth() + 1).padStart(2, '0'); //January is 0!
-         var yyyy = limit.getFullYear();
-
-         limit = yyyy + '-' + mm + '-' + dd;
-         
-         //limitdays
-         console.log(today)
-         console.log(limit)
-         */
-
-         Date.prototype.addDays = function (days) {
+         Date.prototype.addDays = function (days){
             var date = new Date(this.valueOf());
             date.setDate(date.getDate() + days);
             return date;
@@ -235,15 +214,21 @@
          var hoy = new Date();
          //hoy=hoy.toDateString()
          console.log("TODAY (hoy)")
+         //console.log(typeof(hoy)) //object
          console.log(hoy)
          console.log("-------------")
          
+         //console.log(excludeDate) //2020-09-15 00:00:00+00:00
+         //console.log(typeof(excludeDate)) //string
+
+         excludeDate=excludeDate.substr(0,excludeDate.indexOf(' '));
+         //console.log(excludeDate) //2020-09-01
+         
          var scheduledDate = new Date(excludeDate);
-         //scheduledDate=scheduledDate.toDateString()
          console.log("LATEST SCHEDULED_DATE (scheduledDate)")
          console.log(scheduledDate);
          console.log("-------------")
-         
+
          if(scheduledDate > hoy ){
             scheduledDate=scheduledDate.addDays(2)
             document.getElementById("myInput").value = scheduledDate;

@@ -101,7 +101,7 @@
          <div class="container">
             <div class="row">
                <div class="col-md-4"></div>
-               <label for="excludeDate" class="col-form-label col-md-4""><b>Maximum target date</b> </br> <i>Choose risk expiration date. </br> One year limit. </i></label>
+               <label for="excludeDate" class="col-form-label col-md-4""><b>Maximum target date</b> <br> <i>Choose risk expiration date. <br> One year limit. </i></label>
                <div class=" col-md-4"></div>
             </div>
          </div>
@@ -150,13 +150,25 @@
    console.log(hoy)
    console.log("-------------")
 
-   var scheduledDate = new Date("{{getPatchesPk|safe}}");
+   //console.warn("SEIF:")
+   var excludeDateEdit = "{{getPatchesPk|safe}}";
+   //console.warn(excludeDateEdit);
+   //console.warn(typeof(excludeDateEdit));
+
+   excludeDateEdit=excludeDateEdit.substr(0,excludeDateEdit.indexOf(' '));
+
+   var scheduledDate = new Date(excludeDateEdit);
    //scheduledDate=scheduledDate.toDateString()
    console.log("LATEST SCHEDULED_DATE (scheduledDate)")
    console.log(scheduledDate);
    console.log("-------------")
 
-   var startDate = new Date("{{createdDate|safe}}");
+   var createdDate = "{{createdDate|safe}}";
+   createdDate=createdDate.substr(0,createdDate.indexOf(' '));
+
+   var startDate = new Date(createdDate);
+   //var startDate = new Date("{{createdDate|safe}}");
+
    console.log("startDate")
    console.log(startDate)
    console.log("-------------")
