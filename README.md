@@ -8,7 +8,7 @@
 - Personalize admin area
 - Divide users roles (clients, approvers & admin) in Django
 - Dynamic calendar with conditions
-- Deploy with DigitalOcean & Nginx
+- Deployment with DigitalOcean & Nginx
 
 ## Link:
 http://167.99.153.106/ (Deprecated)
